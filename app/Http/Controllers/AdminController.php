@@ -18,11 +18,11 @@ class AdminController extends Controller
     public function users()
     {
         $code = Auth::user()->company->company_code;
-        $approved = Auth::user()->company->users->where('isApproved', true)->count() / 10;
-        $pending = Auth::user()->company->users->where('isApproved', false)->count() / 10;
+        $approved = Auth::user()->company->users->where('isApproved', 1)->count() / 10;
+        $pending = Auth::user()->company->users->where('isApproved', 0)->count() / 10;
         $branches = Auth::user()->company->branches;
 
-        dd(Auth::user()->company->users->where('isApproved', true));
+        dd(Auth::user()->company->users->where('isApproved', "=", 1));
 
         return view('admin.users')->with('code', $code)
                             ->with('approved', $approved)
@@ -40,7 +40,7 @@ class AdminController extends Controller
     public function getApprovedUsers($start, Request $request)
     {
         if($request->ajax()){
-            $users = Auth::user()->company->users()->where('isApproved', true)->skip($start*10)->take(10)->get();
+            $users = Auth::user()->company->users()->where('isApproved', 1)->skip($start*10)->take(10)->get();
             
             // $approved = Auth::user()->company->users->where('isApproved', 1);
             // $pending = Auth::user()->company->users->where('isApproved', 0);
@@ -60,7 +60,7 @@ class AdminController extends Controller
     public function getPendingUsers($start, Request $request)
     {
         if($request->ajax()){
-            $users = Auth::user()->company->users()->where('isApproved', false)->skip($start*10)->take(10)->get();
+            $users = Auth::user()->company->users()->where('isApproved', 0)->skip($start*10)->take(10)->get();
             
             // $approved = Auth::user()->company->users->where('isApproved', 1);
             // $pending = Auth::user()->company->users->where('isApproved', 0);

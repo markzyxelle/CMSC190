@@ -18,18 +18,18 @@ class AdminController extends Controller
     public function users()
     {
         $code = Auth::user()->company->company_code;
-        // $approved = Auth::user()->company->users->where('isApproved', 1)->count() / 10;
-        // $pending = Auth::user()->company->users->where('isApproved', 0)->count() / 10;
+        $approved = Auth::user()->company->users()->where('isApproved', 1)->count() / 10;
+        $pending = Auth::user()->company->users()->where('isApproved', 0)->count() / 10;
         $branches = Auth::user()->company->branches;
 
-        $temp = Auth::user()->company->users;
-        foreach ($temp as $key => $value) {
-            if($value['isApproved']) $approved++;
-            else $pending++;
-        }
-        echo $approved;
-        echo $pending;
-        dd(Auth::user()->company->users->where('username', 'mark'));
+        // $temp = Auth::user()->company->users;
+        // foreach ($temp as $key => $value) {
+        //     if($value['isApproved']) $approved++;
+        //     else $pending++;
+        // }
+        // echo $approved;
+        // echo $pending;
+        // dd(Auth::user()->company->users->where('username', 'mark'));
 
         return view('admin.users')->with('code', $code)
                             ->with('approved', $approved)

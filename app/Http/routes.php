@@ -42,6 +42,8 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/getPendingUsers/{start}', 'AdminController@getPendingUsers')->middleware(['administrator']);		//GET
     Route::get('/branches', 'AdminController@branches')->middleware(['administrator']);		//display branches
     Route::post('/addBranch', 'AdminController@addBranch')->middleware(['administrator']);		//add branch
+    Route::post('/approveUser', 'AdminController@approveUser')->middleware(['administrator']);      //approve user
+    Route::get('/roles', 'AdminController@roles')->middleware(['administrator']);     //display roles
 
     //unapproved
     Route::get('/unapproved', 'HomeController@unapproved');

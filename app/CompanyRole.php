@@ -22,4 +22,12 @@ class CompanyRole extends Model
     {
         return $this->hasMany('App\User');
     }
+
+    /**
+     * Get the role name.
+     */
+    public function role()
+    {
+        return $this->belongsTo('App\Role');
+    }
 }

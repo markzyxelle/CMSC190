@@ -6,8 +6,19 @@
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading">Welcome</div>
-
-                <div class="panel-body">
+                    <br>
+                    @if ($errors->has('branch_id'))
+                        <div class="alert alert-danger">  
+                            <a class="close" data-dismiss="alert">×</a>  
+                            <strong>Approval Unsuccessful!</strong> {{ $errors->first('branch_id') }}
+                        </div> 
+                    @endif
+                    @if ($errors->has('role_id'))
+                        <div class="alert alert-danger">  
+                            <a class="close" data-dismiss="alert">×</a>  
+                            <strong>Approval Unsuccessful!</strong> {{ $errors->first('role_id') }}
+                        </div>
+                    @endif
                     Company Code : {{ $code }}
                     <br />
                     <h1> Approved Users: </h1>
@@ -63,7 +74,7 @@
 </div>
 
 <!-- Modal -->
-<div id="branchModal" class="modal fade" role="dialog">
+<div id="branchModal" class="modal fade in" role="dialog">
     <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -73,17 +84,49 @@
                 <h4 class="modal-title">Modal Header</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form" method="POST" action="{{ url('/addBranch') }}">
+                <form id="approve-user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/approveUser') }}">
                     {!! csrf_field() !!}
                     <input type="hidden" name="user_id" id="user-id-modal" value=""/>
-                    <select name="branch_name">
-                        @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="form-group{{ $errors->has('branch_id') ? ' has-error' : '' }}">
+                        <label class="col-md-3 control-label">Branch Name</label>
+                        <div class="col-md-6">
+                            <select required class="form-control" name="branch_id" value="{{ old('branch_id') }}">
+                                <option value="">None</option>
+                                @foreach($branches as $branch)
+                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('branch_id'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('branch_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
+                        <label class="col-md-3 control-label">Role</label>
+                        <div class="col-md-6">
+                            <select required class="form-control" name="role_id" value="{{ old('role_id') }}">
+                                <option value="">None</option>
+                                @foreach($roles as $role)
+                                    @if($role->id != 1)
+                                        <option value="{{ $role->pivot->id }}">{{ $role->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @if ($errors->has('role_id'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('role_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
                 </form> 
             </div>
             <div class="modal-footer">
+                <button id="submit" type="submit" class="btn btn-primary">
+                    <i class="fa fa-thumbs-o-up"></i>  Approve
+                </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

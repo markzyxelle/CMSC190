@@ -17,24 +17,18 @@ class AdminController extends Controller
      */
     public function users()
     {
-        $code = Auth::user()->company->company_code;
+        $company = Auth::user()->company;
+        $code = $company->company_code;
         $approved = Auth::user()->company->users()->where('isApproved', 1)->count() / 10;
         $pending = Auth::user()->company->users()->where('isApproved', 0)->count() / 10;
         $branches = Auth::user()->company->branches;
-
-        // $temp = Auth::user()->company->users;
-        // foreach ($temp as $key => $value) {
-        //     if($value['isApproved']) $approved++;
-        //     else $pending++;
-        // }
-        // echo $approved;
-        // echo $pending;
-        // dd(Auth::user()->company->users->where('username', 'mark'));
+        $roles = $company->roles;
 
         return view('admin.users')->with('code', $code)
                             ->with('approved', $approved)
                             ->with('pending', $pending)
-                            ->with('branches', $branches);
+                            ->with('branches', $branches)
+                            ->with('roles', $roles);
 
         // return view('users')->with('code', $code);
     }
@@ -117,5 +111,39 @@ class AdminController extends Controller
         ]);
 
         return redirect('/branches');
+    }     
+
+    /**
+     * Approve User.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function approveUser(Request $request)
+    {
+        $data = $request->all();
+
+        $customNames = array(
+            'branch_id' => 'branch name',
+            'role_id' => 'role',
+        );
+
+        $validator = Validator::make($data, [
+            'branch_id' => 'required',
+            'role_id' => 'required',
+        ])->setAttributeNames($customNames);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $user = \App\User::find($data['user_id']);
+        $user->company_role_id = $data['role_id'];
+        $user->branch_id = $data['branch_id'];
+        $user->isApproved = 1;
+        $user->save();
+
+        return redirect('/users');
     }        
 }

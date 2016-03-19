@@ -14,8 +14,8 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('barangay_code')->unsigned();
-            $table->bigInteger('group_id')->unsigned();
+            $table->bigInteger('barangay_code');            //edit
+            $table->bigInteger('group_id');                 //edit
             $table->string('personal_id')->nullable();
             $table->string('national_id')->nullable();
             $table->string('first_name');
@@ -29,7 +29,7 @@ class CreateClientsTable extends Migration
             $table->string('street');
             $table->enum('gender', ['male', 'female']);
             $table->enum('civil_status', ['single', 'married', 'separated', 'widowed']);
-            $table->integer('mobile_number', 15);
+            $table->string('mobile_number', 15);
             $table->timestamps();
         });
     }

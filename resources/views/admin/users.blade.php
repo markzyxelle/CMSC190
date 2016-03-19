@@ -9,6 +9,7 @@
 
                 <div class="panel-body">
                     Company Code : {{ $code }}
+                    {{$approved}}
                     <br />
                     <h1> Approved Users: </h1>
                     <ul id="approved-users-pagination" class="pagination">

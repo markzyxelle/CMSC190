@@ -22,6 +22,8 @@ class AdminController extends Controller
         $pending = Auth::user()->company->users->where('isApproved', 0)->count() / 10;
         $branches = Auth::user()->company->branches;
 
+        dd($approved);
+
         return view('admin.users')->with('code', $code)
                             ->with('approved', $approved)
                             ->with('pending', $pending)

@@ -1,5 +1,4 @@
 $( document ).ready(function() {
-	alert("Sdfsdfsdf");
 	// $.post( "/getUsers/0", function(  ) {
 	// 	alert( "dsfsdds" );
 	// });

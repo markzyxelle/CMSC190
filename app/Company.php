@@ -23,19 +23,8 @@ class Company extends Model
         return $this->hasMany('App\User');
     }
 
-    /**
-     * Get the branches for the company.
-     */
     public function branches()
     {
         return $this->hasMany('App\Branch');
-    }
-
-    /**
-     * Get the roles that the company has.
-     */
-    public function roles()
-    {
-        return $this->belongsToMany('App\Role', 'company_roles')->withPivot('id');
     }
 }

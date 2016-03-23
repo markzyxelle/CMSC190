@@ -139,8 +139,4 @@ $( document ).ready(function() {
 	$(document).on('click', '.modal-button', function(){
 		$("#user-id-modal").val($(this).data("value"));
 	});
-
-	$(document).on('click', '#submit', function(){
-		$( "#approve-user-form" ).submit();
-	});
 });

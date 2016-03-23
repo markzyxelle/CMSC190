@@ -114,7 +114,7 @@ class AuthController extends Controller
         ])->id;
         $company_role_id = \App\CompanyRole::create([
             'company_id' => $company_id,
-            'role_id' => 1,
+            'role_id' => 2,
         ])->id;
         return User::create([
             'company_id' => $company_id,
@@ -131,9 +131,13 @@ class AuthController extends Controller
     {
         $company = \App\Company::where('company_code', $data['regusercode'])->first();
         $company_id = $company ? $company->id : $company_id = 0;
+        $company_role_id = \App\CompanyRole::create([
+            'company_id' => $company_id,
+            'role_id' => 1,
+        ])->id;
         return User::create([
             'company_id' => $company_id,
-            'company_role_id' => null,
+            'company_role_id' => $company_role_id,
             'name' => $data['regusername'],
             'username' => $data['reguserusername'],
             'email' => $data['reguseremail'],

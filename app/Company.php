@@ -27,4 +27,12 @@ class Company extends Model
     {
         return $this->hasMany('App\Branch');
     }
+
+    /**
+     * Get the roles for the company.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('App\Role', 'company_roles')->withPivot("id");
+    }
 }

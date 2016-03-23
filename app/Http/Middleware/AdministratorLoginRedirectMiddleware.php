@@ -17,7 +17,7 @@ class AdministratorLoginRedirectMiddleware
     public function handle($request, Closure $next)
     {
         if(Auth::check()){
-            if ($request->user()->companyrole->role_id == 2) {
+            if ($request->user()->companyrole->role_id == 1) {
                 return redirect('/admin');
             }
         }

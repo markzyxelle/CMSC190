@@ -37,13 +37,14 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/home', 'HomeController@index')->middleware(['unapproved']);		//home page
 
     //administrator
-    Route::get('/users', 'AdminController@users')->middleware(['administrator']);	//approved and pending users
-    Route::get('/getApprovedUsers/{start}', 'AdminController@getApprovedUsers')->middleware(['administrator']);		//GET
-    Route::get('/getPendingUsers/{start}', 'AdminController@getPendingUsers')->middleware(['administrator']);		//GET
-    Route::get('/branches', 'AdminController@branches')->middleware(['administrator']);		//display branches
-    Route::post('/addBranch', 'AdminController@addBranch')->middleware(['administrator']);		//add branch
-    Route::post('/approveUser', 'AdminController@approveUser')->middleware(['administrator']);      //approve user
-    Route::get('/roles', 'AdminController@roles')->middleware(['administrator']);     //display roles
+    Route::get('/users', 'AdminController@users')->middleware(['auth', 'administrator']);	//approved and pending users
+    Route::get('/getApprovedUsers/{start}', 'AdminController@getApprovedUsers')->middleware(['auth', 'administrator']);		//GET
+    Route::get('/getPendingUsers/{start}', 'AdminController@getPendingUsers')->middleware(['auth', 'administrator']);		//GET
+    Route::get('/branches', 'AdminController@branches')->middleware(['auth', 'administrator']);		//display branches
+    Route::post('/addBranch', 'AdminController@addBranch')->middleware(['auth', 'administrator']);		//add branch
+    Route::post('/approveUser', 'AdminController@approveUser')->middleware(['auth', 'administrator']);      //approve user
+    Route::get('/roles', 'AdminController@roles')->middleware(['auth', 'administrator']);     //display roles
+    Route::post('/addRole', 'AdminController@addRole')->middleware(['auth', 'administrator']);      //add role
 
     //unapproved
     Route::get('/unapproved', 'HomeController@unapproved');

@@ -128,9 +128,12 @@ class AdminController extends Controller
         );
 
         $validator = Validator::make($data, [
-            'branch_id' => 'required',
             'role_id' => 'required',
         ])->setAttributeNames($customNames);
+
+        $validator->sometimes('branch_id', 'required', function($input) {
+            return $input->role_id > 1;
+        });
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -140,10 +143,95 @@ class AdminController extends Controller
 
         $user = \App\User::find($data['user_id']);
         $user->company_role_id = $data['role_id'];
-        $user->branch_id = $data['branch_id'];
+        $user->branch_id = ($data['role_id'] == 1) ? NULL : $data['branch_id'];
         $user->isApproved = 1;
         $user->save();
 
         return redirect('/users');
-    }        
+    }   
+
+    /**
+     * Display roles page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function roles()
+    {
+        $roles = Auth::user()->company->roles;
+
+        return view('admin.roles')->with('roles', $roles);
+    }     
+
+    /**
+     * Add Role.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addRole(Request $request)
+    {
+        $data = $request->all();
+        $company_id = Auth::user()->company->id;
+
+        $role = \App\Role::where('name', $data["role_name"])->first();
+        $role_id = ($role == null) ? null : $role->id;
+
+        //to check if the role is already used by the company
+        //to take advantage of "accepted" feature of laravel
+        $data['company_role_id'] = (\App\CompanyRole::where('company_id', $company_id)->where('role_id', $role_id)->first() == null) ? true : false;
+
+        $validator = Validator::make($data, [
+            'role_name' => 'required|max:255',
+            'company_role_id' => 'accepted'
+        ]);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        if($role_id == null){
+            $role_id = \App\Role::create([
+                'name' => $data['role_name'],
+            ]);
+        }
+
+        \App\CompanyRole::create([
+            'company_id' => $company_id,
+            'role_id' => $role_id,
+        ]);
+        // \App\Branch::create([
+        //     'company_id' => $company_id,
+        //     'name' => $data['branch_name'],
+        // ]);
+
+        return redirect('/roles');
+    }     
+
+    //TEST CSV ________________________________________________________________________________
+
+    // /**
+    //  * Testing
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function testCsv(Request $request)
+    // {
+    //     $data = $request->all();
+
+    //     $row = 1;
+    //     if (($handle = fopen($data["fileToUpload"], "r")) !== FALSE) {
+    //         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+    //             $num = count($data);
+    //             echo "<p> $num fields in line $row: <br /></p>\n";
+    //             $row++;
+    //             for ($c=0; $c < $num; $c++) {
+    //                 echo $data[$c] . "<br />\n";
+    //             }
+    //         }
+    //         fclose($handle);
+    //     }
+
+    //     die();
+    // }
 }

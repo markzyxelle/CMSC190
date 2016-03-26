@@ -1,5 +1,4 @@
-$( document ).ready(function() {
-	// $.post( "/getUsers/0", function(  ) {
+$( document ).ready(function() {	// $.post( "/getUsers/0", function(  ) {
 	// 	alert( "dsfsdds" );
 	// });
 

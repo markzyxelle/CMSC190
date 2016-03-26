@@ -1,0 +1,17 @@
+.btn.raised {
+    box-shadow: 0 3px 0 0 #007299;
+    margin-right: 1%;
+}
+
+.row{
+	margin : 2%;
+}
+
+#structure-body{
+	border: 1px solid #ddd;
+	height:200px;
+	line-height:3em;
+	overflow:auto;
+	padding:5px;
+}
+

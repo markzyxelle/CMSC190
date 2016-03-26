@@ -22,4 +22,12 @@ class Branch extends Model
     {
         return $this->belongsTo('App\Company');
     }
+
+    /**
+     * Get the centers under this branch.
+     */
+    public function centers()
+    {
+        return $this->hasMany('App\Center');
+    }
 }

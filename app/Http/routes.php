@@ -35,6 +35,13 @@ Route::group(['middleware' => 'web'], function () {
 
     //normal user
     Route::get('/home', 'HomeController@index')->middleware(['unapproved']);		//home page
+    Route::get('/switchDummyMode', 'GeneralController@switchDummyMode')->middleware(['auth', 'unapproved']);        //toggles dummy mode
+    Route::get('/structure', 'GeneralController@getStructure')->middleware(['auth']);   //show structure of microfinance institution
+    Route::get('/getCenters/{branch}', 'GeneralController@getCenters')->middleware(['auth']);     //GET
+    Route::post('/addCenter', 'GeneralController@addCenter')->middleware(['auth']);     //add a center
+    Route::get('/getGroups/{center}', 'GeneralController@getGroups')->middleware(['auth']);     //GET
+    Route::post('/addGroup', 'GeneralController@addGroup')->middleware(['auth']);     //add a group
+    Route::get('/getClients/{group}', 'GeneralController@getClients')->middleware(['auth']);     //GET
 
     //administrator
     Route::get('/users', 'AdminController@users')->middleware(['auth', 'administrator']);   //approved and pending users

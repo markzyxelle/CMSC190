@@ -14,15 +14,13 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('barangay_id');            //edit
-            $table->bigInteger('group_id');                 //edit
+            $table->bigInteger('barangay_id')->unsigned();            //edit
+            $table->bigInteger('group_id')->unsigned();                 //edit
             $table->integer('status_id')->unsigned();
             $table->integer('gender_id')->unsigned();           //edit
             $table->integer('civil_status_id')->unsigned();     //edit
             $table->integer('beneficiary_type_id')->unsigned(); //edit
             $table->integer('birthplace')->unsigned();  //edit
-            $table->bigInteger('barangay_code')->unsigned();
-            $table->bigInteger('group_id')->unsigned();
             $table->string('personal_id')->nullable();
             $table->string('national_id')->nullable();
             $table->string('first_name');
@@ -46,6 +44,6 @@ class CreateClientsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('clients');
+        //Schema::drop('clients');
     }
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class EditClientsTable extends Migration
+class CreateGendersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,10 @@ class EditClientsTable extends Migration
      */
     public function up()
     {
-        Schema::table('clients', function (Blueprint $table) {
-            $table->foreign('group_id')->references('id')->on('groups');
+        Schema::create('genders', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -24,6 +26,6 @@ class EditClientsTable extends Migration
      */
     public function down()
     {
-       
+        Schema::drop('genders');
     }
 }

@@ -123,7 +123,7 @@ $( document ).ready(function() {	// $.post( "/getUsers/0", function(  ) {
 			    	htmlInside += "<td>"
 			    	htmlInside += value['email']
 			    	htmlInside += "</td>"
-			    	htmlInside += "<td><button type='button' class='btn btn-info btn-sm modal-button' data-toggle='modal' data-target='#branchModal' data-value='"+ value['id'] +"''>Approve</button></td>"
+			    	htmlInside += "<td><button type='button' class='btn btn-info btn-sm modal-button' data-toggle='modal' data-target='#branchModal' data-value='"+ value['id'] +"'>Approve</button></td>"
 			        htmlInside += "<tr>"
 			    });
 			    $('#pending-users-table tbody').html(htmlInside);

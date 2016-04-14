@@ -47,4 +47,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Branch');
     }
+
+    /**
+     * The clusters that belong to the user.
+     */
+    public function clusters()
+    {
+        return $this->belongsToMany('App\Cluster', 'cluster_users')->withPivot("id", "isApproved");
+    }
 }

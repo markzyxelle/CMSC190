@@ -56,17 +56,17 @@
                 <form id="add-center-form" class="form-horizontal" role="form" data-url="{{URL::to('/addCenter')}}">
                     {!! csrf_field() !!}
                     <input type="hidden" name="branch_id" id="branch-id-modal" value="{{ $branch->id }}"/>
-                    <div class="form-group{{ $errors->has('center_name') ? ' has-error' : '' }}">
+                    <div id="center-name-form" class="form-group">
                         <label class="col-md-4 control-label">Center Name</label>
 
                         <div class="col-md-8">
-                            <input id="center-name" type="text" class="form-control" name="center_name" value="{{ old('center_name') }}">
-
-                            @if ($errors->has('center_name'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('center_name') }}</strong>
-                                </span>
-                            @endif
+                            <input id="center-name" type="text" class="form-control" name="center_name" value="{{ old('center_name') }}" required>
+                            <span hidden id="center-required-span" class="help-block">
+                                <strong hidden id="center-required-strong">Center Name is Required</strong>
+                            </span>
+                            <span hidden id="center-unique-span" class="help-block">
+                                <strong hidden id="center-unique-strong">Center Name has already been used</strong>
+                            </span>
                         </div>
                     </div>
                 </form>
@@ -95,17 +95,17 @@
             <div class="modal-body">
                 <form id="add-group-form" class="form-horizontal" role="form" data-url="{{URL::to('/addGroup')}}">
                     {!! csrf_field() !!}
-                    <div class="form-group{{ $errors->has('group_name') ? ' has-error' : '' }}">
+                    <input type="hidden" name="center_id" id="center-id-modal" value=""/>
+                    <div id="group-name-form" class="form-group">
                         <label class="col-md-4 control-label">Group Name</label>
-                        <input type="hidden" name="center_id" id="center-id-modal" value=""/>
                         <div class="col-md-8">
-                            <input id="group-name" type="text" class="form-control" name="group_name" value="{{ old('group_name') }}">
-
-                            @if ($errors->has('group_name'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('group_name') }}</strong>
-                                </span>
-                            @endif
+                            <input id="group-name" type="text" class="form-control" name="group_name" value="{{ old('group_name') }}" required>
+                            <span hidden id="group-required-span" class="help-block">
+                                <strong hidden id="group-required-strong">Group Name is Required</strong>
+                            </span>
+                            <span hidden id="group-unique-span" class="help-block">
+                                <strong hidden id="group-unique-strong">Group Name has already been used</strong>
+                            </span>
                         </div>
                     </div>
                 </form>
@@ -134,15 +134,215 @@
             <div class="modal-body">
                 <form id="add-client-form" class="form-horizontal" role="form" data-url="{{URL::to('/addClient')}}">
                     {!! csrf_field() !!}
-                    <div class="form-group{{ $errors->has('client_name') ? ' has-error' : '' }}">
-                        <label class="col-md-4 control-label">Client Name</label>
-                        <input type="hidden" name="group_id" id="group-id-modal" value=""/>
-                        <div class="col-md-8">
-                            <input id="client-name" type="text" class="form-control" name="client_name" value="{{ old('client_name') }}">
+                    <input type="hidden" name="group_id" id="group-id-modal" value=""/>
+                    <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">First Name</label>
+                        <div class="col-md-7">
+                            <input id="first-name" type="text" class="form-control required-text" name="first_name" value="{{ old('first_name') }}">
 
-                            @if ($errors->has('client_name'))
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
+                            <span class="help-block max">
+                                <strong>Please limit number of characters to 255</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('middle_name') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Middle Name</label>
+                        <div class="col-md-7">
+                            <input id="middle-name" type="text" class="form-control required-text" name="middle_name" value="{{ old('middle_name') }}">
+
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
+                            <span class="help-block max">
+                                <strong>Please limit number of characters to 255</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Last Name</label>
+                        <div class="col-md-7">
+                            <input id="last-name" type="text" class="form-control required-text" name="last_name" value="{{ old('last_name') }}">
+
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
+                            <span class="help-block max">
+                                <strong>Please limit number of characters to 255</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('suffix_name') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Suffix</label>
+                        <div class="col-md-7">
+                            <input id="suffix-name" type="text" class="form-control" name="suffix_name" value="{{ old('suffix_name') }}">
+
+                            @if ($errors->has('suffix_name'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('client_name') }}</strong>
+                                    <strong>{{ $errors->first('suffix_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('mother_maiden_last_name') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Mother's Maiden Middle Name</label>
+                        <div class="col-md-7">
+                            <input id="mother_maiden_last-name" type="text" class="form-control" name="mother_maiden_last_name" value="{{ old('mother_maiden_last_name') }}">
+
+                            @if ($errors->has('mother_maiden_last_name'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('mother_maiden_last_name') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('region_id') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Region</label>
+                        <div class="col-md-7">
+                            <select required id="region-select" class="form-control" name="region_id" value="{{ old('region_id') }}">
+                                <option value="">None</option>
+                                @foreach($regions as $region)
+                                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('region_id'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('region_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('province_id') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Province</label>
+                        <div class="col-md-7">
+                            <select required id="province-select" class="form-control" name="province_id" value="{{ old('province_id') }}">
+                                <option value="">None</option>  
+                            </select>
+                            @if ($errors->has('province_id'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('province_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('municipality_id') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Municipality</label>
+                        <div class="col-md-7">
+                            <select required id="municipality-select" class="form-control" name="municipality_id" value="{{ old('municipality_id') }}">
+                                <option value="">None</option>  
+                            </select>
+                            @if ($errors->has('municipality_id'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('municipality_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('barangay_id') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Barangay</label>
+                        <div class="col-md-7">
+                            <select required id="barangay-select" class="form-control required-select" name="barangay_id" value="{{ old('barangay_id') }}">
+                                <option value="">None</option>  
+                            </select>
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('house_address') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">House Address</label>
+                        <div class="col-md-7">
+                            <input id="house-address" type="text" class="form-control required-text" name="house_address" value="{{ old('house_address') }}">
+
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
+                            <span class="help-block max">
+                                <strong>Please limit number of characters to 255</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('status_id') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Status</label>
+                        <div class="col-md-7">
+                            <select required class="form-control" name="status_id" value="{{ old('status_id') }}">
+                                <option value="">None</option>  
+                            </select>
+                            @if ($errors->has('status_id'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('status_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('gender_id') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Gender</label>
+                        <div class="col-md-7">
+                            <select required class="form-control required-select" name="gender_id" value="{{ old('gender_id') }}">
+                                <option value="">None</option>  
+                            </select>
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('civil_status_id') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Civil Status</label>
+                        <div class="col-md-7">
+                            <select required class="form-control required-select" name="civil_status_id" value="{{ old('civil_status_id') }}">
+                                <option value="">None</option>  
+                            </select>
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('beneficiary_type_id') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Beneficiary Type</label>
+                        <div class="col-md-7">
+                            <select required class="form-control required-select" name="beneficiary_type_id" value="{{ old('beneficiary_type_id') }}">
+                                <option value="">None</option>  
+                            </select>
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('birthplace') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Birthplace</label>
+                        <div class="col-md-7">
+                            <input id="birthplace" type="text" class="form-control" name="birthplace" value="{{ old('birthplace') }}">
+
+                            @if ($errors->has('birthplace'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('birthplace') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('birthdate') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Birthdate</label>
+                        <div class="col-md-7">
+                            <input id="birthdate" type="date" class="form-control required-date" name="birthdate" value="{{ old('birthdate') }}">
+
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
+                            <span class="help-block wrong-format">
+                                <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('mobile_number') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Mobile Number</label>
+                        <div class="col-md-7">
+                            <input id="mobile-number" type="number" class="form-control" name="mobile_number" value="{{ old('mobile_number') }}">
+
+                            @if ($errors->has('mobile_number'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('mobile_number') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -162,4 +362,9 @@
 
 @section('javascript')
     <script src="{{ URL::asset('assets/js/structure.js') }}"></script>
+    <script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
+    <script>
+        webshims.setOptions('forms-ext', {types: 'date'});
+        webshims.polyfill('forms forms-ext');
+    </script>
 @endsection

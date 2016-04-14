@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class EditClientsTable extends Migration
+class CreateLoanTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,9 @@ class EditClientsTable extends Migration
      */
     public function up()
     {
-        Schema::table('clients', function (Blueprint $table) {
-            $table->foreign('group_id')->references('id')->on('groups');
+        Schema::create('loan_types', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
         });
     }
 
@@ -24,6 +25,6 @@ class EditClientsTable extends Migration
      */
     public function down()
     {
-       
+        Schema::drop('loan_types');
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use DB;
 
 class AdminController extends Controller
 {
@@ -184,6 +185,8 @@ class AdminController extends Controller
         $role = \App\Role::where('name', $data["role_name"])->first();
         $role_id = ($role == null) ? null : $role->id;
 
+        //dd($role_id);
+
         //to check if the role is already used by the company
         //to take advantage of "accepted" feature of laravel
         $data['company_role_id'] = (\App\CompanyRole::where('company_id', $company_id)->where('role_id', $role_id)->first() == null) ? true : false;
@@ -202,7 +205,7 @@ class AdminController extends Controller
         if($role_id == null){
             $role_id = \App\Role::create([
                 'name' => $data['role_name'],
-            ]);
+            ])->id;
         }
 
         \App\CompanyRole::create([
@@ -217,27 +220,4 @@ class AdminController extends Controller
         return redirect('/roles');
     }     
 
-    //TEST CSV ________________________________________________________________________________
-
-    // /**
-    //  * Testing
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function testCsv(Request $request)
-    // {
-    //     $data = $request->all();
-
-    //     $row = 1;
-    //     if (($handle = fopen($data["fileToUpload"], "r")) !== FALSE) {
-    //         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-    //             $num = count($data);
-    //             echo "<p> $num fields in line $row: <br /></p>\n";
-    //             $row++;
-    //             for ($c=0; $c < $num; $c++) {
-    //                 echo $data[$c] . "<br />\n";
-    //             }
-    //         }
-    //         fclose($handle);
-    //     }
 }

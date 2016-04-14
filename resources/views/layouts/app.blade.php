@@ -78,6 +78,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <!-- // <script src="{{ URL::asset('bootstrap-3.3.6-dist/js/bootstrap.js') }}"></script> -->
     @yield('javascript')
 </body>
 </html>

@@ -106,7 +106,7 @@ class AuthController extends Controller
             $code = str_random(8);
             $company = \App\Company::where('company_code', $code)->first();
         }
-        while(!empty($company_code));
+        while(!empty($company));
         $company_id = \App\Company::create([
             'name' => $data['company_name'],
             'shortname' => $data['shortname'],

@@ -202,7 +202,7 @@ class ClusterController extends Controller
         $clients = json_decode($data["clients"]);
 
         foreach($clients as $client){
-            $client_cluster = \App\ClientCLuster::firstOrCreate(['client_id' => $client, 
+            $client_cluster = \App\ClientCluster::firstOrCreate(['client_id' => $client, 
                                                                 'cluster_id' => $data["cluster_id"],
                                                                 'branch_id' => Auth::user()->branch->id]);
         }
@@ -223,7 +223,7 @@ class ClusterController extends Controller
         $temp = array();
 
         foreach($clients as $client){
-            \App\ClientCLuster::where(['client_id' => $client,
+            \App\ClientCluster::where(['client_id' => $client,
                                         'cluster_id' => $data["cluster_id"],
                                         'branch_id' => Auth::user()->branch->id])->delete(); 
             // $client_cluster = \App\ClientCLuster::firstOrCreate(['client_id' => $client, 

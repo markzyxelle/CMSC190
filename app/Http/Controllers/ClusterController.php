@@ -178,7 +178,7 @@ class ClusterController extends Controller
 
             $cluster_users = $cluster->users;
 
-            $clients = $cluster->clients()->where("branch_id", $branch->id)->get();
+            $clients = $cluster->clients()->where(["branch_id" => $branch->id, "isDummy" => Auth::user()->dummy_mode])->get();
 
             $actions = \App\Action::all();
             $genders = \App\Gender::all();
@@ -224,7 +224,7 @@ class ClusterController extends Controller
 
                     foreach ($groups as $group) {
                         foreach ($group->clients as $client) {
-                            array_push($clients, $client);
+                            if($client->isDummy == Auth::user()->dummy_mode) array_push($clients, $client);
                         }
                     }
                 }
@@ -234,7 +234,9 @@ class ClusterController extends Controller
                     $clients = array();
 
                     foreach ($tag->clients as $client) {
-                        if($client->group->center->id == $center_id) array_push($clients, $client);
+                        if($client->group->center->id == $center_id){
+                            if($client->isDummy == Auth::user()->dummy_mode) array_push($clients, $client);
+                        }
                     }
                 }
                 return json_encode($clients);
@@ -259,7 +261,7 @@ class ClusterController extends Controller
                     $clients = array();
 
                     foreach ($group->clients as $client) {
-                        array_push($clients, $client);
+                        if($client->isDummy == Auth::user()->dummy_mode) array_push($clients, $client);
                     }
                 }
                 else{
@@ -268,7 +270,9 @@ class ClusterController extends Controller
                     $clients = array();
 
                     foreach ($tag->clients as $client) {
-                        if($client->group->id == $group_id) array_push($clients, $client);
+                        if($client->group->id == $group_id){
+                            if($client->isDummy == Auth::user()->dummy_mode) array_push($clients, $client);
+                        } 
                     }
                 }
 
@@ -293,7 +297,9 @@ class ClusterController extends Controller
 
                 $clients = array();
 
-                if(in_array($tag_id,$tags) || $tag_id == 0) array_push($clients, $client);
+                if(in_array($tag_id,$tags) || $tag_id == 0) {
+                    if($client->isDummy == Auth::user()->dummy_mode) array_push($clients, $client);
+                }
                 return json_encode($clients);
             }
         }
@@ -582,6 +588,7 @@ class ClusterController extends Controller
 
                     array_push($parameters, ['first_name', $data["first_name"]]);
                     array_push($parameters, ['last_name', $data["last_name"]]);
+                    array_push($parameters, ['isDummy', Auth::user()->dummy_mode]);
                     if($data["middle_name"] != "") array_push($parameters, ['middle_name', $data["middle_name"]]);
                     if($data["suffix_name"] != "") array_push($parameters, ['suffix', $data["suffix_name"]]);
                     if($data["mother_maiden_last_name"] != "") array_push($parameters, ['mother_middle_name', $data["mother_maiden_last_name"]]);

@@ -227,7 +227,7 @@ class GeneralController extends Controller
     {
         if($request->ajax()){
             $group = \App\Group::find($group_id);
-            $clients = $group->clients;
+            $clients = $group->clients()->where("isDummy", Auth::user()->dummy_mode)->get();
             
             // $approved = Auth::user()->company->users->where('isApproved', 1);
             // $pending = Auth::user()->company->users->where('isApproved', 0);
@@ -755,6 +755,7 @@ class GeneralController extends Controller
 
         if($client == null) return redirect("/structure");
         if($client->group->center->branch->id != Auth::user()->branch->id) return redirect("/structure");
+        if($client->isDummy != Auth::user()->dummy_mode) return redirect("/structure");
 
         $loans = $client->loans;
         $regions = \App\Region::all();

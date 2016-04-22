@@ -26,7 +26,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home.home');
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        return view('home.home')->with("activities", $activities)
+                                ->with("isAdministrator", $companyrole->role_id);
     }
 
     /**

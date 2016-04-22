@@ -8,7 +8,20 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                    You are logged in!
+                    @if($isAdministrator == 1)
+                        <a href="{{URL::to('/branches')}}">Branches</a>
+                        <a href="{{URL::to('/roles')}}">Roles</a>
+                        <a href="{{URL::to('/users')}}">Users</a>
+                    @endif
+                    @if($isAdministrator != 1)
+                        <a href="{{URL::to('/structure')}}">Structure</a>
+                    @endif
+                    @if(in_array(7,$activities))
+                        <a href="{{URL::to('/upload')}}">Upload</a>
+                    @endif
+                    @if(in_array(6,$activities))
+                        <a href="{{URL::to('/clusters')}}">Clusters</a>
+                    @endif
                 </div>
             </div>
         </div>

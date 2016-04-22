@@ -59,7 +59,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/addTag', 'GeneralController@addTag')->middleware(['auth']);     //add a tag
 
 
-    Route::get('/clusters', 'ClusterController@getCluster')->middleware(['auth']);        //get cluster page
+    Route::get('/clusters', 'ClusterController@getCluster')->middleware(['auth']);        //get cluster page  *
     Route::post('/addCluster', 'ClusterController@addCluster')->middleware(['auth']);     //add a cluster
     Route::post('/joinCluster', 'ClusterController@joinCluster')->middleware(['auth']);     //join a cluster
     Route::get('/viewCluster/{cluster}', 'ClusterController@viewCluster')->middleware(['auth']);     //get the page for a specific cluster
@@ -77,12 +77,12 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/addUser', 'ClusterController@addUser')->middleware(['auth']);     //add user to cluster
 
     //administrator
-    Route::get('/users', 'AdminController@users')->middleware(['auth', 'administrator']);   //approved and pending users
+    Route::get('/users', 'AdminController@users')->middleware(['auth', 'administrator']);   //approved and pending users   *
     Route::get('/getApprovedUsers/{start}', 'AdminController@getApprovedUsers')->middleware(['auth', 'administrator']);     //GET
     Route::get('/getPendingUsers/{start}', 'AdminController@getPendingUsers')->middleware(['auth', 'administrator']);       //GET
-    Route::get('/branches', 'AdminController@branches')->middleware(['auth', 'administrator']);     //display branches
+    Route::get('/branches', 'AdminController@branches')->middleware(['auth', 'administrator']);     //display branches   *
     Route::post('/addBranch', 'AdminController@addBranch')->middleware(['auth', 'administrator']);      //add branch
-    Route::post('/approveUser', 'AdminController@approveUser')->middleware(['auth', 'administrator']);      //approve user
+    Route::post('/approveUser', 'AdminController@approveUser')->middleware(['auth', 'administrator']);      //approve user    *
     Route::get('/roles', 'AdminController@roles')->middleware(['auth', 'administrator']);     //display roles
     Route::post('/addRole', 'AdminController@addRole')->middleware(['auth', 'administrator']);      //add role
 

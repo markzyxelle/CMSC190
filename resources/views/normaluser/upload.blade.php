@@ -17,7 +17,6 @@
                             <ul class="nav nav-tabs">
                                 <li class="active"><a data-toggle="tab" href="#addClient">Add Client</a></li>
                                 <li><a data-toggle="tab" href="#addLoan">Add Loan</a></li>
-                                <li><a data-toggle="tab" href="#addTransaction">Add Transaction</a></li>
                             </ul>
 
                             <div class="tab-content">
@@ -25,10 +24,20 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Add Client</div>
                                         <div class="panel-body">
-                                            <form id="upload-csv" class="form-horizontal" role="form" data-url="{{URL::to('/clientsCSV')}}">
+                                            <div id="client-upload-status" class="row">
+                                                <!-- <div class="alert alert-success">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong id="success-number"></strong> rows were successfully processed.
+                                                </div>
+                                                <div class="alert alert-danger">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong id="failed-number"></strong> rows were not processed.
+                                                </div> -->
+                                            </div>
+                                            <form id="upload-client-csv" class="form-horizontal" role="form" data-url="{{URL::to('/clientsCSV')}}">
                                                 Select file to upload:
                                                 {!! csrf_field() !!}
-                                                <input type="file" name="fileToUpload" id="fileToUpload">
+                                                <input type="file" name="fileToUpload" id="client-file">
                                                 <input type="submit" value="Upload File" name="submit">
                                             </form>
                                             <div id="client-display-summary" class="row">
@@ -45,6 +54,7 @@
                                                             <td>Marital Status</td>
                                                             <td>House Number and Street</td>
                                                             <td>Barangay</td>
+                                                            <td>Status</td>
                                                             <td>Group Name</td>
                                                             <td>Center Name</td>
                                                             <td>Client Type</td>
@@ -68,12 +78,45 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Add Loan</div>
                                         <div class="panel-body">
-                                            <form id="upload-csv" class="form-horizontal" role="form" data-url="{{URL::to('/loansCSV')}}">
+                                            <div id="loan-upload-status" class="row">
+                                                <!-- <div class="alert alert-success">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong id="success-number"></strong> rows were successfully processed.
+                                                </div>
+                                                <div class="alert alert-danger">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong id="failed-number"></strong> rows were not processed.
+                                                </div> -->
+                                            </div>
+                                            <form id="upload-loan-csv" class="form-horizontal" role="form" data-url="{{URL::to('/loansCSV')}}">
                                                 Select file to upload:
                                                 {!! csrf_field() !!}
-                                                <input type="file" name="fileToUpload" id="fileToUpload">
+                                                <input type="file" name="fileToUpload" id="loan-file">
                                                 <input type="submit" value="Upload File" name="submit">
                                             </form>
+                                            <div id="loan-display-summary" class="row">
+                                                <table id="loan-summary-table" class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <td>Client</td>
+                                                            <td>ID</td>
+                                                            <td>Type</td>
+                                                            <td>Cycle Number</td>
+                                                            <td>Release Date</td>
+                                                            <td>Princpal Amount</td>
+                                                            <td>Interest Amount</td>
+                                                            <td>Principal Balance</td>
+                                                            <td>Interest Balance</td>
+                                                            <td>Active</td>
+                                                            <td>Released</td>
+                                                            <td>Status</td>
+                                                            <td>Maturity Date</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             
                                             <form action="/approveLoansCSV" method="post" id="approve-loans-csv">
                                                 {!! csrf_field() !!}

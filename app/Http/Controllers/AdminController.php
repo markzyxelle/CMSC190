@@ -168,8 +168,10 @@ class AdminController extends Controller
     public function roles()
     {
         $roles = Auth::user()->company->roles;
+        $activities = \App\Activity::all();
 
-        return view('admin.roles')->with('roles', $roles);
+        return view('admin.roles')->with('roles', $roles)
+                                ->with('activities', $activities);
     }     
 
     /**
@@ -208,15 +210,25 @@ class AdminController extends Controller
             ])->id;
         }
 
-        \App\CompanyRole::create([
+        $company_role_id = \App\CompanyRole::create([
             'company_id' => $company_id,
             'role_id' => $role_id,
-        ]);
+        ])->id;
+
+        $activities = \App\Activity::all();
+
+        foreach ($activities as $activity) {
+            if(array_key_exists($activity->id, $data)){
+                \App\CompanyRoleActivity::create([
+                    'activity_id' => $activity->id,
+                    'company_role_id' => $company_role_id,
+                ]);
+            }
+        }
         // \App\Branch::create([
         //     'company_id' => $company_id,
         //     'name' => $data['branch_name'],
         // ]);
-
         return redirect('/roles');
     }     
 

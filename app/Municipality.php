@@ -13,4 +13,12 @@ class Municipality extends Model
     {
         return $this->hasMany('App\Barangay');
     }
+
+    /**
+     * Get the province that the municipality is under.
+     */
+    public function province()
+    {
+        return $this->belongsTo('App\Province');
+    }
 }

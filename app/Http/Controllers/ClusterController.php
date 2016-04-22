@@ -8,6 +8,7 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\Facades\URL;
+use DB;
 
 class ClusterController extends Controller
 {
@@ -18,13 +19,20 @@ class ClusterController extends Controller
      */
     public function getCluster()
     {
-        $approved = Auth::user()->clusters()->where("isApproved", true)->get();
-        $pending = Auth::user()->clusters()->where("isApproved", false)->get();
-        $actions = \App\Action::all();
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $approved = Auth::user()->clusters()->where("isApproved", true)->get();
+            $pending = Auth::user()->clusters()->where("isApproved", false)->get();
+            $actions = \App\Action::all();
 
-        return view('normaluser.cluster')->with('approved', $approved)
-                            ->with('pending', $pending)
-                            ->with('actions', $actions);
+            return view('normaluser.cluster')->with('approved', $approved)
+                                ->with('pending', $pending)
+                                ->with('actions', $actions);
+        }
+        else{
+            return redirect("/home");
+        }
     }
 
     /**
@@ -34,51 +42,58 @@ class ClusterController extends Controller
      */
     public function addCluster(Request $request)
     {
-        $data = $request->all();
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $data = $request->all();
 
-        $validator = Validator::make($data, [
-            'cluster_name' => 'required|max:255',
-            'cluster_setting' => 'required|between:1,4'
-        ]);
+            $validator = Validator::make($data, [
+                'cluster_name' => 'required|max:255',
+                'cluster_setting' => 'required|between:1,4'
+            ]);
 
-        if ($validator->fails()) {
-            $request->session()->flash('setting', $data['cluster_setting']);
-            $this->throwValidationException(
-                $request, $validator
-            );
-        }
-
-        do
-        {
-            $code = str_random(8);
-            $cluster = \App\Cluster::where('cluster_code', $code)->first();
-        }
-        while(!empty($cluster));
-
-        $cluster_id = \App\Cluster::create([
-            'name' => $data['cluster_name'],
-            'cluster_code' => $code,
-            'setting' => $data['cluster_setting'],
-        ])->id;
-
-        $cluster_user_id = \App\ClusterUser::create([
-            'cluster_id' => $cluster_id,
-            'user_id' => Auth::user()->id,
-            'isApproved' => 1,
-        ])->id;
-
-        $actions = \App\Action::all();
-
-        foreach ($actions as $action) {
-            if(array_key_exists(str_replace(" ", "_", $action->name), $data)){
-                \App\ActionClusterUser::create([
-                    'action_id' => $action->id,
-                    'cluster_user_id' => $cluster_user_id,
-                ]);
+            if ($validator->fails()) {
+                $request->session()->flash('setting', $data['cluster_setting']);
+                $this->throwValidationException(
+                    $request, $validator
+                );
             }
-        }
 
-        return redirect('/clusters');
+            do
+            {
+                $code = str_random(8);
+                $cluster = \App\Cluster::where('cluster_code', $code)->first();
+            }
+            while(!empty($cluster));
+
+            $cluster_id = \App\Cluster::create([
+                'name' => $data['cluster_name'],
+                'cluster_code' => $code,
+                'setting' => $data['cluster_setting'],
+            ])->id;
+
+            $cluster_user_id = \App\ClusterUser::create([
+                'cluster_id' => $cluster_id,
+                'user_id' => Auth::user()->id,
+                'isApproved' => 1,
+            ])->id;
+
+            $actions = \App\Action::all();
+
+            foreach ($actions as $action) {
+                if(array_key_exists(str_replace(" ", "_", $action->name), $data)){
+                    \App\ActionClusterUser::create([
+                        'action_id' => $action->id,
+                        'cluster_user_id' => $cluster_user_id,
+                    ]);
+                }
+            }
+
+            return redirect('/clusters');
+        }
+        else{
+            return redirect("/home");
+        }
     }
 
     /**
@@ -88,42 +103,49 @@ class ClusterController extends Controller
      */
     public function joinCluster(Request $request)
     {
-        $data = $request->all();
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $data = $request->all();
 
-        $validator = Validator::make($data, [
-            'cluster_code' => 'required|max:8|exists:clusters,cluster_code',
-        ]);
+            $validator = Validator::make($data, [
+                'cluster_code' => 'required|max:8|exists:clusters,cluster_code',
+            ]);
 
-        if ($validator->fails()) {
-            $this->throwValidationException(
-                $request, $validator
-            );
+            if ($validator->fails()) {
+                $this->throwValidationException(
+                    $request, $validator
+                );
+            }
+
+
+            $data["cluster_code"] = \App\Cluster::where("cluster_code", $data["cluster_code"])->first()->id;
+
+            $messages = [
+                'unique' => 'You have already requested to be in this group',
+            ];
+
+            $validator = Validator::make($data, [
+                'cluster_code' => 'unique:cluster_users,cluster_id,NULL,NULL,user_id,' . Auth::user()->id,
+            ], $messages);
+
+            if ($validator->fails()) {
+                $this->throwValidationException(
+                    $request, $validator
+                );
+            }
+
+            \App\ClusterUser::create([
+                'cluster_id' => $data["cluster_code"],
+                'user_id' => Auth::user()->id,
+                'isApproved' => 0,
+            ]);
+
+            return redirect('/clusters');
         }
-
-
-        $data["cluster_code"] = \App\Cluster::where("cluster_code", $data["cluster_code"])->first()->id;
-
-        $messages = [
-            'unique' => 'You have already requested to be in this group',
-        ];
-
-        $validator = Validator::make($data, [
-            'cluster_code' => 'unique:cluster_users,cluster_id,NULL,NULL,user_id,' . Auth::user()->id,
-        ], $messages);
-
-        if ($validator->fails()) {
-            $this->throwValidationException(
-                $request, $validator
-            );
+        else{
+            return redirect("/home");
         }
-
-        \App\ClusterUser::create([
-            'cluster_id' => $data["cluster_code"],
-            'user_id' => Auth::user()->id,
-            'isApproved' => 0,
-        ]);
-
-        return redirect('/clusters');
     }
 
     /**
@@ -133,24 +155,53 @@ class ClusterController extends Controller
      */
     public function viewCluster($cluster_id)
     {
-        $branch = Auth::user()->branch;
-        $cluster = \App\Cluster::find($cluster_id);
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $cluster_user = \App\ClusterUser::where(['cluster_id' => $cluster_id,
+                                            'user_id' => Auth::user()->id,
+                                            'isApproved' => 1])->first();
 
-        $user = $cluster->users->where("id", Auth::user()->id)->first();
+            if($cluster_user == null) return redirect("/clusters");
 
-        if($user == null) return redirect('/home');
+            $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user->id)->lists('action_id')->toArray();
 
-        if($user->pivot->isApproved == 0) return redirect('/clusters');
+            $branch = Auth::user()->branch;
+            $cluster = \App\Cluster::find($cluster_id);
 
-        $cluster_users = $cluster->users;
+            $user = $cluster->users->where("id", Auth::user()->id)->first();
 
-        $clients = $cluster->clients()->where("branch_id", $branch->id)->get();
+            if($user == null) return redirect('/home');
 
-        return view('normaluser.specificcluster')->with("cluster_users", $cluster_users)
-                                                    ->with("branch", $branch)
-                                                    ->with("cluster_id", $cluster_id)
-                                                    ->with("clients", $clients);
+            if($user->pivot->isApproved == 0) return redirect('/clusters');
 
+
+            $cluster_users = $cluster->users;
+
+            $clients = $cluster->clients()->where("branch_id", $branch->id)->get();
+
+            $actions = \App\Action::all();
+            $genders = \App\Gender::all();
+            $regions = \App\Region::all();
+            $civil_statuses = \App\CivilStatus::all();
+            $tags = $branch->tags;
+
+
+            return view('normaluser.specificcluster')->with("cluster_users", $cluster_users)
+                                                        ->with("branch", $branch)
+                                                        ->with("cluster_id", $cluster_id)
+                                                        ->with("clients", $clients)
+                                                        ->with("actions", $actions)
+                                                        ->with("allowed_actions", $allowed_actions)
+                                                        ->with("genders", $genders)
+                                                        ->with("regions", $regions)
+                                                        ->with("civil_statuses", $civil_statuses)
+                                                        ->with("tags", $tags)
+                                                        ->with("setting", $cluster->setting);
+        }
+        else{
+            return redirect("/home");
+        }
     }
 
     /**
@@ -158,22 +209,72 @@ class ClusterController extends Controller
      *
      * @return JSON
      */
-    public function getClientsFromCenter($center_id)
+    public function getClientsFromCenter($center_id, $tag_id, Request $request)
     {
-        //if($request->ajax()){
-            $center = \App\Center::find($center_id);
+        if($request->ajax()){
+            $companyrole = Auth::user()->companyrole;
+            $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+            if(in_array(6,$activities)){
+                if($tag_id == 0){
+                    $center = \App\Center::find($center_id);
 
-            $groups = $center->groups;
+                    $groups = $center->groups;
 
-            $clients = array();
+                    $clients = array();
 
-            foreach ($groups as $group) {
-                foreach ($group->clients as $client) {
-                    array_push($clients, $client);
+                    foreach ($groups as $group) {
+                        foreach ($group->clients as $client) {
+                            array_push($clients, $client);
+                        }
+                    }
                 }
+                else{
+                    $tag = \App\Tag::find($tag_id);
+
+                    $clients = array();
+
+                    foreach ($tag->clients as $client) {
+                        if($client->group->center->id == $center_id) array_push($clients, $client);
+                    }
+                }
+                return json_encode($clients);
             }
-            return json_encode($clients);
-        //}
+        }
+    }
+
+    /**
+     * Get Clients given a group.
+     *
+     * @return JSON
+     */
+    public function getClientsFromGroup($group_id, $tag_id, Request $request)
+    {
+        if($request->ajax()){
+            $companyrole = Auth::user()->companyrole;
+            $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+            if(in_array(6,$activities)){
+                if($tag_id == 0){
+                    $group = \App\Group::find($group_id);
+
+                    $clients = array();
+
+                    foreach ($group->clients as $client) {
+                        array_push($clients, $client);
+                    }
+                }
+                else{
+                    $tag = \App\Tag::find($tag_id);
+
+                    $clients = array();
+
+                    foreach ($tag->clients as $client) {
+                        if($client->group->id == $group_id) array_push($clients, $client);
+                    }
+                }
+
+                return json_encode($clients);
+            }
+        }
     }
 
     /**
@@ -181,14 +282,21 @@ class ClusterController extends Controller
      *
      * @return JSON
      */
-    public function getClient($client_id)
+    public function getClient($client_id, $tag_id, Request $request)
     {
-        //if($request->ajax()){
-            $clients = array();
+        if($request->ajax()){
+            $companyrole = Auth::user()->companyrole;
+            $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+            if(in_array(6,$activities)){
+                $client = \App\Client::find($client_id);
+                $tags = $client->tags->lists('id')->toArray();
 
-            array_push($clients, \App\Client::find($client_id));
-            return json_encode($clients);
-        //}
+                $clients = array();
+
+                if(in_array($tag_id,$tags) || $tag_id == 0) array_push($clients, $client);
+                return json_encode($clients);
+            }
+        }
     }
 
     /**
@@ -198,17 +306,39 @@ class ClusterController extends Controller
      */
     public function addClientToCluster(Request $request)
     {
-        $data = $request->all();
-        $clients = json_decode($data["clients"]);
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $data = $request->all();
 
-        foreach($clients as $client){
-            $client_cluster = \App\ClientCluster::firstOrCreate(['client_id' => $client, 
-                                                                'cluster_id' => $data["cluster_id"],
-                                                                'branch_id' => Auth::user()->branch->id]);
+            $cluster_user = \App\ClusterUser::where(['cluster_id' => $data["cluster_id"],
+                                            'user_id' => Auth::user()->id,
+                                            'isApproved' => 1])->first();
+
+            if($cluster_user == null) return redirect("/clusters");
+
+            $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user->id)->lists('action_id')->toArray();
+
+            if(in_array(3,$allowed_actions)){
+
+
+                $clients = json_decode($data["clients"]);
+
+                foreach($clients as $client){
+                    $client_cluster = \App\ClientCluster::firstOrCreate(['client_id' => $client, 
+                                                                        'cluster_id' => $data["cluster_id"],
+                                                                        'branch_id' => Auth::user()->branch->id]);
+                }
+
+                return redirect(URL::previous());
+            }
+            else{
+                return redirect("/home");
+            }
         }
-
-
-        return redirect(URL::previous());
+        else{
+            return redirect("/home");
+        }
     }
 
     /**
@@ -218,20 +348,296 @@ class ClusterController extends Controller
      */
     public function removeClientFromCluster(Request $request)
     {
-        $data = $request->all();
-        $clients = json_decode($data["clients"]);
-        $temp = array();
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $data = $request->all();
+            $cluster_user = \App\ClusterUser::where(['cluster_id' => $data["cluster_id"],
+                                            'user_id' => Auth::user()->id,
+                                            'isApproved' => 1])->first();
 
-        foreach($clients as $client){
-            \App\ClientCluster::where(['client_id' => $client,
-                                        'cluster_id' => $data["cluster_id"],
-                                        'branch_id' => Auth::user()->branch->id])->delete(); 
-            // $client_cluster = \App\ClientCLuster::firstOrCreate(['client_id' => $client, 
-            //                                                     'cluster_id' => $data["cluster_id"],
-            //                                                     'branch_id' => Auth::user()->branch->id]);
+            if($cluster_user == null) return redirect("/clusters");
+
+            $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user->id)->lists('action_id')->toArray();
+
+            if(in_array(3,$allowed_actions)){
+                $clients = json_decode($data["clients"]);
+                $temp = array();
+
+                foreach($clients as $client){
+                    \App\ClientCluster::where(['client_id' => $client,
+                                                'cluster_id' => $data["cluster_id"],
+                                                'branch_id' => Auth::user()->branch->id])->delete(); 
+                    // $client_cluster = \App\ClientCLuster::firstOrCreate(['client_id' => $client, 
+                    //                                                     'cluster_id' => $data["cluster_id"],
+                    //                                                     'branch_id' => Auth::user()->branch->id]);
+                }
+
+                return redirect(URL::previous());
+            }
+            else{
+                return redirect("/home");
+            }
         }
+        else{
+            return redirect("/home");
+        }
+    }
 
-        return redirect(URL::previous());
+    /**
+     * Get Actions allowed to a user in a cluster.
+     *
+     * @return JSON
+     */
+    public function getActions($cluster_user_id, Request $request)
+    {
+        if($request->ajax()){
+            $companyrole = Auth::user()->companyrole;
+            $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+            if(in_array(6,$activities)){
+                $actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user_id)->lists('action_id')->toArray();
+                return json_encode($actions);
+            }
+        }
     }
     
+    /**
+     * Edit user's actions in a cluster
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editClusterUser(Request $request)
+    {
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $data = $request->all();
+
+            $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $data["cluster_user_id"])->lists('action_id')->toArray();
+
+            if(in_array(1,$allowed_actions)){
+                foreach (\App\Action::all() as $action) {
+                    if(array_key_exists(str_replace(" ", "_", $action->name), $data)){
+                        \App\ActionClusterUser::firstOrCreate(['action_id' => $action->id, 'cluster_user_id' => $data["cluster_user_id"]]);
+                    }
+                    else{
+                        $action_cluster_user = \App\ActionClusterUser::where([
+                                                        ['action_id',$action->id],
+                                                        ['cluster_user_id',$data["cluster_user_id"]],
+                                                    ])->first();
+                        if($action_cluster_user != null) $action_cluster_user->delete();
+                    }
+                }
+                return redirect(URL::previous());
+            }
+            else{
+                return redirect("/home");
+            }
+        }
+        else{
+            return redirect("/home");
+        }
+    }
+
+    /**
+     * Delete user from the cluster
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteClusterUser($cluster_user_id, Request $request)
+    {
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+
+            $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user_id)->lists('action_id')->toArray();
+
+            if(in_array(1,$allowed_actions)){
+                $action_cluster_users = \App\ActionClusterUser::where([
+                                                        ['cluster_user_id',$cluster_user_id],
+                                                    ])->lists('id')->toArray();
+                // dd($action_cluster_users);
+                \App\ActionClusterUser::destroy($action_cluster_users);
+                \App\ClusterUser::destroy($cluster_user_id);
+                
+                return redirect(URL::previous());
+            }
+            else{
+                return redirect("/home");
+            }
+        }
+        else{
+            return redirect("/home");
+        }
+    }
+
+    /**
+     * Approve user to join the cluster
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function approveClusterUser(Request $request)
+    {
+        $cluster_id = explode("/", URL::previous());
+        $cluster_id = $cluster_id[sizeof($cluster_id)-1];
+
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+
+            $cluster_user = \App\ClusterUser::where(['cluster_id' => $cluster_id,
+                                            'user_id' => Auth::user()->id,
+                                            'isApproved' => 1])->first();
+
+            if($cluster_user == null) return redirect("/clusters");
+
+            $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user->id)->lists('action_id')->toArray();
+
+            if(in_array(1,$allowed_actions)){
+                $data = $request->all();
+
+                $cluster_user = \App\ClusterUser::find($data["cluster_user_id"]);
+                $cluster_user->isApproved = true;
+
+                $cluster_user->save();
+
+                foreach (\App\Action::all() as $action) {
+                    if(array_key_exists(str_replace(" ", "_", $action->name), $data)){
+                        \App\ActionClusterUser::Create(['action_id' => $action->id, 'cluster_user_id' => $data["cluster_user_id"]]);
+                    }
+                }
+                
+                return redirect(URL::previous());
+            }
+            else{
+                return redirect("/home");
+            }
+        }
+        else{
+            return redirect("/home");
+        }
+    }
+
+    /**
+     * Disapprove user to join the cluster
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function disapproveClusterUser($cluster_user_id, Request $request)
+    {
+        $cluster_id = explode("/", URL::previous());
+        $cluster_id = $cluster_id[sizeof($cluster_id)-1];
+
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $cluster_user = \App\ClusterUser::where(['cluster_id' => $cluster_id,
+                                            'user_id' => Auth::user()->id,
+                                            'isApproved' => 1])->first();
+
+            if($cluster_user == null) return redirect("/clusters");
+
+            $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user->id)->lists('action_id')->toArray();
+
+            if(in_array(1,$allowed_actions)){
+                $cluster_user = \App\ClusterUser::where([
+                                                        ['id',$cluster_user_id],
+                                                        ['isApproved',0],
+                                                    ])->first();
+                $cluster_user->delete();
+                
+                return redirect(URL::previous());
+            }
+            else{
+                return redirect("/home");
+            }
+        }
+        else{
+            return redirect("/home");
+        }
+    }
+
+    /**
+     * search user in cluster.
+     *
+     * @return JSON
+     */
+    public function searchClientCluster(Request $request)
+    {
+        if($request->ajax()){
+            $companyrole = Auth::user()->companyrole;
+            $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+            if(in_array(6,$activities)){
+                $data = $request->all();
+
+                $cluster_user = \App\ClusterUser::where(['cluster_id' => $data["cluster_id"],
+                                            'user_id' => Auth::user()->id,
+                                            'isApproved' => 1])->first();
+
+                if($cluster_user == null) return redirect("/clusters");
+
+                $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user->id)->lists('action_id')->toArray();
+                if(in_array(2,$allowed_actions)){
+                    $parameters = [];
+
+                    array_push($parameters, ['first_name', $data["first_name"]]);
+                    array_push($parameters, ['last_name', $data["last_name"]]);
+                    if($data["middle_name"] != "") array_push($parameters, ['middle_name', $data["middle_name"]]);
+                    if($data["suffix_name"] != "") array_push($parameters, ['suffix', $data["suffix_name"]]);
+                    if($data["mother_maiden_last_name"] != "") array_push($parameters, ['mother_middle_name', $data["mother_maiden_last_name"]]);
+                    if($data["barangay_id"] != "") array_push($parameters, ['barangay_id', $data["barangay_id"]]);
+                    if($data["house_address"] != "") array_push($parameters, ['house_address', $data["house_address"]]);
+                    if($data["gender_id"] != "") array_push($parameters, ['gender_id', $data["gender_id"]]);
+                    if($data["civil_status_id"] != "") array_push($parameters, ['civil_status_id', $data["civil_status_id"]]);
+                    if($data["birthplace"] != "") array_push($parameters, ['birthplace', $data["birthplace"]]);
+                    if($data["birthdate"] != "") array_push($parameters, ['birthdate', $data["birthdate"]]);
+
+                    $cluster = \App\Cluster::find($data["cluster_id"]);
+                    $clients["setting"] = $data["cluster_setting"];
+                    switch($data["cluster_setting"]){
+                        case 1: $clients["data"] = ($cluster->clients()->where($parameters)->count() > 0) ? true : false;
+                            break;
+                        case 2: $temp = array();
+                            foreach ($cluster->clients()->where($parameters)->get() as $client) {
+                                if(!array_key_exists ( $client->group->center->branch->company->id , $temp )) $temp[$client->group->center->branch->company->id] = 0;
+                                $temp[$client->group->center->branch->company->id] = $temp[$client->group->center->branch->company->id] + $client->loans()->count();
+                            }
+                            $clients["data"] = $temp;
+                            break;
+                        case 3: $temp = array();
+                            foreach ($cluster->clients()->where($parameters)->get() as $client) {
+                                if(!array_key_exists ( $client->group->center->branch->company->name , $temp )) $temp[$client->group->center->branch->company->name] = array();
+                                $loans = $client->loans()->get()->toArray();
+                                foreach ($loans as $loan) {
+                                    $loan["loan_type_id"] = \App\LoanType::find($loan["loan_type_id"])->name;
+                                    $temp[$client->group->center->branch->company->name][] = $loan;
+                                }
+                                // $temp[$client->group->center->branch->company->name] = $temp[$client->group->center->branch->company->name] + $loans;
+                            }
+                            $clients["data"] = $temp;
+                            break;
+                        case 4: $temp = array();
+                            foreach ($cluster->clients()->where($parameters)->get() as $client) {
+                                $name = $client->group->center->branch->company->name;
+                                if(!array_key_exists ( $name , $temp )) $temp[$name] = array();
+                                foreach ($client->loans()->get() as $loan) {
+                                    if(!array_key_exists ( $loan->id , $temp[$name] )) $temp[$name][$loan->id] = array();
+                                    $temp[$name][$loan->id] = $loan;
+                                    // array_push($temp[$client->group->center->branch->company->name], $loan);
+                                    $temp[$name][$loan->id]["transactions"] = $loan->transactions->toArray();
+                                }
+                                // $temp[$client->group->center->branch->company->name] = $temp[$client->group->center->branch->company->name] + $client->loans()->get()->toArray();
+                                // $temp[$client->group->center->branch->company->name]["transactions"] = 
+                            }
+                            $clients["data"] = $temp;
+                            break;
+                        // $temp
+                    }
+                    // $clients = $cluster->clients()->where($parameters)->get();
+
+                    return json_encode($clients);
+                }
+            }
+        }
+    }
 }

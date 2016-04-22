@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LoanType extends Model
+class Tag extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -14,4 +14,12 @@ class LoanType extends Model
     protected $fillable = [
         'name',
     ];
+
+    /**
+     * Get the clients for the tags.
+     */
+    public function clients()
+    {
+        return $this->belongsToMany('App\Client', 'client_tags')->withPivot("id");
+    }
 }

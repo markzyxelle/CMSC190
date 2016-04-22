@@ -6,3 +6,11 @@ table{
 td{
 	word-wrap: break-word;
 }
+
+tr.false td:not(.false) {
+	background-color: yellow;
+}
+
+td.false {
+	background-color: red;
+}

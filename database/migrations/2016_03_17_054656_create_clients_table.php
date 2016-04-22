@@ -33,6 +33,7 @@ class CreateClientsTable extends Migration
             $table->string('house_address');                 //10
             $table->string('mobile_number', 15)->nullable();            //should be nullable  put 0 first    /
             $table->boolean('isDummy');                     //       /
+            $table->date('cutoff_date');
             $table->timestamps();
         });
     }

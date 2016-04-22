@@ -29,6 +29,21 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group{{ $errors->has('role_activities') ? ' has-error' : '' }}">
+                            <label class="col-md-2 control-label">Activities Allowed</label>
+
+                            <div class="col-md-8">
+                                @foreach($activities as $activity)
+                                    <input type="checkbox" name="{{ $activity->id }}" value="true">   {{ $activity->name }}<br>
+                                @endforeach
+
+                                @if ($errors->has('role_activities'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('role_activities') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-4 col-md-offset-8">
                                 <button type="submit" class="btn btn-primary">

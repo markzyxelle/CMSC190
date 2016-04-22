@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLoanTypesTable extends Migration
+class CreateTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,11 @@ class CreateLoanTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('loan_types', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('tags', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('name');
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -27,6 +26,6 @@ class CreateLoanTypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('loan_types');
+        Schema::drop('tags');
     }
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLoanTypesTable extends Migration
+class EditLoansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,9 @@ class CreateLoanTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('loan_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('loans', function (Blueprint $table) {
+            $table->foreign('loan_type_id')->references('id')->on('loan_types');
         });
-        
     }
 
     /**
@@ -27,6 +24,6 @@ class CreateLoanTypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('loan_types');
+        //
     }
 }

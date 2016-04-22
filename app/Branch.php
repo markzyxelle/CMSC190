@@ -30,4 +30,12 @@ class Branch extends Model
     {
         return $this->hasMany('App\Center');
     }
+
+    /**
+     * Get the tags for the branch.
+     */
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag', 'branch_tags')->withPivot("id");
+    }
 }

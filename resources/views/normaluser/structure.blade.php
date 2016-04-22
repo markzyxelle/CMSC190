@@ -20,16 +20,19 @@
                         </ol>
                     </div>
                     <div id="structure-buttons" class="row">
-                        <button id='add-center-button' type='button' class='btn btn-info btn-sm modal-button pull-right raised' data-toggle='modal' data-target='#addCenterModal'>Add Center</button>
-                        <button id='add-group-button' type='button' class='btn btn-info btn-sm modal-button pull-right raised' data-toggle='modal' data-target='#addGroupModal'>Add Group</button>
-                        <button id='add-client-button' type='button' class='btn btn-info btn-sm modal-button pull-right raised' data-toggle='modal' data-target='#addClientModal'>Add Client</button>
+                        @if(in_array(1,$activities))
+                            <button id='add-center-button' type='button' class='btn btn-info btn-sm modal-button pull-right raised' data-toggle='modal' data-target='#addCenterModal'>Add Center</button>
+                            <button id='add-group-button' type='button' class='btn btn-info btn-sm modal-button pull-right raised' data-toggle='modal' data-target='#addGroupModal'>Add Group</button>
+                        @endif
+                        @if(in_array(2,$activities))
+                            <button id='add-client-button' type='button' class='btn btn-info btn-sm modal-button pull-right raised' data-toggle='modal' data-target='#addClientModal'>Add Client</button>
+                        @endif
                     </div>
                     <div id="structure-body" class="row">
                         <table id="structure-table" class="table table-striped">
                             <thead>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -267,21 +270,25 @@
                     <div class="form-group{{ $errors->has('status_id') ? ' has-error' : '' }}">
                         <label class="col-md-5 control-label">Status</label>
                         <div class="col-md-7">
-                            <select required class="form-control" name="status_id" value="{{ old('status_id') }}">
-                                <option value="">None</option>  
+                            <select required class="form-control required-select" name="status_id" value="{{ old('status_id') }}">
+                                <option value="">None</option>
+                                @foreach($client_statuses as $client_status)
+                                    <option value="{{ $client_status->id }}">{{ $client_status->name }}</option>
+                                @endforeach  
                             </select>
-                            @if ($errors->has('status_id'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('status_id') }}</strong>
-                                </span>
-                            @endif
+                            <span class="help-block required">
+                                <strong>This field is required</strong>
+                            </span>
                         </div>
                     </div>
                     <div class="form-group{{ $errors->has('gender_id') ? ' has-error' : '' }}">
                         <label class="col-md-5 control-label">Gender</label>
                         <div class="col-md-7">
                             <select required class="form-control required-select" name="gender_id" value="{{ old('gender_id') }}">
-                                <option value="">None</option>  
+                                <option value="">None</option> 
+                                @foreach($genders as $gender)
+                                    <option value="{{ $gender->id }}">{{ $gender->name }}</option>
+                                @endforeach   
                             </select>
                             <span class="help-block required">
                                 <strong>This field is required</strong>
@@ -293,6 +300,9 @@
                         <div class="col-md-7">
                             <select required class="form-control required-select" name="civil_status_id" value="{{ old('civil_status_id') }}">
                                 <option value="">None</option>  
+                                @foreach($civil_statuses as $civil_status)
+                                    <option value="{{ $civil_status->id }}">{{ $civil_status->name }}</option>
+                                @endforeach   
                             </select>
                             <span class="help-block required">
                                 <strong>This field is required</strong>
@@ -304,6 +314,9 @@
                         <div class="col-md-7">
                             <select required class="form-control required-select" name="beneficiary_type_id" value="{{ old('beneficiary_type_id') }}">
                                 <option value="">None</option>  
+                                @foreach($beneficiary_types as $beneficiary_type)
+                                    <option value="{{ $beneficiary_type->id }}">{{ $beneficiary_type->name }}</option>
+                                @endforeach  
                             </select>
                             <span class="help-block required">
                                 <strong>This field is required</strong>
@@ -327,9 +340,6 @@
                         <div class="col-md-7">
                             <input id="birthdate" type="date" class="form-control required-date" name="birthdate" value="{{ old('birthdate') }}">
 
-                            <span class="help-block required">
-                                <strong>This field is required</strong>
-                            </span>
                             <span class="help-block wrong-format">
                                 <strong>The date has a wrong format (MM/DD/YYYY)</strong>
                             </span>
@@ -338,13 +348,21 @@
                     <div class="form-group{{ $errors->has('mobile_number') ? ' has-error' : '' }}">
                         <label class="col-md-5 control-label">Mobile Number</label>
                         <div class="col-md-7">
-                            <input id="mobile-number" type="number" class="form-control" name="mobile_number" value="{{ old('mobile_number') }}">
+                            <input id="mobile-number" type="text" class="form-control" name="mobile_number" value="{{ old('mobile_number') }}">
 
-                            @if ($errors->has('mobile_number'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('mobile_number') }}</strong>
-                                </span>
-                            @endif
+                            <span class="help-block wrong-format">
+                                <strong>Please put a valid number</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('cutoff_date') ? ' has-error' : '' }}">
+                        <label class="col-md-5 control-label">Data as of</label>
+                        <div class="col-md-7">
+                            <input id="cutoff-date" type="date" class="form-control required-date" name="cutoff_date" value="{{ old('cutoff_date') }}">
+
+                            <span class="help-block wrong-format">
+                                <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                            </span>
                         </div>
                     </div>
                 </form>

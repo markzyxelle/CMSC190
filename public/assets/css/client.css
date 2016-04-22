@@ -1,0 +1,22 @@
+#view-loans-modal .modal-dialog
+{
+    width: 100%;
+}
+
+#view-loans-information, #view-transactions-information{
+	border: 1px solid #ddd;
+	height:150px;
+	line-height:3em;
+	overflow:auto;
+	padding:5px;
+}
+
+#view-loans-table tr{
+	cursor:pointer;
+}
+
+.btn.raised {
+    box-shadow: 0 3px 0 0 grey;
+    margin-right: 2%;
+    margin-top: 1%;
+}

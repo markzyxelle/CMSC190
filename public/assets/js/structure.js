@@ -94,7 +94,7 @@ $( document ).ready(function() {
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
-			    	$('#structure-table').append("<tr><td><a class='structure-client' data-id='" + value["id"] + "'>" + value["first_name"] + "</a><td></tr>");
+			    	$('#structure-table').append("<tr><td><a href='/viewClient/" + value["id"] + "' class='structure-client' data-id='" + value["id"] + "'>" + value["first_name"] + "</a><td></tr>");
 			    });
 			    $("#add-center-button").hide();
 				$("#add-group-button").hide();
@@ -223,6 +223,8 @@ $( document ).ready(function() {
 		var url = $(this).data('url');
 		var valid = true;
 
+		alert(url);
+
 		$("#addClientModal .help-block").hide();
 		$("#addClientModal .form-group.has-error").removeClass("has-error");
 		
@@ -232,7 +234,64 @@ $( document ).ready(function() {
 				($(this).parent().find(".required")).show();
 				($(this).parent().parent()).addClass("has-error");
 			}
+			if($(this).val().length > 255){
+				valid = false;
+				($(this).parent().find(".max")).show();
+				($(this).parent().parent()).addClass("has-error");
+			}
 		});
+
+		$(".required-select").each(function(){
+			if($(this).val() == ""){
+				valid = false;
+				($(this).parent().find(".required")).show();
+				($(this).parent().parent()).addClass("has-error");
+			}
+		});
+
+		$("#birthdate").each(function(){
+			if(!isValidDate($(this).val())){
+				valid = false;
+				($(this).parent().find(".wrong-format")).show();
+				($(this).parent().parent()).addClass("has-error");
+			}
+		});
+
+		$("#cutoff-date").each(function(){
+			if(!isValidDate($(this).val())){
+				valid = false;
+				($(this).parent().find(".wrong-format")).show();
+				($(this).parent().parent()).addClass("has-error");
+			}
+		});
+
+		$("#mobile-number").each(function(){
+			if(isNaN($(this).val())){
+				valid = false;
+				($(this).parent().find(".wrong-format")).show();
+				($(this).parent().parent()).addClass("has-error");
+			}
+		});
+
+		//AJAX: post to database
+		// if(valid == true){
+		// 	$.ajax({
+		// 		type : 'POST',
+		// 		url: url,
+		// 		data : form,
+		// 		dataType : 'json',
+		// 		success : function(data) {
+		// 			$('#structure-table').append("<tr><td><a href='/viewClient/" + data["id"] + " class='structure-client' data-id='" + data["id"] + "'>" + data["first_name"] + "</a><td></tr>");
+		// 			// alert(data["center_name"]);
+		// 			// $.each( data, function( key, value ) {
+		// 			// 	alert("key: " + key + " value: " + value);
+		// 		 //    })
+		// 		},
+		// 		error : function(data, text, error) {
+		// 			alert("error")
+		// 		}
+		// 	});
+		// }
 	});
 
 	$(document).on('click', '#add-center-submit', function(){
@@ -252,19 +311,27 @@ $( document ).ready(function() {
 	//clears lower categories
 	$( "#region-select" ).change(function() {
 		var region_id = $(this).val();
-		$.getJSON( "/getProvinces/" + region_id ) 
-			.done(function( resp ) {
-				$("#province-select").html("");
-				$("#municipality-select").html('<option value="">None</option>');
-				$("#barangay-select").html('<option value="">None</option>');
-				$("#province-select").append('<option value="">None</option>');
-				$.each( resp, function( key, value ) {
-			    	$("#province-select").append('<option value="'+ value["id"] +'">'+ value["name"] +'</option>');
-				});
-			})
-			.fail(function( jqxhr, textStatus, error ) {
-			    alert("There was an error");
-		});
+		if(region_id == ""){
+			$("#province-select").html("");
+			$("#municipality-select").html('<option value="">None</option>');
+			$("#barangay-select").html('<option value="">None</option>');
+			$("#province-select").append('<option value="">None</option>');
+		}
+		else{
+			$.getJSON( "/getProvinces/" + region_id ) 
+				.done(function( resp ) {
+					$("#province-select").html("");
+					$("#municipality-select").html('<option value="">None</option>');
+					$("#barangay-select").html('<option value="">None</option>');
+					$("#province-select").append('<option value="">None</option>');
+					$.each( resp, function( key, value ) {
+				    	$("#province-select").append('<option value="'+ value["id"] +'">'+ value["name"] +'</option>');
+					});
+				})
+				.fail(function( jqxhr, textStatus, error ) {
+				    alert("There was an error");
+			});
+		}
 	});
 
 	//province is selected
@@ -272,35 +339,48 @@ $( document ).ready(function() {
 	//clears lower categories
 	$( "#province-select" ).change(function() {
 		var province_id = $(this).val();
-		$.getJSON( "/getMunicipalities/" + province_id ) 
-			.done(function( resp ) {
-				$("#municipality-select").html("");
-				$("#barangay-select").html('<option value="">None</option>');
-				$("#municipality-select").append('<option value="">None</option>');
-				$.each( resp, function( key, value ) {
-			    	$("#municipality-select").append('<option value="'+ value["id"] +'">'+ value["name"] +'</option>');
-				});
-			})
-			.fail(function( jqxhr, textStatus, error ) {
-			    alert("There was an error");
-		});
+		if(province_id == ""){
+			$("#municipality-select").html("");
+			$("#barangay-select").html('<option value="">None</option>');
+			$("#municipality-select").append('<option value="">None</option>');
+		}
+		else{
+			$.getJSON( "/getMunicipalities/" + province_id ) 
+				.done(function( resp ) {
+					$("#municipality-select").html("");
+					$("#barangay-select").html('<option value="">None</option>');
+					$("#municipality-select").append('<option value="">None</option>');
+					$.each( resp, function( key, value ) {
+				    	$("#municipality-select").append('<option value="'+ value["id"] +'">'+ value["name"] +'</option>');
+					});
+				})
+				.fail(function( jqxhr, textStatus, error ) {
+				    alert("There was an error");
+			});
+		}
 	});
 
 	//municipality is selected
 	//populates barangay
 	$( "#municipality-select" ).change(function() {
 		var municipality_id = $(this).val();
-		$.getJSON( "/getBarangays/" + municipality_id ) 
-			.done(function( resp ) {
-				$("#barangay-select").html("");
-				$("#barangay-select").append('<option value="">None</option>');
-				$.each( resp, function( key, value ) {
-			    	$("#barangay-select").append('<option value="'+ value["id"] +'">'+ value["name"] +'</option>');
-				});
-			})
-			.fail(function( jqxhr, textStatus, error ) {
-			    alert("There was an error");
-		});
+		if(municipality_id == ""){
+			$("#barangay-select").html("");
+			$("#barangay-select").append('<option value="">None</option>');
+		}
+		else{
+			$.getJSON( "/getBarangays/" + municipality_id ) 
+				.done(function( resp ) {
+					$("#barangay-select").html("");
+					$("#barangay-select").append('<option value="">None</option>');
+					$.each( resp, function( key, value ) {
+				    	$("#barangay-select").append('<option value="'+ value["id"] +'">'+ value["name"] +'</option>');
+					});
+				})
+				.fail(function( jqxhr, textStatus, error ) {
+				    alert("There was an error");
+			});
+		}
 	});
 
 	// $("tr").click(function(){
@@ -309,3 +389,31 @@ $( document ).ready(function() {
 
 	$( "#branch-breadcrumb" ).click();
 });
+
+// Validates that the input string is a valid date formatted as "mm/dd/yyyy"
+function isValidDate(dateString)
+{
+    // First check for the pattern
+    if(!/^\d{4}-\d{1,2}-\d{1,2}$/.test(dateString))
+        return false;
+
+    // Parse the date parts to integers
+    var parts = dateString.split("-");
+    var day = parseInt(parts[2], 10);
+    var month = parseInt(parts[1], 10);
+    var year = parseInt(parts[0], 10);
+
+    // Check the ranges of month and year
+    if(year < 1000 || year > 3000 || month == 0 || month > 12)
+        return false;
+
+
+    var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+    // Adjust for leap years
+    if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+        monthLength[1] = 29;
+
+    // Check the range of the day
+    return day > 0 && day <= monthLength[month - 1];
+};

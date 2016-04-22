@@ -22,4 +22,12 @@ class CompanyRole extends Model
     {
         return $this->hasMany('App\User');
     }
+
+    /**
+     * The activities that belong to the Company Role.
+     */
+    public function activities()
+    {
+        return $this->belongsToMany('App\Activity', 'company_role_activities', 'company_role_id', 'activity_id');
+    }
 }

@@ -22,4 +22,12 @@ class Group extends Model
     {
         return $this->hasMany('App\Client');
     }
+
+    /**
+     * Get the center that the group is under.
+     */
+    public function center()
+    {
+        return $this->belongsTo('App\Center');
+    }
 }

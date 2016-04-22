@@ -425,17 +425,16 @@
                     <form id="add-loan-form" class="form-horizontal" role="form" data-url="{{URL::to('/addLoan')}}">
                         {!! csrf_field() !!}
                         <input type="hidden" name="client_id" id="client-id-modal" value="{{$client->id}}"/>
-                        <div class="form-group{{ $errors->has('loan_type_id') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('loan_type') ? ' has-error' : '' }}">
                             <label class="col-md-3 control-label">Loan Type</label>
                             <div class="col-md-7">
-                                <select required class="form-control required-select" name="loan_type_id" value="">
-                                    <option value="">None</option>  
-                                    @foreach($loan_types as $loan_type)
-                                        <option value="{{ $loan_type->id }}">{{ $loan_type->name }}</option>
-                                    @endforeach   
-                                </select>
+                                <input id="loan-type" type="text" class="form-control required-text" name="loan_type" value="">
+
                                 <span class="help-block required">
                                     <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block max">
+                                    <strong>Please limit number of characters to 255</strong>
                                 </span>
                             </div>
                         </div>

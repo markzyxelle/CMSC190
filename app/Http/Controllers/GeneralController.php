@@ -790,7 +790,7 @@ class GeneralController extends Controller
                                         ->with("selected_municipality", $selected_municipality)
                                         ->with("selected_province", $selected_province)
                                         ->with("selected_region", $selected_region)
-                                        ->with("loan_types", $loan_types)
+                                        // ->with("loan_types", $loan_types)
                                         ->with("activities", $activities)
                                         ->with("tags", $tags);
     }
@@ -872,9 +872,11 @@ class GeneralController extends Controller
             if(in_array(4,$activities)){
                 $data = $request->all();
 
+                $loan_type = \App\LoanType::firstOrCreate(['name' => $data['loan_type']]);
+
                 $loan = \App\Loan::create([
                     'client_id' => $data['client_id'],
-                    'loan_type_id' => $data['loan_type_id'],
+                    'loan_type_id' => $loan_type->id,
                     'loan_cycle' => $data['cycle_number'],
                     'released_date' => date("Y-m-d", strtotime($data['release_date'])),
                     'principal_amount' => $data['principal_amount_loan'],
@@ -888,13 +890,13 @@ class GeneralController extends Controller
                     'cutoff_date' => date("Y-m-d", strtotime($data['cutoff_date_loan'])),
                 ]);
 
-                \App\LoanHistory::create([
-                    'loan_id' => $loan->id,
-                    'status' => $loan->status,
-                    'date' => $loan->cutoff_date,
-                ]);
+                // \App\LoanHistory::create([
+                //     'loan_id' => $loan->id,
+                //     'status' => $loan->status,
+                //     'date' => $loan->cutoff_date,
+                // ]);
 
-                $loan->loan_type_id = \App\LoanType::find($data['loan_type_id'])->name;
+                $loan->loan_type_id = \App\LoanType::find($loan->loan_type_id)->name;
                 // $approved = Auth::user()->company->users->where('isApproved', 1);
                 // $pending = Auth::user()->company->users->where('isApproved', 0);
                 // return view('users')->with('code', $code)

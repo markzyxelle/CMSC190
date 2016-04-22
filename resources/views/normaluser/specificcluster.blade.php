@@ -372,6 +372,45 @@
                             </form>
                         </div>
                     @endif
+                    @if(in_array(1,$allowed_actions))
+                        <div id="add-user" class="row">
+                            <h1> Add User </h1>
+                            <form class="form-horizontal" role="form" method="POST" action="{{ url('/addUser') }}">
+                                {!! csrf_field() !!}
+                                <input type="hidden" name="cluster_id" id="cluster-id-add-user" value="{{$cluster_id}}"/>
+                                <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}{{ session('cluster_user_exists', false) ? ' has-error' : '' }}">
+                                    <label class="col-md-2 control-label">Username</label>
+
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" name="username" value="{{ old('username') }}">
+
+                                        @if ($errors->has('username'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('username') }}</strong>
+                                            </span>
+                                        @endif
+                                        @if (session('cluster_user_exists', false))
+                                            <span class="help-block">
+                                                <strong>User is already a member of the cluster</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-offset-1 col-md-11">
+                                    @foreach($actions as $action)
+                                        <input type="checkbox" name="{{ $action->name }}" value="true">   {{ $action->name }}<br>
+                                    @endforeach
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-2 col-md-offset-9">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-btn fa-plus"></i>Add User
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

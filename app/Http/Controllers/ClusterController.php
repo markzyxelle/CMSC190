@@ -108,6 +108,27 @@ class ClusterController extends Controller
         if(in_array(6,$activities)){
             $data = $request->all();
 
+            if($data["cluster_code"] == "a1" || $data["cluster_code"] == "a2" ||$data["cluster_code"] == "a3" ||$data["cluster_code"] == "a4"){              //universal cluster everyone can join
+                $cluster = \App\Cluster::where("cluster_code", $data["cluster_code"])->first();
+                $cluster_user = \App\ClusterUser::firstOrCreate([
+                    'cluster_id' => $cluster->id,
+                    'user_id' => Auth::user()->id,
+                    'isApproved' => 1,
+                ]);
+
+                \App\ActionClusterUser::firstOrCreate([
+                    'cluster_user_id' => $cluster_user->id,
+                    'action_id' => 2,
+                ]);
+
+                \App\ActionClusterUser::firstOrCreate([
+                    'cluster_user_id' => $cluster_user->id,
+                    'action_id' => 3,
+                ]);
+
+                return redirect('/clusters');
+            }
+
             $validator = Validator::make($data, [
                 'cluster_code' => 'required|max:8|exists:clusters,cluster_code',
             ]);
@@ -645,6 +666,67 @@ class ClusterController extends Controller
                     return json_encode($clients);
                 }
             }
+        }
+    }
+
+    /**
+     * Add user to cluster
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addUser(Request $request)
+    {
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $data = $request->all();
+            $cluster_user = \App\ClusterUser::where(['cluster_id' => $data["cluster_id"],
+                                            'user_id' => Auth::user()->id,
+                                            'isApproved' => 1])->first();
+
+            if($cluster_user == null) return redirect("/clusters");
+
+            $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user->id)->lists('action_id')->toArray();
+
+            if(in_array(1,$allowed_actions)){
+                $validator = Validator::make($data, [
+                    'username' => 'required|max:255|exists:users,username,isApproved,1,branch_id,!NULL',
+                ]);
+
+                if ($validator->fails()) {
+                    $this->throwValidationException(
+                        $request, $validator
+                    );
+                }
+
+                $user = \App\User::where("username", $data["username"])->first();
+                $new_cluster_user = \App\ClusterUser::where(['user_id' => $user->id, 
+                                                                        'cluster_id' => $data["cluster_id"],
+                                                                        'isApproved' => 1])->first();
+
+                if($new_cluster_user != null){ 
+                    $request->session()->flash('cluster_user_exists', true);
+                    return redirect(URL::previous());
+                }
+
+                $new_cluster_user = \App\ClusterUser::Create(['user_id' => $user->id, 
+                                                                        'cluster_id' => $data["cluster_id"],
+                                                                        'isApproved' => 1]);
+
+                foreach (\App\Action::all() as $action) {
+                    if(array_key_exists(str_replace(" ", "_", $action->name), $data)){
+                        \App\ActionClusterUser::Create(['action_id' => $action->id, 'cluster_user_id' => $new_cluster_user->id]);
+                    }
+                }
+                
+                return redirect(URL::previous());
+            }
+            else{
+                return redirect("/home");
+            }
+        }
+        else{
+            return redirect("/home");
         }
     }
 }

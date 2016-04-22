@@ -74,6 +74,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/approveClusterUser', 'ClusterController@approveClusterUser')->middleware(['auth']);     //approve user's request to join cluster
     Route::post('/disapproveClusterUser/{clusteruser}', 'ClusterController@disapproveClusterUser')->middleware(['auth']);     //disapprove user's request to join cluster
     Route::post('/searchClientCluster', 'ClusterController@searchClientCluster')->middleware(['auth']);     //search user in cluster
+    Route::post('/addUser', 'ClusterController@addUser')->middleware(['auth']);     //add user to cluster
 
     //administrator
     Route::get('/users', 'AdminController@users')->middleware(['auth', 'administrator']);   //approved and pending users

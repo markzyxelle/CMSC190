@@ -349,9 +349,10 @@ $( document ).ready(function() {
 							$("#search-results-table tbody").html("<tr><td>"+ (data["data"] ? "Yes" : "No") +"</td></tr>");
 							break;
 						case 2:
+							$("#search-results-table tbody").html("");
 							$.each( data["data"], function( key, value ) {
-								$("#search-results-table thead").html("<tr><td>Company</td><td>Number of Loans</td></tr>");
-								$("#search-results-table tbody").html("<tr><td>"+ key + "</td><td>"+ value +"</td></tr>");
+								$("#search-results-table thead").append("<tr><td>Company</td><td>Number of Loans</td></tr>");
+								$("#search-results-table tbody").append("<tr><td>"+ key + "</td><td>"+ value +"</td></tr>");
 							})
 							break;	
 						case 3:

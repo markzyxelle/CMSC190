@@ -275,7 +275,8 @@ $( document ).ready(function() {
 				data : form,
 				dataType : 'json',
 				success : function(data) {
-					alert(JSON.stringify(data));
+					// alert(JSON.stringify(data));
+					$('#structure-table').append("<tr class='structure-client'><td>" + data["last_name"]+ ", " +data["first_name"] + "</td><td><a href='/viewClient/"+ data["id"] + "'>" + "<button class='btn btn-sm raised btn-info'><i class='fa fa-btn fa-eye'></i>View Client</button></a></td><td data-id='"+ data["id"] +"'>" + "<button type='button' id='delete-client-button' class='btn btn-danger btn-sm modal-button raised delete-client-button' data-toggle='modal' data-target='#delete-client-modal'><i class='fa fa-btn fa-trash-o'></i>Delete User</button>" +"<td></tr>");
 					// $('#structure-table').append("<tr><td><a href='/viewClient/" + data["id"] + " class='structure-client' data-id='" + data["id"] + "'>" + data["first_name"] + "</a><td></tr>");
 					// alert(data["center_name"]);
 					// $.each( data, function( key, value ) {

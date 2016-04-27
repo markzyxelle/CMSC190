@@ -431,9 +431,9 @@ class GeneralController extends Controller
                         $client[$row][] = $data[11];
                         $client[$row][] = strlen($data[12]) > 255 ? false : true;
                         $client[$row][] = $data[12];
-                        $client[$row][] = $data[13] > 1 ? false : true;     //change
+                        $client[$row][] = $data[13] > 3 ? false : true;     //change
                         $client[$row][] = $data[13];
-                        $client[$row][] = $data[14] > 1 ? false : true;     //change
+                        $client[$row][] = $data[14] > 3 ? false : true;     //change
                         $client[$row][] = $data[14];
                         $client[$row][] = in_array(false, $client[$row], true) ? false : true;
                         $current_client = \App\Client::where("uploaded_id", $data[1])->first();

@@ -7,10 +7,27 @@ td{
 	word-wrap: break-word;
 }
 
+tr.cutoff-date-error td:not(.false) {
+	background-color: blue;
+	color: white;
+}
+
 tr.false td:not(.false) {
 	background-color: yellow;
 }
 
 td.false {
 	background-color: red;
+}
+
+#client-display-summary, #loan-display-summary{
+	border: 1px solid #ddd;
+	height:200px;
+	line-height:3em;
+	overflow:auto;
+	padding:5px;
+}
+
+#client-approve-button, #loan-approve-button{
+	margin-top: 1%;
 }

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>@yield('title')</title>
 
     <!-- Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
@@ -15,8 +15,8 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
-    <!-- <link rel="stylesheet" href="{{ URL::asset('bootstrap-3.3.6-dist/css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ URL::asset('bootstrap-3.3.6-dist/css/normalize.css') }}"> -->
+    <!-- <link rel="stylesheet" href="{{ URL::asset('bootstrap-3.3.6-dist/css/bootstrap.min.css') }}"> -->
+    <!-- <link rel="stylesheet" href="{{ URL::asset('bootstrap-3.3.6-dist/css/normalize.css') }}"> -->
 
     <style>
         body {
@@ -25,6 +25,10 @@
 
         .fa-btn {
             margin-right: 6px;
+        }
+
+        .container > .row > .col-md-10 > .panel{
+            box-shadow: 2px 10px 10px 5px #888888;
         }
     </style>
 
@@ -45,7 +49,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/home') }}">
-                    Laravel
+                    CommonClusters
                 </a>
             </div>
 
@@ -78,7 +82,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <!-- // <script src="{{ URL::asset('bootstrap-3.3.6-dist/js/bootstrap.js') }}"></script> -->
+    <!-- // <script src="{{ URL::asset('assets/js/jquery-1.10.2.js') }}"></script> -->
+    <!-- // <script src="{{ URL::asset('assets/js/jquery-2.2.3.min.js') }}"></script> -->
+    <!-- // <script src="{{ URL::asset('bootstrap-3.3.6-dist/js/bootstrap.min.js') }}"></script> -->
     @yield('javascript')
 </body>
 </html>

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    CommonClusters - Upload
+@endsection
+
 @section('css')
     <link href="{{ URL::asset('assets/css/upload.css') }}" rel='stylesheet' type='text/css'>
 @endsection
@@ -7,9 +11,9 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">Upload</div>
 
                 <div class="panel-body">
                     <div class="row">
@@ -22,7 +26,6 @@
                             <div class="tab-content">
                                 <div id="addClient" class="tab-pane fade in active">
                                     <div class="panel panel-default">
-                                        <div class="panel-heading">Add Client</div>
                                         <div class="panel-body">
                                             <div id="client-upload-status" class="row">
                                                 <!-- <div class="alert alert-success">
@@ -37,8 +40,10 @@
                                             <form id="upload-client-csv" class="form-horizontal" role="form" data-url="{{URL::to('/clientsCSV')}}">
                                                 Select file to upload:
                                                 {!! csrf_field() !!}
-                                                <input type="file" name="fileToUpload" id="client-file">
-                                                <input type="submit" value="Upload File" name="submit">
+                                                <div>
+                                                    <input style="margin-left:1%;" type="file" name="fileToUpload" id="client-file">
+                                                    <input style="margin:1%;" class="btn btn-info btn-md" type="submit" value="View Summary" name="submit">
+                                                </div>
                                             </form>
                                             <div id="client-display-summary" class="row">
                                                 <table id="client-summary-table" class="table table-striped">
@@ -54,10 +59,10 @@
                                                             <td>Marital Status</td>
                                                             <td>House Number and Street</td>
                                                             <td>Barangay</td>
-                                                            <td>Status</td>
                                                             <td>Group Name</td>
                                                             <td>Center Name</td>
                                                             <td>Client Type</td>
+                                                            <td>Status</td>
                                                             <!-- <td>Action</td>    For Merging -->
                                                         </tr>
                                                     </thead>
@@ -76,7 +81,6 @@
                                 </div>
                                 <div id="addLoan" class="tab-pane fade">
                                     <div class="panel panel-default">
-                                        <div class="panel-heading">Add Loan</div>
                                         <div class="panel-body">
                                             <div id="loan-upload-status" class="row">
                                                 <!-- <div class="alert alert-success">
@@ -91,8 +95,10 @@
                                             <form id="upload-loan-csv" class="form-horizontal" role="form" data-url="{{URL::to('/loansCSV')}}">
                                                 Select file to upload:
                                                 {!! csrf_field() !!}
-                                                <input type="file" name="fileToUpload" id="loan-file">
-                                                <input type="submit" value="Upload File" name="submit">
+                                                <div>
+                                                    <input style="margin-left:1%;" type="file" name="fileToUpload" id="loan-file">
+                                                    <input style="margin:1%;" class="btn btn-info btn-md" type="submit" value="View Summary" name="submit">
+                                                </div>
                                             </form>
                                             <div id="loan-display-summary" class="row">
                                                 <table id="loan-summary-table" class="table table-striped">

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 class GeneralController extends Controller
 {
@@ -253,31 +254,69 @@ class GeneralController extends Controller
 
                 $data = $request->all();
 
-                $client = \App\Client::create([
-                    'barangay_id' => $data['barangay_id'],
-                    'group_id' => $data['group_id'],
-                    'status_id' => $data['status_id'],
-                    'gender_id' => $data['gender_id'],
-                    'civil_status_id' => $data['civil_status_id'],
-                    'beneficiary_type_id' => $data['beneficiary_type_id'],
-                    'birthplace' => $data['birthplace'],
-                    'first_name' => $data['first_name'],
-                    'middle_name' => $data['middle_name'],
-                    'last_name' => $data['last_name'],
-                    'mother_middle_name' => $data['mother_maiden_last_name'],
-                    'birthdate' => date("Y-m-d", strtotime($data['birthdate'])),
-                    'house_address' => $data['house_address'],
-                    'mobile_number' => $data['mobile_number'],
-                    'cutoff_date' => $data['cutoff_date'],
-                    'isDummy' => Auth::user()->dummy_mode,
-                ]);
+                $client = new \App\Client;
+
+                $client->group_id = $data['group_id'];
+                $client->barangay_id = (($data['barangay_id'] != "") ? $data['barangay_id'] : NULL);
+                $client->status_id = $data['status_id'];
+                $client->gender_id = $data['gender_id'];
+                $client->civil_status_id = $data['civil_status_id'];
+                $client->beneficiary_type_id = $data['beneficiary_type_id'];
+                $client->birthplace = $data['birthplace'];
+                $client->first_name = $data['first_name'];
+                $client->middle_name = $data['middle_name'];
+                $client->last_name = $data['last_name'];
+                $client->mother_middle_name = $data['mother_maiden_last_name'];
+                $client->suffix = $data['suffix_name'];
+                $client->birthdate = (strtotime($data['birthdate']) ? date("Y-m-d", strtotime($data['birthdate'])) : strtotime("00/00/0000"));
+                $client->house_address = $data['house_address'];
+                $client->mobile_number = $data['mobile_number'];
+                $client->cutoff_date = $data['cutoff_date'];
+
+                $client->save();
+
+                // $client = \App\Client::create([
+                //     'barangay_id' => $data['barangay_id'],
+                //     'group_id' => $data['group_id'],
+                //     'status_id' => $data['status_id'],
+                //     'gender_id' => $data['gender_id'],
+                //     'civil_status_id' => $data['civil_status_id'],
+                //     'beneficiary_type_id' => $data['beneficiary_type_id'],
+                //     'barangay_id' => $data['barangay_id'],
+                //     'birthplace' => $data['birthplace'],
+                //     'first_name' => $data['first_name'],
+                //     'middle_name' => $data['middle_name'],
+                //     'last_name' => $data['last_name'],
+                //     'mother_middle_name' => $data['mother_maiden_last_name'],
+                //     'birthdate' => ($data['birthdate'] != "" ? date("Y-m-d", strtotime($data['birthdate'])) : date("Y-m-d", strtotime("00/00/0000"))),
+                //     'house_address' => $data['house_address'],
+                //     'mobile_number' => (($data['mobile_number'] != "") ? $data['mobile_number'] : 0),
+                //     'cutoff_date' => date("Y-m-d", strtotime($data['cutoff_date'])),
+                //     'isDummy' => Auth::user()->dummy_mode,
+                // ]);
+
+                // $client = \App\Client::create([
+                //     'client_id' => $data['client_id'],
+                //     'loan_type_id' => $loan_type->id,
+                //     'loan_cycle' => $data['cycle_number'],
+                //     'released_date' => date("Y-m-d", strtotime($data['release_date'])),
+                //     'principal_amount' => $data['principal_amount_loan'],
+                //     'interest_amount' => $data['interest_amount_loan'],
+                //     'principal_balance' => $data['principal_balance'],
+                //     'interest_balance' => $data['interest_balance'],
+                //     'isActive' => $data['isActive'],
+                //     'isReleased' => $data['isReleased'],
+                //     'status' => $data['status'],
+                //     'maturity_date' => date("Y-m-d", strtotime($data['maturity_date'])),
+                //     'cutoff_date' => date("Y-m-d", strtotime($data['cutoff_date_loan'])),
+                // ]);
                 // $approved = Auth::user()->company->users->where('isApproved', 1);
                 // $pending = Auth::user()->company->users->where('isApproved', 0);
                 // return view('users')->with('code', $code)
                 //                     ->with('approved', $approved)
                 //                     ->with('pending', $pending);
 
-                return response()->json($client);
+                return response()->json($data);
             }
         }
     }
@@ -375,7 +414,7 @@ class GeneralController extends Controller
                         $client[$row][] = $data[3];
                         $client[$row][] = strlen($data[4]) > 255 ? false : true;
                         $client[$row][] = $data[4];
-                        $client[$row][] = strtotime($data[5]) ? true : false;
+                        $client[$row][] = (strtotime($data[5]) || $data[5] == "") ? true : false;       //change
                         $client[$row][] = $data[5];
                         $client[$row][] = strlen($data[6]) > 255 ? false : true;
                         $client[$row][] = $data[6];
@@ -385,17 +424,25 @@ class GeneralController extends Controller
                         $client[$row][] = $data[8];
                         $client[$row][] = strlen($data[9]) > 255 ? false : true;
                         $client[$row][] = $data[9];
-                        $client[$row][] = is_numeric($data[10]) ? true : false;
-                        $client[$row][] = $data[10];
-                        $client[$row][] = true;
+                        // $client[$row][] = (\App\Barangay::find($data[10]) != null || $data[10] == "-1") ? true : false;
+                        $client[$row][] = is_numeric($data[10]) ? true : false;     //change
+                        $client[$row][] = $data[10];//19
+                        $client[$row][] = strlen($data[11]) > 255 ? false : true;
                         $client[$row][] = $data[11];
                         $client[$row][] = strlen($data[12]) > 255 ? false : true;
                         $client[$row][] = $data[12];
-                        $client[$row][] = strlen($data[13]) > 255 ? false : true;
+                        $client[$row][] = $data[13] > 1 ? false : true;     //change
                         $client[$row][] = $data[13];
-                        $client[$row][] = $data[14] > 1 ? false : true;
+                        $client[$row][] = $data[14] > 1 ? false : true;     //change
                         $client[$row][] = $data[14];
                         $client[$row][] = in_array(false, $client[$row], true) ? false : true;
+                        $current_client = \App\Client::where("uploaded_id", $data[1])->first();
+                        if($current_client == null){
+                            $client[$row][] = true;
+                        }
+                        else{
+                            $client[$row][] = (strtotime($current_client->cutoff_date) > strtotime($client[0][0])) ? false : true;
+                        }
 
                         // $client[$row] = array_slice($data, 1, 18);
                         // $client[$row][] = "reserved";
@@ -455,10 +502,10 @@ class GeneralController extends Controller
                     $cutoff_date = $client[0];
                     continue;
                 } 
-                if($client[28] == false) continue;
+                if($client[28] == false || $client[29] == false) continue;
 
-                $center = \App\Center::firstOrCreate(['branch_id' => $branch_id, 'name' => $client[25]]);
-                $group = \App\Group::firstOrCreate(['center_id' => $center->id, 'name' => $client[23]]);
+                $center = \App\Center::firstOrCreate(['branch_id' => $branch_id, 'name' => $client[23]]);
+                $group = \App\Group::firstOrCreate(['center_id' => $center->id, 'name' => $client[21]]);
 
                 $client_detail = \App\Client::where('uploaded_id', $client[1])->first();
                 if($client_detail == null){
@@ -469,15 +516,16 @@ class GeneralController extends Controller
                 $client_detail->last_name = $client[3];
                 $client_detail->first_name = $client[5];
                 $client_detail->middle_name = $client[7];
-                $client_detail->birthdate = date("Y-m-d", strtotime($client[9]));
+                if($client[9] != "") $client_detail->birthdate = date("Y-m-d", strtotime($client[9]));
                 $client_detail->birthplace = $client[11];
                 $client_detail->gender_id = $client[13];
                 $client_detail->civil_status_id = $client[15];
                 $client_detail->house_address = $client[17];
-                //barangay
+                $barangay = \App\Barangay::find($client[19]);
+                if($barangay != null) $client_detail->barangay_id = $barangay->id;
                 $client_detail->group_id = $group->id;
-                //status
-                $client_detail->beneficiary_type_id = $client[27];
+                $client_detail->beneficiary_type_id = $client[25];
+                $client_detail->status_id = $client[27];
                 $client_detail->mobile_number = "0";
                 $client_detail->cutoff_date = date("Y-m-d", strtotime($cutoff_date));
                 $client_detail->isDummy = Auth::user()->dummy_mode;
@@ -594,6 +642,13 @@ class GeneralController extends Controller
                         $loan[$row]["loan"][] = (strtotime($data[13]) || $data[13] == "") ? true : false;
                         $loan[$row]["loan"][] = $data[13];
                         $loan[$row]["loan"][] = in_array(false, $loan[$row]["loan"], true) ? false : true;
+                        $current_loan = \App\Loan::where("uploaded_id", $data[2])->first();
+                        if($current_loan == null){
+                            $loan[$row]["loan"][] = true;
+                        }
+                        else{
+                            $loan[$row]["loan"][] = (strtotime($current_loan->cutoff_date) > strtotime($loan[0][0])) ? false : true;
+                        }
 
 
                         $temp = array_slice($data, 14);
@@ -603,18 +658,25 @@ class GeneralController extends Controller
 
                         $num = count($temp);
 
-                        for ($c=0; $c < $num; $c+=6) {
-                            $transactions[$c/6][0] = is_numeric($temp[$c]) ? true : false;
-                            $transactions[$c/6][1] = $temp[$c];
-                            $transactions[$c/6][2] = is_numeric($temp[$c+1]) ? true : false;
-                            $transactions[$c/6][3] = $temp[$c+1];
-                            $transactions[$c/6][4] = is_numeric($temp[$c+2]) ? true : false;
-                            $transactions[$c/6][5] = $temp[$c+2];
-                            $transactions[$c/6][6] = strtotime($temp[$c+3]) ? true : false;
-                            $transactions[$c/6][7] = $temp[$c+3];
-                            $transactions[$c/6][8] = strtotime($temp[$c+4]) ? true : false;
-                            $transactions[$c/6][9] = $temp[$c+4];
-                            $transactions[$c/6][10] = (!(in_array(false, $transactions[$c/6], true)) && $loan[$row]["loan"][26]) ? true : false;
+                        for ($c=0; $c < $num; $c+=5) {
+                            $transactions[$c/5][0] = is_numeric($temp[$c]) ? true : false;
+                            $transactions[$c/5][1] = $temp[$c];
+                            $transactions[$c/5][2] = is_numeric($temp[$c+1]) ? true : false;
+                            $transactions[$c/5][3] = $temp[$c+1];
+                            $transactions[$c/5][4] = is_numeric($temp[$c+2]) ? true : false;
+                            $transactions[$c/5][5] = $temp[$c+2];
+                            $transactions[$c/5][6] = strtotime($temp[$c+3]) ? true : false;
+                            $transactions[$c/5][7] = $temp[$c+3];
+                            $transactions[$c/5][8] = strtotime($temp[$c+4]) ? true : false;
+                            $transactions[$c/5][9] = $temp[$c+4];
+                            $transactions[$c/5][10] = (!(in_array(false, $transactions[$c/5], true)) && $loan[$row]["loan"][26]) ? true : false;
+                            $current_transaction = \App\Transaction::where("uploaded_id", $temp[$c])->first();
+                            if($current_transaction == null){
+                                $transactions[$c/5][11] = true;
+                            }
+                            else{
+                                $transactions[$c/5][11] = (strtotime($current_transaction->cutoff_date) > strtotime($loan[0][0])) ? false : true;
+                            }
                         }
 
                         $loan[$row]["transactions"] = $transactions;
@@ -682,8 +744,8 @@ class GeneralController extends Controller
         $companyrole = Auth::user()->companyrole;
         $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
         if(in_array(7,$activities)){
-            $temploan = 0;
-            $temptran = 0;
+            $loantemp = 0;
+            $trantemp = 0;
             set_time_limit(0);
             $data = $request->all();
 
@@ -691,55 +753,63 @@ class GeneralController extends Controller
 
             foreach ($loans as $loan) {
                 if(sizeof($loan) == 1){
-                    $cutoff_date = $loan[0];
+                    $cutoff_date = $loan[0];                    
                     continue;
-                } 
-                if($loan["loan"][26] == false) continue;
-
+                }
                 $client = \App\Client::where('uploaded_id', $loan["loan"][1])->first();
                 if($client == NULL) continue;
-                $loan_detail = \App\Loan::where('uploaded_id', $loan["loan"][3])->first();            
-                if($loan_detail == null){
-                    $loan_detail = new \App\Loan;
-                }
-                $loan_detail->client_id = $client->id;
-                $loan_type = \App\LoanType::firstOrCreate(['name' => $loan["loan"][5]]);
-                $loan_detail->loan_type_id = $loan_type->id;
-                $loan_detail->loan_cycle = $loan["loan"][7];
-                if($loan["loan"][9] != "") $loan_detail->released_date = date("Y-m-d", strtotime($loan["loan"][9]));
-                else $loan_detail->released_date = null;
+                $loan_detail = \App\Loan::where('uploaded_id', $loan["loan"][3])->first(); 
+                if(!($loan["loan"][26] == false || $loan["loan"][27] == false)){
+            
+                    if($loan_detail == null){
+                        $loan_detail = new \App\Loan;
+                    }
+                    $loan_detail->client_id = $client->id;
+                    $loan_type = \App\LoanType::firstOrCreate(['name' => $loan["loan"][5]]);
+                    $loan_detail->loan_type_id = $loan_type->id;
+                    $loan_detail->loan_cycle = $loan["loan"][7];
+                    if($loan["loan"][9] != "") $loan_detail->released_date = date("Y-m-d", strtotime($loan["loan"][9]));
+                    else $loan_detail->released_date = null;
 
-                $loan_detail->principal_amount = $loan["loan"][11];
-                $loan_detail->interest_amount = $loan["loan"][13];
-                $loan_detail->principal_balance = $loan["loan"][15];
-                $loan_detail->interest_balance = $loan["loan"][17];
-                $loan_detail->isActive = ($loan["loan"][19] == "True" || $loan["loan"][19] == "true") ? true : false;
-                $loan_detail->isReleased = ($loan["loan"][21] == "True" || $loan["loan"][21] == "true") ? true : false;
-                $loan_detail->status = $loan["loan"][23];
-                $loan_detail->uploaded_id = $loan["loan"][3];
-                if($loan["loan"][25] != "") $loan_detail->maturity_date = date("Y-m-d", strtotime($loan["loan"][12]));
-                else $loan_detail->maturity_date = null;
-                $loan_detail->cutoff_date = $cutoff_date;
-                //loan_history,client_history
-                $loan_detail->save();
-                $temploan++;
-
-                foreach ($loan["transactions"] as $transaction) {           //change here for uploaded id
-                    if($transaction[10] == false) continue;
-                    \App\Transaction::create([
-                        'loan_id' => $loan_detail->id,
-                        'principal_amount' => $transaction[3],
-                        'interest_amount' => $transaction[5],
-                        'payment_date' => date("Y-m-d", strtotime($transaction[7])),
-                        'due_date' => date("Y-m-d", strtotime($transaction[9])),
-                        // 'uploaded_id' => $transaction[1],
-                        'cutoff_date' => $cutoff_date,
-                    ]);
-                    $temptran++;
+                    $loan_detail->principal_amount = $loan["loan"][11];
+                    $loan_detail->interest_amount = $loan["loan"][13];
+                    $loan_detail->principal_balance = $loan["loan"][15];
+                    $loan_detail->interest_balance = $loan["loan"][17];
+                    $loan_detail->isActive = ($loan["loan"][19] == "True" || $loan["loan"][19] == "true") ? true : false;
+                    $loan_detail->isReleased = ($loan["loan"][21] == "True" || $loan["loan"][21] == "true") ? true : false;
+                    $loan_detail->status = $loan["loan"][23];
+                    $loan_detail->uploaded_id = $loan["loan"][3];
+                    if($loan["loan"][25] != "") $loan_detail->maturity_date = date("Y-m-d", strtotime($loan["loan"][12]));
+                    else $loan_detail->maturity_date = null;
+                    $loan_detail->cutoff_date = date("Y-m-d", strtotime($cutoff_date));
+                    dd($loan_detail);
                     //loan_history,client_history
+                    $loan_detail->save();
+                    $loantemp++;
+                }
+
+                if($loan_detail != null){
+                    foreach ($loan["transactions"] as $transaction) {           //change here for uploaded id
+                        if(!($transaction[10] == false || $transaction[11] == false)){
+                            $transaction_detail = \App\Transaction::where('uploaded_id', $transaction[1])->first();
+                            if($transaction_detail == null){
+                                $transaction_detail = new \App\Transaction;
+                            }
+                            
+                            $transaction_detail->loan_id = $loan_detail->id;
+                            $transaction_detail->principal_amount = $transaction[3];
+                            $transaction_detail->interest_amount = $transaction[5];
+                            $transaction_detail->payment_date = date("Y-m-d", strtotime($transaction[7]));
+                            $transaction_detail->due_date = date("Y-m-d", strtotime($transaction[9]));
+                            $transaction_detail->uploaded_id = $transaction[1];
+                            $transaction_detail->cutoff_date = date("Y-m-d", strtotime($cutoff_date));
+                            $transaction_detail->save();
+                            $trantemp++;
+                        }
+                        //loan_history,client_history
+                    }
                 }
             }
-
             return redirect("/upload");
         }
     }
@@ -808,10 +878,10 @@ class GeneralController extends Controller
             $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
             if(in_array(3,$activities)){
                 $data = $request->all();
-
+                //check here
                 $client = \App\Client::find($client_id);
 
-                $client->barangay_id = $data['barangay_id'];
+                $client->barangay_id = (($data['barangay_id'] != "") ? $data['barangay_id'] : NULL);
                 $client->status_id = $data['status_id'];
                 $client->gender_id = $data['gender_id'];
                 $client->civil_status_id = $data['civil_status_id'];
@@ -821,7 +891,7 @@ class GeneralController extends Controller
                 $client->middle_name = $data['middle_name'];
                 $client->last_name = $data['last_name'];
                 $client->mother_middle_name = $data['mother_maiden_last_name'];
-                $client->birthdate = date("Y-m-d", strtotime($data['birthdate']));
+                if(strtotime($data['birthdate'])) $client->birthdate = date("Y-m-d", strtotime($data['birthdate']));
                 $client->house_address = $data['house_address'];
                 $client->mobile_number = $data['mobile_number'];
                 $client->cutoff_date = $data['cutoff_date'];
@@ -932,12 +1002,14 @@ class GeneralController extends Controller
                 ]);
 
                 $loan = \App\Loan::find($data['loan_id']);
+                //check here
                 $loan->principal_amount = $data["principal_amount_loan_transaction_form"];
                 $loan->interest_amount = $data["interest_amount_loan_transaction_form"];
                 $loan->principal_balance = $data["principal_balance_transaction_form"];
                 $loan->interest_balance = $data["interest_balance_transaction_form"];
                 $loan->isActive = $data["isActive_transaction_form"];
                 $loan->status = $data["status_transaction_form"];
+                $loan->cutoff_date = $data["cutoff_date_loan"];
 
                 $loan->save();
 
@@ -952,7 +1024,7 @@ class GeneralController extends Controller
     }
 
     /**
-     * Add a transaction to the loan.
+     * Add a tag to the client.
      *
      * @return JSON
      */
@@ -969,11 +1041,156 @@ class GeneralController extends Controller
                 \App\BranchTag::firstOrCreate(['branch_id' => Auth::user()->branch_id,
                                                 'tag_id' => $tag->id]);
 
-                \App\ClientTag::firstOrCreate(['client_id' => $data["client_id"],
+                $client_tag = \App\ClientTag::firstOrCreate(['client_id' => $data["client_id"],
                                                 'tag_id' => $tag->id]);
 
-                return response()->json($tag);
+                $whole["tag"] = $tag;
+                $whole["client_tag"] = $client_tag;
+
+                return response()->json($whole);
             // }
         }
+    }
+
+    /**
+     * Delete a Client.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteClient(Request $request)
+    {
+        $data = $request->all();
+        
+        $client = \App\Client::find($data["client_id"]);
+
+        foreach ($client->loans as $loan) {
+            foreach ($loan->transactions as $transaction) {
+                $transaction->delete();
+            }
+            $loan->delete();
+        }
+
+        foreach ($client->clusters as $cluster) {
+            $cluster->pivot->delete();
+        }
+
+        foreach ($client->tags as $tag) {
+            $tag->pivot->delete();
+        }
+
+        return redirect("/structure");
+    }
+
+    /**
+     * Delete a Loan.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteLoan(Request $request)
+    {
+        $data = $request->all();
+        
+        $loan = \App\Loan::find($data["loan_id"]);
+
+        foreach ($loan->transactions as $transaction) {
+            $transaction->delete();
+        }
+        $loan->delete();
+
+        return redirect(URL::previous());
+    }
+
+    /**
+     * Delete a Transaction.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteTransaction(Request $request)
+    {
+        $data = $request->all();
+
+        \App\Transaction::destroy($data["transaction_id"]);
+
+        return redirect(URL::previous());
+    }
+
+    /**
+     * Delete a Tag.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteTag(Request $request)
+    {
+        $data = $request->all();
+
+        \App\ClientTag::destroy($data["tag_id"]);
+
+        return redirect(URL::previous());
+    }
+
+    /**
+     * Edit a Loan.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editLoan(Request $request)
+    {
+        $data = $request->all();
+
+        $loan = \App\Loan::find($data["loan_id"]);
+
+        $loan_type = \App\LoanType::firstOrCreate(['name' => $data['loan_type']]);
+
+        //check here
+        $loan->loan_type_id = $loan_type->id;
+        $loan->loan_cycle = $data['cycle_number'];
+        $loan->released_date = date("Y-m-d", strtotime($data['release_date']));
+        $loan->principal_amount = $data['principal_amount_loan'];
+        $loan->interest_amount = $data['interest_amount_loan'];
+        $loan->principal_balance = $data['principal_balance'];
+        $loan->interest_balance = $data['interest_balance'];
+        $loan->isActive = $data['isActive'];
+        $loan->isReleased = $data['isReleased'];
+        $loan->status = $data['status'];
+        $loan->maturity_date = date("Y-m-d", strtotime($data['maturity_date']));
+        $loan->cutoff_date = date("Y-m-d", strtotime($data['cutoff_date_loan']));
+
+        $loan->save();
+
+        return redirect(URL::previous());
+    }
+
+    /**
+     * Edit a Transaction.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editTransaction(Request $request)
+    {
+        $data = $request->all();
+
+        $transaction = \App\Transaction::find($data["transaction_id"]);
+        //check here
+        $transaction->principal_amount = $data['principal_amount_transaction'];
+        $transaction->interest_amount = $data['interest_amount_transaction'];
+        $transaction->payment_date = date("Y-m-d", strtotime($data['payment_date']));
+        $transaction->due_date = date("Y-m-d", strtotime($data['due_date']));
+        $transaction->cutoff_date = date("Y-m-d", strtotime($data['cutoff_date_transaction']));
+
+        $transaction->save();
+
+        $loan = \App\Loan::find($transaction->loan_id);
+        //check here
+        $loan->principal_amount = $data["principal_amount_loan_transaction_form"];
+        $loan->interest_amount = $data["interest_amount_loan_transaction_form"];
+        $loan->principal_balance = $data["principal_balance_transaction_form"];
+        $loan->interest_balance = $data["interest_balance_transaction_form"];
+        $loan->isActive = $data["isActive_transaction_form"];
+        $loan->status = $data["status_transaction_form"];
+        $loan->cutoff_date = $data["cutoff_date_loan"];
+
+        $loan->save();
+
+        return redirect(URL::previous());
     }
 }

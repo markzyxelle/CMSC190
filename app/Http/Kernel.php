@@ -51,5 +51,6 @@ class Kernel extends HttpKernel
         'unapproved' => \App\Http\Middleware\UnapprovedMiddleware::class,
         'administratorLoginRedirect' => \App\Http\Middleware\AdministratorLoginRedirectMiddleware::class,
         'administrator' => \App\Http\Middleware\AdministratorMiddleware::class,
+        'normaluser' => \App\Http\Middleware\NormalUserMiddleware::class,
     ];
 }

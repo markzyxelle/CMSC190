@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    CommonClusters - Client
+@endsection
+
 @section('css')
     <link href="{{ URL::asset('assets/css/client.css') }}" rel='stylesheet' type='text/css'>
 @endsection
@@ -7,7 +11,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Client</div>
 
@@ -90,7 +94,7 @@
                             <div class="form-group{{ $errors->has('region_id') ? ' has-error' : '' }}">
                                 <label class="col-md-3 control-label">Region</label>
                                 <div class="col-md-7">
-                                    <select required id="region-select" class="form-control" name="region_id" value="{{ old('region_id') }}" disabled>
+                                    <select id="region-select" class="form-control" name="region_id" value="{{ old('region_id') }}" disabled>
                                         <option value="">None</option>
                                         @foreach($regions as $region)
                                             @if($client->barangay_id != null)
@@ -114,7 +118,7 @@
                             <div class="form-group{{ $errors->has('province_id') ? ' has-error' : '' }}">
                                 <label class="col-md-3 control-label">Province</label>
                                 <div class="col-md-7">
-                                    <select required id="province-select" class="form-control" name="province_id" value="{{ old('province_id') }}" disabled>
+                                    <select id="province-select" class="form-control" name="province_id" value="{{ old('province_id') }}" disabled>
                                         <option value="">None</option>
                                         @if($client->barangay_id != null)  
                                             @foreach($selected_region->provinces as $province)
@@ -137,7 +141,7 @@
                             <div class="form-group{{ $errors->has('municipality_id') ? ' has-error' : '' }}">
                                 <label class="col-md-3 control-label">Municipality</label>
                                 <div class="col-md-7">
-                                    <select required id="municipality-select" class="form-control" name="municipality_id" value="{{ old('municipality_id') }}" disabled>
+                                    <select id="municipality-select" class="form-control" name="municipality_id" value="{{ old('municipality_id') }}" disabled>
                                         <option value="">None</option>
                                         @if($client->barangay_id != null)  
                                             @foreach($selected_province->municipalities as $municipality)
@@ -160,7 +164,7 @@
                             <div class="form-group{{ $errors->has('barangay_id') ? ' has-error' : '' }}">
                                 <label class="col-md-3 control-label">Barangay</label>
                                 <div class="col-md-7">
-                                    <select required id="barangay-select" class="form-control required-select" name="barangay_id" value="{{ old('barangay_id') }}" disabled>
+                                    <select id="barangay-select" class="form-control" name="barangay_id" value="{{ old('barangay_id') }}" disabled>
                                         <option value="">None</option>
                                         @if($client->barangay_id != null)  
                                             @foreach($selected_municipality->barangays as $barangay)
@@ -298,10 +302,13 @@
                             <div class="form-group{{ $errors->has('cutoff_date') ? ' has-error' : '' }}">
                                 <label class="col-md-3 control-label">Data as of</label>
                                 <div class="col-md-7">
-                                    <input id="cutoff-date" type="date" class="form-control required-date" name="cutoff_date" value="{{ $client->cutoff_date }}" disabled>
+                                    <input id="cutoff-date" type="date" class="form-control required-date" name="cutoff_date" data-saved="{{ $client->cutoff_date }}" value="{{ $client->cutoff_date }}" disabled>
 
                                     <span class="help-block wrong-format">
                                         <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                    </span>
+                                    <span class="help-block earlier-date">
+                                        <strong>Date is earlier than saved date</strong>
                                     </span>
                                 </div>
                             </div>
@@ -341,7 +348,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <h3>Loans</h3>
-                <div id="view-loans-information" data-id="{{ $client->id }}">
+                <div id="view-loans-information" data-id="{{ $client->id }}" data-activity="{{in_array(4,$activities) ? 1 : 0}}">
                     <table id="view-loans-table" class="table table-striped">
                         <thead>
                             <tr>
@@ -357,6 +364,10 @@
                                 <td>Status</td>
                                 <td>Maturity Date</td>
                                 <td>Cutoff Date</td>
+                                @if(in_array(4,$activities))
+                                    <td>Edit</td>  <!-- Put Restriction -->
+                                    <td>Delete</td>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -374,6 +385,14 @@
                                     <td>{{$loan->status}}</td>
                                     <td>{{$loan->maturity_date}}</td>
                                     <td>{{$loan->cutoff_date}}</td>
+                                    @if(in_array(4,$activities))
+                                        <td>
+                                            <button type='button' class='btn btn-info btn-sm modal-button raised edit-loan-button' data-toggle='modal' data-target='#edit-loan-modal'>Edit Loan</button>
+                                        </td>
+                                        <td>
+                                            <button type='button' class='btn btn-danger btn-sm modal-button raised delete-loan-button' data-toggle='modal' data-target='#delete-loan-modal'>Delete Loan</button>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
@@ -385,7 +404,7 @@
                     </div>
                 @endif
                 <h3>Transactions</h3>
-                <div id="view-transactions-information" data-id="">
+                <div id="view-transactions-information" data-id="" data-activity="{{in_array(5,$activities) ? 1 : 0}}">
                     <table id="view-transactions-table" class="table table-striped">
                         <thead>
                             <tr>
@@ -395,6 +414,10 @@
                                 <td>Due Date</td>
                                 <td>Status</td>
                                 <td>Cutoff Date</td>
+                                @if(in_array(5,$activities))
+                                    <td>Edit</td>             <!--  Put restriction -->
+                                    <td>Delete</td>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -420,6 +443,10 @@
 
     <!-- Modal content-->
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Loan</h4>
+            </div>
             <div class="modal-body">
                 <div id="add-loan-div">
                     <form id="add-loan-form" class="form-horizontal" role="form" data-url="{{URL::to('/addLoan')}}">
@@ -591,6 +618,10 @@
 
     <!-- Modal content-->
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Transaction</h4>
+            </div>
             <div class="modal-body">
                 <div id="add-transaction-div">
                     <form id="add-transaction-form" class="form-horizontal" role="form" data-url="{{URL::to('/addTransaction')}}">
@@ -712,7 +743,7 @@
                                 <select required id="isActive-select" class="form-control required-select" name="isActive_transaction_form" value="">
                                     <option value="">None</option>  
                                     <option class="True" value="1">True</option>
-                                    <option class="False"value="0">False</option>
+                                    <option class="False" value="0">False</option>
                                 </select>
                                 <span class="help-block required">
                                     <strong>This field is required</strong>
@@ -729,6 +760,19 @@
                                 </span>
                                 <span class="help-block max">
                                     <strong>Please limit number of characters to 255</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('cutoff_date_loan') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Data as of</label>
+                            <div class="col-md-7">
+                                <input id="cutoff-date-loan" type="date" class="form-control required-date" name="cutoff_date_loan" value="">
+
+                                <span class="help-block wrong-format">
+                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                </span>
+                                <span class="help-block earlier-date">
+                                    <strong>Date is earlier than saved date</strong>
                                 </span>
                             </div>
                         </div>
@@ -751,6 +795,10 @@
 
     <!-- Modal content-->
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Tags</h4>
+            </div>
             <div class="modal-body">
                 <h3>Tags</h3>
                 <div id="add-tags-div">
@@ -795,6 +843,7 @@
                             @foreach($tags as $tag)
                                 <tr>
                                     <td>{{$tag->name}}</td>
+                                    <td><button type='button' class='btn btn-danger btn-sm modal-button raised delete-tag-button' data-toggle='modal' data-target='#delete-tag-modal' data-id='{{$tag->pivot->id}}'>Delete Tag</button></td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -807,6 +856,448 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Loan Modal -->
+<div id="delete-loan-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete Loan</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this loan?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default raised pull-right" data-dismiss="modal">Close</button>
+                <form action="/deleteLoan" method="post">
+                    {!! csrf_field() !!}
+                    <input type="hidden" name="loan_id" id="delete-loan-id-modal" value=""/>
+                    <button class="btn btn-danger raised pull-right">
+                        <i class="fa fa-btn fa-trash-o"></i>Delete Loan
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Delete Transaction Modal -->
+<div id="delete-transaction-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete Transaction</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this transaction?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default raised pull-right" data-dismiss="modal">Close</button>
+                <form action="/deleteTransaction" method="post">
+                    {!! csrf_field() !!}
+                    <input type="hidden" name="transaction_id" id="delete-transaction-id-modal" value=""/>
+                    <button class="btn btn-danger raised pull-right">
+                        <i class="fa fa-btn fa-trash-o"></i>Delete Transaction
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Edit Loans -->
+<div id="edit-loan-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Loan</h4>
+            </div>
+            <div class="modal-body">
+                <div id="edit-loan-div">
+                    <form action="/editLoan" method="post" id="edit-loan-form" class="form-horizontal" role="form">
+                        {!! csrf_field() !!}
+                        <input type="hidden" name="loan_id" id="loan-id-modal" value=""/>
+                        <div class="form-group{{ $errors->has('loan_type') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Loan Type</label>
+                            <div class="col-md-7">
+                                <input id="loan-type" type="text" class="form-control required-text" name="loan_type" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block max">
+                                    <strong>Please limit number of characters to 255</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('cycle_number') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Cycle Number</label>
+                            <div class="col-md-7">
+                                <input id="cycle-number" type="text" class="form-control required-text required-number" name="cycle_number" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('release_date') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Release Date</label>
+                            <div class="col-md-7">
+                                <input id="release-date" type="date" class="form-control required-date" name="release_date" value="">
+
+                                <span class="help-block wrong-format">
+                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('principal_amount_loan') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Principal Amount</label>
+                            <div class="col-md-7">
+                                <input id="principal-amount-loan" type="text" class="form-control required-text required-number" name="principal_amount_loan" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('interest_amount_loan') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Interest Amount</label>
+                            <div class="col-md-7">
+                                <input id="interest-amount-loan" type="text" class="form-control required-text required-number" name="interest_amount_loan" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('principal_balance') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Principal Balance</label>
+                            <div class="col-md-7">
+                                <input id="principal-balance" type="text" class="form-control required-text required-number" name="principal_balance" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('interest_balance') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Interest Balance</label>
+                            <div class="col-md-7">
+                                <input id="interest-balance" type="text" class="form-control required-text required-number" name="interest_balance" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('isActive') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Active</label>
+                            <div class="col-md-7">
+                                <select required id="isActive-select" class="form-control required-select" name="isActive" value="">
+                                    <option value="">None</option>  
+                                    <option class="True" value="1">True</option>
+                                    <option class="False" value="0">False</option>
+                                </select>
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('isReleased') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Released</label>
+                            <div class="col-md-7">
+                                <select required id="isReleased-select" class="form-control required-select" name="isReleased" value="">
+                                    <option value="">None</option>  
+                                    <option class="True" value="1">True</option>
+                                    <option class="False" value="0">False</option>
+                                </select>
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Status</label>
+                            <div class="col-md-7">
+                                <input id="status" type="text" class="form-control required-text" name="status" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block max">
+                                    <strong>Please limit number of characters to 255</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('maturity_date') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Maturity Date</label>
+                            <div class="col-md-7">
+                                <input id="maturity-date" type="date" class="form-control required-date" name="maturity_date" value="">
+
+                                <span class="help-block wrong-format">
+                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('cutoff_date_loan') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Data as of</label>
+                            <div class="col-md-7">
+                                <input id="cutoff-date-loan" type="date" class="form-control required-date" name="cutoff_date_loan" value="">
+
+                                <span class="help-block wrong-format">
+                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                </span>
+                                <span class="help-block earlier-date">
+                                    <strong>Date is earlier than saved date</strong>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="edit-loan-submit">
+                    <i class="fa fa-btn fa-pencil"></i>  Submit
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Transaction -->
+<div id="edit-transaction-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Transaction</h4>
+            </div>
+            <div class="modal-body">
+                <div id="edit-transaction-div">
+                    <form action="/editTransaction" method="post" id="edit-transaction-form" class="form-horizontal" role="form">
+                        {!! csrf_field() !!}
+                        <h1> Transaction </h1>
+                        <input type="hidden" name="transaction_id" id="transaction-id-modal" value=""/>
+                        <div class="form-group{{ $errors->has('principal_amount_transaction') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Principal Amount</label>
+                            <div class="col-md-7">
+                                <input id="principal-amount-transaction" type="text" class="form-control required-text required-number" name="principal_amount_transaction" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('interest_amount_transaction') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Interest Amount</label>
+                            <div class="col-md-7">
+                                <input id="interest-amount-transaction" type="text" class="form-control required-text required-number" name="interest_amount_transaction" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('payment_date') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Payment Date</label>
+                            <div class="col-md-7">
+                                <input id="payment-date" type="date" class="form-control required-date" name="payment_date" value="">
+
+                                <span class="help-block wrong-format">
+                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('due_date') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Due Date</label>
+                            <div class="col-md-7">
+                                <input id="due-date" type="date" class="form-control required-date" name="due_date" value="">
+
+                                <span class="help-block wrong-format">
+                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('cutoff_date_transaction') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Data as of</label>
+                            <div class="col-md-7">
+                                <input id="cutoff-date-transaction" type="date" class="form-control required-date" name="cutoff_date_transaction" value="">
+
+                                <span class="help-block wrong-format">
+                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                </span>
+                                <span class="help-block earlier-date">
+                                    <strong>Date is earlier than saved date</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <h1> Loan </h1>
+                        <div class="form-group{{ $errors->has('principal_amount_loan_transaction_form') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Principal Amount</label>
+                            <div class="col-md-7">
+                                <input id="principal-amount-loan-transaction-form" type="text" class="form-control required-text required-number" name="principal_amount_loan_transaction_form" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('interest_amount_loan_transaction_form') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Interest Amount</label>
+                            <div class="col-md-7">
+                                <input id="interest-amount-loan-transaction-form" type="text" class="form-control required-text required-number" name="interest_amount_loan_transaction_form" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('principal_balance_transaction_form') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Principal Balance</label>
+                            <div class="col-md-7">
+                                <input id="principal-balance-transaction-form" type="text" class="form-control required-text required-number" name="principal_balance_transaction_form" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('interest_balance_transaction_form') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Interest Balance</label>
+                            <div class="col-md-7">
+                                <input id="interest-balance-transaction-form" type="text" class="form-control required-text required-number" name="interest_balance_transaction_form" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block number">
+                                    <strong>Please put a valid number</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('isActive_transaction_form') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Active</label>
+                            <div class="col-md-7">
+                                <select required id="isActive-select" class="form-control required-select" name="isActive_transaction_form" value="">
+                                    <option value="">None</option>  
+                                    <option class="True" value="1">True</option>
+                                    <option class="False" value="0">False</option>
+                                </select>
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('status_transaction_form') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Status</label>
+                            <div class="col-md-7">
+                                <input id="status-transaction-form" type="text" class="form-control required-text" name="status_transaction_form" value="">
+
+                                <span class="help-block required">
+                                    <strong>This field is required</strong>
+                                </span>
+                                <span class="help-block max">
+                                    <strong>Please limit number of characters to 255</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('cutoff_date_loan') ? ' has-error' : '' }}">
+                            <label class="col-md-3 control-label">Data as of</label>
+                            <div class="col-md-7">
+                                <input id="cutoff-date-loan" type="date" class="form-control required-date" name="cutoff_date_loan" value="">
+
+                                <span class="help-block wrong-format">
+                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                </span>
+                                <span class="help-block earlier-date">
+                                    <strong>Date is earlier than saved date</strong>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="edit-transaction-submit">
+                    <i class="fa fa-btn fa-pencil"></i>  Submit
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Tag Modal -->
+<div id="delete-tag-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete Tag</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this tag?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default raised pull-right" data-dismiss="modal">Close</button>
+                <form action="/deleteTag" method="post">
+                    {!! csrf_field() !!}
+                    <input type="hidden" name="tag_id" id="delete-tag-id-modal" value=""/>
+                    <button class="btn btn-danger raised pull-right">
+                        <i class="fa fa-btn fa-trash-o"></i>Delete Tag
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
 @endsection
 
 @section('javascript')
@@ -817,4 +1308,5 @@
         webshims.setOptions('forms-ext', {types: 'date'});
         webshims.polyfill('forms forms-ext');
     </script>
+    
 @endsection

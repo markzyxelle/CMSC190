@@ -1,0 +1,20 @@
+button{
+	border: 1px outset blue;
+	height:100px;
+	width:120px;
+	cursor:pointer;
+	margin:2%;
+}
+
+button:hover {
+	background-color: blue;
+	color:white;
+}
+
+i{
+	font-size: 5.3em;
+}
+
+.alert{
+	margin-top:2%;
+}

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    CommonClusters - Structure
+@endsection
+
 @section('css')
     <link href="{{ URL::asset('assets/css/structure.css') }}" rel='stylesheet' type='text/css'>
 @endsection
@@ -7,7 +11,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Structure</div>
 
@@ -246,7 +250,7 @@
                     <div class="form-group{{ $errors->has('barangay_id') ? ' has-error' : '' }}">
                         <label class="col-md-5 control-label">Barangay</label>
                         <div class="col-md-7">
-                            <select required id="barangay-select" class="form-control required-select" name="barangay_id" value="{{ old('barangay_id') }}">
+                            <select required id="barangay-select" class="form-control" name="barangay_id" value="{{ old('barangay_id') }}">
                                 <option value="">None</option>  
                             </select>
                             <span class="help-block required">
@@ -338,7 +342,7 @@
                     <div class="form-group{{ $errors->has('birthdate') ? ' has-error' : '' }}">
                         <label class="col-md-5 control-label">Birthdate</label>
                         <div class="col-md-7">
-                            <input id="birthdate" type="date" class="form-control required-date" name="birthdate" value="{{ old('birthdate') }}">
+                            <input id="birthdate" type="date" class="form-control" name="birthdate" value="{{ old('birthdate') }}">
 
                             <span class="help-block wrong-format">
                                 <strong>The date has a wrong format (MM/DD/YYYY)</strong>
@@ -374,6 +378,34 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Delete User Modal -->
+<div id="delete-client-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete Client</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this user?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default raised pull-right" data-dismiss="modal">Close</button>
+                <form action="/deleteClient" method="post">
+                    {!! csrf_field() !!}
+                    <input type="hidden" name="client_id" id="delete-client-id-modal" value=""/>
+                    <button class="btn btn-danger raised pull-right">
+                        <i class="fa fa-btn fa-trash-o"></i>Delete Client
+                    </button>
+                </form>
+            </div>
+        </div>
+
     </div>
 </div>
 @endsection

@@ -26,6 +26,9 @@ $( document ).ready(function() {	// $.post( "/getUsers/0", function(  ) {
 	    	htmlInside += "<td>"
 	    	htmlInside += value['email']
 	    	htmlInside += "</td>"
+	    	htmlInside += "<td>"
+	    	htmlInside += "<button type='button' class='btn btn-danger btn-sm modal-button raised unapprove-user-button' data-toggle='modal' data-target='#unapprove-user-modal' data-id='"+ value["id"] +"'>Unapprove User</button>"
+	    	htmlInside += "</td>"
 	        htmlInside += "<tr>"
 	    });
 	    $('#approved-users-table tbody').html(htmlInside);
@@ -141,5 +144,9 @@ $( document ).ready(function() {	// $.post( "/getUsers/0", function(  ) {
 
 	$(document).on('click', '#approve-user-submit', function(){
 		$( "#approve-user-form" ).submit();
+	});
+
+	$(document).on('click', '.unapprove-user-button', function(){
+		$( "#unapprove-user-id-modal" ).val($(this).data("id"));
 	});
 });

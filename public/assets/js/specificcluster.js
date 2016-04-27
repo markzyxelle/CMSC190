@@ -93,7 +93,7 @@ $( document ).ready(function() {
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
-			    	$('#structure-table').append("<tr><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a class='structure-client' data-id='" + value["id"] + "'>  " + value["first_name"] + "</a><td></tr>");
+			    	$('#structure-table').append("<tr><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a class='structure-client' data-id='" + value["id"] + "'>  " + value["last_name"]+ ", " +value["first_name"] + "</a><td></tr>");
 			    });
 			    $("#add-center-button").hide();
 				$("#add-group-button").hide();
@@ -140,7 +140,7 @@ $( document ).ready(function() {
 				    // Log each key in the response data
 				    $.each( resp, function( key, value ) {
 				    	if(!($(".moving-client[data-id="+ value["id"] + "]").length))
-				    		$('#selected-clients-table').append("<tr><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a class='moving-client' data-id='" + value["id"] + "'>  " + value["first_name"] + "</a><td></tr>");
+				    		$('#selected-clients-table').append("<tr><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a class='moving-client' data-id='" + value["id"] + "'>  " + value["last_name"]+ ", " +value["first_name"] + "</a><td></tr>");
 				    });
 				})
 				.fail(function( jqxhr, textStatus, error ) {
@@ -304,16 +304,27 @@ $( document ).ready(function() {
 		var form = $('#search-client-cluster-form').serialize();
 		var url = $(this).data('url');
 		var valid = true;
+
+		$("#search-client-cluster-form .help-block").hide();
+		$("#search-client-cluster-form .has-error").removeClass("has-error");
 		
 		$("#search-client-cluster-form .required-text").each(function(){
 			if($(this).val() == ""){
 				valid = false;
 				($(this).parent().find(".required")).show();
-				($(this).parent().parent()).addClass("has-error");
+				($(this).parent()).addClass("has-error");
 			}
 			if($(this).val().length > 255){
 				valid = false;
 				($(this).parent().find(".max")).show();
+				($(this).parent().parent()).addClass("has-error");
+			}
+		});
+
+		$("#search-client-cluster-form .required-select").each(function(){
+			if($(this).val() == ""){
+				valid = false;
+				($(this).parent().find(".required")).show();
 				($(this).parent().parent()).addClass("has-error");
 			}
 		});
@@ -346,40 +357,53 @@ $( document ).ready(function() {
 					switch(parseInt(data["setting"])){
 						case 1:
 							$("#search-results-table thead").html("<tr><td>Has Record?</td></tr>");
-							$("#search-results-table tbody").html("<tr><td>"+ (data["data"] ? "Yes" : "No") +"</td></tr>");
+							$("#search-results-table tbody").html("<tr><td><strong>"+ (data["data"] ? "The client has a record in this cluster" : "The client has no records in this cluster") +"</strong></td></tr>");
 							break;
 						case 2:
 							$("#search-results-table tbody").html("");
-							$.each( data["data"], function( key, value ) {
-								$("#search-results-table thead").append("<tr><td>Company</td><td>Number of Loans</td></tr>");
-								$("#search-results-table tbody").append("<tr><td>"+ key + "</td><td>"+ value +"</td></tr>");
-							})
+							$("#search-results-table thead").html("");
+							if(data["data"].length == 0) $("#search-results-table tbody").html("<strong>The client has no records in this cluster</strong>");
+							else{
+								$.each( data["data"], function( key, value ) {
+									$("#search-results-table thead").append("<tr><td>Company</td><td>Number of Loans</td></tr>");
+									$("#search-results-table tbody").append("<tr><td>"+ key + "</td><td>"+ value +"</td></tr>");
+								})
+							}
 							break;	
 						case 3:
-							$("#search-results-table thead").html("<tr><td colspan='7'>Company</td></tr>");
 							$("#search-results-table tbody").html("");
-							$.each( data["data"], function( key, value ) {
-								$("#search-results-table tbody").append("<tr><td colspan='7'>"+ key +"</td></tr>");
-								$("#search-results-table tbody").append("<tr><td></td><td>Loan Type</td><td>Loan Cycle</td><td>Active?</td><td>Released?</td><td>Status</td><td>As Of</td></tr>");
-								$.each( value, function( x, loan ) {
-									$("#search-results-table tbody").append("<tr><td></td><td>"+ loan["loan_type_id"] +"</td><td>"+ loan["loan_cycle"] +"</td><td>"+ (loan["isActive"] ? "True" : "False") +"</td><td>"+ (loan["isReleased"] ? "True" : "False") +"</td><td>"+ loan["status"] +"</td><td>" + loan["cutoff_date"] + "</td></tr>");
-								})
-							})
-							break;
-						case 4:
-							$("#search-results-table thead").html("<tr><td colspan='7'>Company</td></tr>");
-							$("#search-results-table tbody").html("");
-							$.each( data["data"], function( key, value ) {
-								$("#search-results-table tbody").append("<tr><td colspan='7'>"+ key +"</td></tr>");
-								$("#search-results-table tbody").append("<tr><td></td><td>Loan Type</td><td>Loan Cycle</td><td>Active?</td><td>Released?</td><td>Status</td><td>As Of</td></tr>");
-								$.each( value, function( x, loan ) {
-									$("#search-results-table tbody").append("<tr><td></td><td>"+ loan["loan_type_id"] +"</td><td>"+ loan["loan_cycle"] +"</td><td>"+ (loan["isActive"] ? "True" : "False") +"</td><td>"+ (loan["isReleased"] ? "True" : "False") +"</td><td>"+ loan["status"] +"</td><td>" + loan["cutoff_date"] + "</td></tr>");
-									if(loan["transactions"].length > 0) $("#search-results-table tbody").append("<tr><td></td><td></td><td>Principal Amount</td><td>Interest Amount</td><td>Payment Date</td><td>Due Date</td><td>As of</td></tr>");
-									$.each( loan["transactions"], function( y,transaction ) {
-										$("#search-results-table tbody").append("<tr><td></td><td></td><td>"+ transaction["principal_amount"] +"</td><td>"+ transaction["interest_amount"] +"</td><td>"+ transaction["payment_date"] +"</td><td>"+ transaction["due_date"] +"</td><td>"+ transaction["cutoff_date"] + "</td></tr>");
+							$("#search-results-table thead").html("");
+							if(data["data"].length == 0) $("#search-results-table tbody").html("<strong>The client has no records in this cluster</strong>");
+							else{
+								$("#search-results-table thead").html("<tr><td colspan='7'>Company</td></tr>");
+								$.each( data["data"], function( key, value ) {
+									$("#search-results-table tbody").append("<tr><td colspan='7'>"+ key +"</td></tr>");
+									$("#search-results-table tbody").append("<tr><td></td><td>Loan Type</td><td>Loan Cycle</td><td>Active?</td><td>Released?</td><td>Status</td><td>As Of</td></tr>");
+									$.each( value, function( x, loan ) {
+										$("#search-results-table tbody").append("<tr><td></td><td>"+ loan["loan_type_id"] +"</td><td>"+ loan["loan_cycle"] +"</td><td>"+ (loan["isActive"] ? "True" : "False") +"</td><td>"+ (loan["isReleased"] ? "True" : "False") +"</td><td>"+ loan["status"] +"</td><td>" + loan["cutoff_date"] + "</td></tr>");
 									})
 								})
-							})
+							}
+							break;
+						case 4:
+							$("#search-results-table tbody").html("");
+							$("#search-results-table thead").html("");
+							if(data["data"].length == 0) $("#search-results-table tbody").html("<strong>The client has no records in this cluster</strong>");
+							else{
+								$("#search-results-table thead").html("<tr><td colspan='7'>Company</td></tr>");
+								$("#search-results-table tbody").html("");
+								$.each( data["data"], function( key, value ) {
+									$("#search-results-table tbody").append("<tr><td colspan='7'>"+ key +"</td></tr>");
+									$("#search-results-table tbody").append("<tr><td></td><td>Loan Type</td><td>Loan Cycle</td><td>Active?</td><td>Released?</td><td>Status</td><td>As Of</td></tr>");
+									$.each( value, function( x, loan ) {
+										$("#search-results-table tbody").append("<tr><td></td><td>"+ loan["loan_type_id"] +"</td><td>"+ loan["loan_cycle"] +"</td><td>"+ (loan["isActive"] ? "True" : "False") +"</td><td>"+ (loan["isReleased"] ? "True" : "False") +"</td><td>"+ loan["status"] +"</td><td>" + loan["cutoff_date"] + "</td></tr>");
+										if(loan["transactions"].length > 0) $("#search-results-table tbody").append("<tr><td></td><td></td><td>Principal Amount</td><td>Interest Amount</td><td>Payment Date</td><td>Due Date</td><td>As of</td></tr>");
+										$.each( loan["transactions"], function( y,transaction ) {
+											$("#search-results-table tbody").append("<tr><td></td><td></td><td>"+ transaction["principal_amount"] +"</td><td>"+ transaction["interest_amount"] +"</td><td>"+ transaction["payment_date"] +"</td><td>"+ transaction["due_date"] +"</td><td>"+ transaction["cutoff_date"] + "</td></tr>");
+										})
+									})
+								})
+							}
 							break;					
 					}
 					// $('#structure-table').append("<tr><td><a href='/viewClient/" + data["id"] + " class='structure-client' data-id='" + data["id"] + "'>" + data["first_name"] + "</a><td></tr>");

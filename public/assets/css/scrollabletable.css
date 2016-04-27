@@ -1,0 +1,8 @@
+#branches-div, #roles-div, #view-pending-clusters, #view-approved-clusters, #view-approved-users, #view-pending-users, #search-results-clusters{
+	border: 1px solid #ddd;
+	height:250px;
+	line-height:3em;
+	overflow:auto;
+	padding:5px;
+}
+

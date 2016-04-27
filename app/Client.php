@@ -38,4 +38,12 @@ class Client extends Model
     {
         return $this->belongsToMany('App\Tag', 'client_tags')->withPivot("id");
     }
+
+    /**
+     * Get the clusters for the client.
+     */
+    public function clusters()
+    {
+        return $this->belongsToMany('App\Cluster', 'client_clusters')->withPivot("id");
+    }
 }

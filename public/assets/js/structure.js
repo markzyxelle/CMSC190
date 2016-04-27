@@ -6,6 +6,7 @@ $( document ).ready(function() {
 		var branch_id = $("#branch-breadcrumb").data('id');
 		$.getJSON( "/getCenters/" + branch_id ) 
 			.done(function( resp ) {
+				$('#structure-table thead').html("<tr><td>Center Name</td></tr>");
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
@@ -33,6 +34,7 @@ $( document ).ready(function() {
 		var center_id = $("#center-breadcrumb").data('id');
 		$.getJSON( "/getGroups/" + center_id ) 
 			.done(function( resp ) {
+				$('#structure-table thead').html("<tr><td>Group Name</td></tr>");
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
@@ -64,6 +66,7 @@ $( document ).ready(function() {
 				$( "#center-breadcrumb" ).html( $this.html() );
 				$("#center-id-modal").val(center_id);
 
+				$('#structure-table thead').html("<tr><td>Group Name</td></tr>");
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
@@ -91,10 +94,11 @@ $( document ).ready(function() {
 				$( "#group-breadcrumb" ).html( $this.html() );
 				$("#group-id-modal").val(group_id);
 
+				$('#structure-table thead').html("<tr><td>Name</td><td>View</td><td>Delete</td></tr>");
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
-			    	$('#structure-table').append("<tr><td><a href='/viewClient/" + value["id"] + "' class='structure-client' data-id='" + value["id"] + "'>" + value["first_name"] + "</a><td></tr>");
+			    	$('#structure-table').append("<tr class='structure-client'><td>" + value["last_name"]+ ", " +value["first_name"] + "</td><td><a href='/viewClient/"+ value["id"] + "'>" + "<button class='btn btn-sm raised btn-info'><i class='fa fa-btn fa-eye'></i>View Client</button></a></td><td data-id='"+ value["id"] +"'>" + "<button type='button' id='delete-client-button' class='btn btn-danger btn-sm modal-button raised delete-client-button' data-toggle='modal' data-target='#delete-client-modal'><i class='fa fa-btn fa-trash-o'></i>Delete User</button>" +"<td></tr>");
 			    });
 			    $("#add-center-button").hide();
 				$("#add-group-button").hide();
@@ -223,8 +227,6 @@ $( document ).ready(function() {
 		var url = $(this).data('url');
 		var valid = true;
 
-		alert(url);
-
 		$("#addClientModal .help-block").hide();
 		$("#addClientModal .form-group.has-error").removeClass("has-error");
 		
@@ -249,14 +251,6 @@ $( document ).ready(function() {
 			}
 		});
 
-		$("#birthdate").each(function(){
-			if(!isValidDate($(this).val())){
-				valid = false;
-				($(this).parent().find(".wrong-format")).show();
-				($(this).parent().parent()).addClass("has-error");
-			}
-		});
-
 		$("#cutoff-date").each(function(){
 			if(!isValidDate($(this).val())){
 				valid = false;
@@ -274,24 +268,25 @@ $( document ).ready(function() {
 		});
 
 		//AJAX: post to database
-		// if(valid == true){
-		// 	$.ajax({
-		// 		type : 'POST',
-		// 		url: url,
-		// 		data : form,
-		// 		dataType : 'json',
-		// 		success : function(data) {
-		// 			$('#structure-table').append("<tr><td><a href='/viewClient/" + data["id"] + " class='structure-client' data-id='" + data["id"] + "'>" + data["first_name"] + "</a><td></tr>");
-		// 			// alert(data["center_name"]);
-		// 			// $.each( data, function( key, value ) {
-		// 			// 	alert("key: " + key + " value: " + value);
-		// 		 //    })
-		// 		},
-		// 		error : function(data, text, error) {
-		// 			alert("error")
-		// 		}
-		// 	});
-		// }
+		if(valid == true){
+			$.ajax({
+				type : 'POST',
+				url: url,
+				data : form,
+				dataType : 'json',
+				success : function(data) {
+					alert(JSON.stringify(data));
+					// $('#structure-table').append("<tr><td><a href='/viewClient/" + data["id"] + " class='structure-client' data-id='" + data["id"] + "'>" + data["first_name"] + "</a><td></tr>");
+					// alert(data["center_name"]);
+					// $.each( data, function( key, value ) {
+					// 	alert("key: " + key + " value: " + value);
+				 //    })
+				},
+				error : function(data, text, error) {
+					alert("error")
+				}
+			});
+		}
 	});
 
 	$(document).on('click', '#add-center-submit', function(){
@@ -381,6 +376,10 @@ $( document ).ready(function() {
 				    alert("There was an error");
 			});
 		}
+	});
+
+	$(document).on('click', '.delete-client-button', function(){
+		$("#delete-client-id-modal").val($(this).parent().data('id'));
 	});
 
 	// $("tr").click(function(){

@@ -18,11 +18,12 @@ class AdminController extends Controller
      */
     public function users()
     {
-        $code = Auth::user()->company->company_code;
+        $company = Auth::user()->company;
         $approved = Auth::user()->company->users()->where('isApproved', 1)->count() / 10;
         $pending = Auth::user()->company->users()->where('isApproved', 0)->count() / 10;
         $branches = Auth::user()->company->branches;
         $roles = Auth::user()->company->roles;
+        $activities = \App\Activity::all();
 
         // $temp = Auth::user()->company->users;
         // foreach ($temp as $key => $value) {
@@ -33,11 +34,12 @@ class AdminController extends Controller
         // echo $pending;
         // dd(Auth::user()->company->users->where('username', 'mark'));
 
-        return view('admin.users')->with('code', $code)
+        return view('admin.users')->with('company', $company)
                             ->with('approved', $approved)
                             ->with('pending', $pending)
                             ->with('branches', $branches)
-                            ->with('roles', $roles);
+                            ->with('roles', $roles)
+                            ->with('activities', $activities);
 
         // return view('users')->with('code', $code);
     }
@@ -157,6 +159,58 @@ class AdminController extends Controller
         $user->isApproved = 1;
         $user->save();
 
+        //auto-join to unversal clusters
+        $cluster = \App\Cluster::where("cluster_code", "a1")->first();
+        $cluster_user = \App\ClusterUser::firstOrCreate([
+            'cluster_id' => $cluster->id,
+            'user_id' => $user->id,
+            'isApproved' => 1,
+        ]);
+
+        \App\ActionClusterUser::firstOrCreate([
+            'cluster_user_id' => $cluster_user->id,
+            'action_id' => 2,
+        ]);
+
+        \App\ActionClusterUser::firstOrCreate([
+            'cluster_user_id' => $cluster_user->id,
+            'action_id' => 3,
+        ]);
+
+        $cluster = \App\Cluster::where("cluster_code", "a2")->first();
+        $cluster_user = \App\ClusterUser::firstOrCreate([
+            'cluster_id' => $cluster->id,
+            'user_id' => $user->id,
+            'isApproved' => 1,
+        ]);
+
+        \App\ActionClusterUser::firstOrCreate([
+            'cluster_user_id' => $cluster_user->id,
+            'action_id' => 2,
+        ]);
+
+        \App\ActionClusterUser::firstOrCreate([
+            'cluster_user_id' => $cluster_user->id,
+            'action_id' => 3,
+        ]);
+
+        $cluster = \App\Cluster::where("cluster_code", "a3")->first();
+        $cluster_user = \App\ClusterUser::firstOrCreate([
+            'cluster_id' => $cluster->id,
+            'user_id' => $user->id,
+            'isApproved' => 1,
+        ]);
+
+        \App\ActionClusterUser::firstOrCreate([
+            'cluster_user_id' => $cluster_user->id,
+            'action_id' => 2,
+        ]);
+
+        \App\ActionClusterUser::firstOrCreate([
+            'cluster_user_id' => $cluster_user->id,
+            'action_id' => 3,
+        ]);
+
         return redirect('/users');
     }   
 
@@ -230,6 +284,102 @@ class AdminController extends Controller
         //     'name' => $data['branch_name'],
         // ]);
         return redirect('/roles');
+    }
+
+    /**
+     * Unapprove User.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function unapproveUser(Request $request)
+    {
+        $data = $request->all();
+        
+        $user = \App\User::find($data['user_id']);
+        $user->company_role_id = NULL;
+        $user->branch_id = NULL;
+        $user->isApproved = 0;
+        $user->save();
+
+        return redirect('/users');
+    } 
+
+    /**
+     * Edit Branch.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editBranch(Request $request)
+    {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'branch_name' => 'required|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+        
+        $branch = \App\Branch::find($data["branch_id"]);
+        $branch->name = $data["branch_name"];
+        $branch->save();
+
+        return redirect('/branches');
     }     
 
+    /**
+     * Edit Role.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editRole(Request $request)
+    {
+        $data = $request->all();
+        
+        foreach (\App\Activity::all() as $activity) {
+            if(array_key_exists(str_replace(" ", "_", $activity->id), $data)){
+                \App\CompanyRoleActivity::firstOrCreate(['activity_id' => $activity->id, 'company_role_id' => $data["company_role_id"]]);
+            }
+            else{
+                $company_role_activity = \App\CompanyRoleActivity::where([
+                                                ['activity_id',$activity->id],
+                                                ['company_role_id',$data["company_role_id"]],
+                                            ])->first();
+                if($company_role_activity != null) $company_role_activity->delete();
+            }
+        }
+
+        return redirect('/roles');
+    }   
+
+    /**
+     * Edit Company.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editCompany(Request $request)
+    {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'company_name' => 'required|max:255',
+            'company_shortname' => 'required|max:15'
+        ]);
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+        
+        $company = Auth::user()->company;
+        $company->name = $data["company_name"];
+        $company->shortname = $data["company_shortname"];
+        $company->save();
+
+        return redirect('/users');
+    }     
 }

@@ -519,7 +519,7 @@ class GeneralController extends Controller
                 $client_detail->middle_name = $client[7];
                 if($client[9] != "") $client_detail->birthdate = date("Y-m-d", strtotime($client[9]));
                 // else $client_detail->birthdate = date("Y-m-d", strtotime("0000-00-00"));
-                else $client_detail->birthdate = NULL;
+                else $client_detail->birthdate = "0000-00-00";
                 $client_detail->birthplace = $client[11];
                 if($client[13] < 1) $client_detail->gender_id = 3;
                 else $client_detail->gender_id = $client[13];

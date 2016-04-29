@@ -787,7 +787,6 @@ class GeneralController extends Controller
                     if($loan["loan"][25] != "") $loan_detail->maturity_date = date("Y-m-d", strtotime($loan["loan"][12]));
                     else $loan_detail->maturity_date = null;
                     $loan_detail->cutoff_date = date("Y-m-d", strtotime($cutoff_date));
-                    dd($loan_detail);
                     //loan_history,client_history
                     $loan_detail->save();
                     $loantemp++;

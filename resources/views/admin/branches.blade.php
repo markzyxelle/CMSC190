@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    CommonClusters - Branches
+    CommonCluster - Branches
 @endsection
 
 @section('css')

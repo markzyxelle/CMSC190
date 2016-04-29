@@ -1,4 +1,4 @@
-#branches-div, #roles-div, #view-pending-clusters, #view-approved-clusters, #view-approved-users, #view-pending-users, #search-results-clusters{
+#branches-div, #roles-div, #view-pending-clusters, #view-approved-clusters, #view-approved-users, #view-pending-users, #search-results-clusters, #search-results-body{
 	border: 1px solid #ddd;
 	height:250px;
 	line-height:3em;

@@ -98,7 +98,7 @@ $( document ).ready(function() {
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
-			    	$('#structure-table').append("<tr class='structure-client'><td>" + value["last_name"]+ ", " +value["first_name"] + "</td><td><a href='/viewClient/"+ value["id"] + "'>" + "<button class='btn btn-sm raised btn-info'><i class='fa fa-btn fa-eye'></i>View Client</button></a></td><td data-id='"+ value["id"] +"'>" + "<button type='button' id='delete-client-button' class='btn btn-danger btn-sm modal-button raised delete-client-button' data-toggle='modal' data-target='#delete-client-modal'><i class='fa fa-btn fa-trash-o'></i>Delete User</button>" +"<td></tr>");
+			    	$('#structure-table').append("<tr class='structure-client'><td>" + value["last_name"]+ ", " +value["first_name"] + "</td><td><a href='/viewClient/"+ value["id"] + "'>" + "<button class='btn btn-sm raised btn-info'><i class='fa fa-btn fa-eye'></i>View Client</button></a></td><td data-id='"+ value["id"] +"'>" + "<button type='button' id='delete-client-button' class='btn btn-danger btn-sm modal-button raised delete-client-button' data-toggle='modal' data-target='#delete-client-modal'><i class='fa fa-btn fa-trash-o'></i>Delete Client</button>" +"<td></tr>");
 			    });
 			    $("#add-center-button").hide();
 				$("#add-group-button").hide();
@@ -152,6 +152,7 @@ $( document ).ready(function() {
 						$("#center-required-span").hide();
 						$("#center-required-strong").hide();
 						$("#center-name-form").removeClass( "has-error" );
+						$("#add-center-form").find("input[type=text]").val("");
 						// alert(data["center_name"]);
 						// $.each( data, function( key, value ) {
 						// 	alert("key: " + key + " value: " + value);
@@ -208,6 +209,7 @@ $( document ).ready(function() {
 						$("#group-unique-span").hide();
 						$("#group-unique-strong").hide();
 						$("#group-name-form").removeClass( "has-error" );
+						$("#add-group-form").find("input[type=text]").val("");
 						// alert(data["center_name"]);
 						// $.each( data, function( key, value ) {
 						// 	alert("key: " + key + " value: " + value);
@@ -230,7 +232,7 @@ $( document ).ready(function() {
 		$("#addClientModal .help-block").hide();
 		$("#addClientModal .form-group.has-error").removeClass("has-error");
 		
-		$(".required-text").each(function(){
+		$("#addClientModal .required-text").each(function(){
 			if($(this).val() == ""){
 				valid = false;
 				($(this).parent().find(".required")).show();
@@ -243,7 +245,7 @@ $( document ).ready(function() {
 			}
 		});
 
-		$(".required-select").each(function(){
+		$("#addClientModal .required-select").each(function(){
 			if($(this).val() == ""){
 				valid = false;
 				($(this).parent().find(".required")).show();
@@ -251,7 +253,7 @@ $( document ).ready(function() {
 			}
 		});
 
-		$("#cutoff-date").each(function(){
+		$("#addClientModal #cutoff-date").each(function(){
 			if(!isValidDate($(this).val())){
 				valid = false;
 				($(this).parent().find(".wrong-format")).show();
@@ -259,7 +261,7 @@ $( document ).ready(function() {
 			}
 		});
 
-		$("#mobile-number").each(function(){
+		$("#addClientModal #mobile-number").each(function(){
 			if(isNaN($(this).val())){
 				valid = false;
 				($(this).parent().find(".wrong-format")).show();
@@ -276,7 +278,11 @@ $( document ).ready(function() {
 				dataType : 'json',
 				success : function(data) {
 					// alert(JSON.stringify(data));
-					$('#structure-table').append("<tr class='structure-client'><td>" + data["last_name"]+ ", " +data["first_name"] + "</td><td><a href='/viewClient/"+ data["id"] + "'>" + "<button class='btn btn-sm raised btn-info'><i class='fa fa-btn fa-eye'></i>View Client</button></a></td><td data-id='"+ data["id"] +"'>" + "<button type='button' id='delete-client-button' class='btn btn-danger btn-sm modal-button raised delete-client-button' data-toggle='modal' data-target='#delete-client-modal'><i class='fa fa-btn fa-trash-o'></i>Delete User</button>" +"<td></tr>");
+					$('#structure-table').append("<tr class='structure-client'><td>" + data["last_name"]+ ", " +data["first_name"] + "</td><td><a href='/viewClient/"+ data["id"] + "'>" + "<button class='btn btn-sm raised btn-info'><i class='fa fa-btn fa-eye'></i>View Client</button></a></td><td data-id='"+ data["id"] +"'>" + "<button type='button' id='delete-client-button' class='btn btn-danger btn-sm modal-button raised delete-client-button' data-toggle='modal' data-target='#delete-client-modal'><i class='fa fa-btn fa-trash-o'></i>Delete Client</button>" +"<td></tr>");
+					$("#addClientModal").find("input[type=text]").val("");
+					$("#addClientModal").find("input[type=date]").val("");
+					$("#addClientModal").find("select option").prop("selected", "");
+					$("#addClientModal").find("select option[value='']").prop("selected", "selected");
 					// $('#structure-table').append("<tr><td><a href='/viewClient/" + data["id"] + " class='structure-client' data-id='" + data["id"] + "'>" + data["first_name"] + "</a><td></tr>");
 					// alert(data["center_name"]);
 					// $.each( data, function( key, value ) {

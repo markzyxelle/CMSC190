@@ -149,4 +149,10 @@ $( document ).ready(function() {	// $.post( "/getUsers/0", function(  ) {
 	$(document).on('click', '.unapprove-user-button', function(){
 		$( "#unapprove-user-id-modal" ).val($(this).data("id"));
 	});
+
+	if($( "#role-form" ).val() == 1) $("#branch-div").hide();
+	$( "#role-form" ).change(function() {
+		if($(this).val() == 1) $("#branch-div").hide();
+		else $("#branch-div").show();
+	});
 });

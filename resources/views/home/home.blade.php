@@ -43,34 +43,34 @@
                         </div>
                     @endif
                     @if($isAdministrator != 1)
-                        <div class="row">
-                            <div class="col-md-2">
-                                <a href="{{URL::to('/structure')}}"><button><i class="glyphicon glyphicon-folder-open"></i>Structure</button></a>
-                            </div>
-                            <div class="col-md-9 alert alert-info">
-                                <strong>Organize, add, and edit client information</strong>
-                            </div>
-                        </div>
-                        @if(in_array(7,$activities))
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <a href="{{URL::to('/upload')}}"><button><i class="glyphicon glyphicon-circle-arrow-up"></i>Upload</button></a>
-                                </div>
-                                <div class="col-md-9 alert alert-info">
-                                    <strong>Upload client, loan, and transaction information using a CSV file.</strong>
-                                </div>
-                            </div>
-                        @endif
                         @if(in_array(6,$activities))
                             <div class="row">
                                 <div class="col-md-2">
                                     <a href="{{URL::to('/clusters')}}"><button><i class="glyphicon glyphicon-globe"></i>Clusters</button></a>
                                 </div>
                                 <div class="col-md-9 alert alert-info">
-                                    <strong>Join or create clusters where you can share client information</strong>
+                                    <strong>Join or create clusters where you can share/view clients and loan Info</strong>
                                 </div>
                             </div>
                         @endif
+                        @if(in_array(7,$activities))
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <a href="{{URL::to('/upload')}}"><button><i class="glyphicon glyphicon-circle-arrow-up"></i>Upload</button></a>
+                                </div>
+                                <div class="col-md-9 alert alert-info">
+                                    <strong>Upload client, loan, and transaction information using CSV file</strong>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="row">
+                            <div class="col-md-2">
+                                <a href="{{URL::to('/structure')}}"><button><i class="glyphicon glyphicon-folder-open"></i>Maintain Data</button></a>
+                            </div>
+                            <div class="col-md-9 alert alert-info">
+                                <strong>Organize, add, and edit client and loan information</strong>
+                            </div>
+                        </div>
                     @endif
                 </div>
             </div>

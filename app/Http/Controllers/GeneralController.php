@@ -178,6 +178,7 @@ class GeneralController extends Controller
     public function getGroups($center_id, Request $request)
     {
         if($request->ajax()){
+            //put if to check if they own the center
             $center = \App\Center::find($center_id);
             $groups = $center->groups;
             
@@ -316,7 +317,7 @@ class GeneralController extends Controller
                 //                     ->with('approved', $approved)
                 //                     ->with('pending', $pending);
 
-                return response()->json($data);
+                return response()->json($client);
             }
         }
     }
@@ -427,9 +428,9 @@ class GeneralController extends Controller
                         // $client[$row][] = (\App\Barangay::find($data[10]) != null || $data[10] == "-1") ? true : false;
                         $client[$row][] = is_numeric($data[10]) ? true : false;     //change
                         $client[$row][] = $data[10];//19
-                        $client[$row][] = strlen($data[11]) > 255 ? false : true;
+                        $client[$row][] = (strlen($data[11]) > 255 || $data[11] == "") ? false : true;
                         $client[$row][] = $data[11];
-                        $client[$row][] = strlen($data[12]) > 255 ? false : true;
+                        $client[$row][] = (strlen($data[12]) > 255 || $data[12] == "") ? false : true;
                         $client[$row][] = $data[12];
                         $client[$row][] = $data[13] > 3 ? false : true;     //change
                         $client[$row][] = $data[13];
@@ -517,9 +518,13 @@ class GeneralController extends Controller
                 $client_detail->first_name = $client[5];
                 $client_detail->middle_name = $client[7];
                 if($client[9] != "") $client_detail->birthdate = date("Y-m-d", strtotime($client[9]));
+                // else $client_detail->birthdate = date("Y-m-d", strtotime("0000-00-00"));
+                else $client_detail->birthdate = NULL;
                 $client_detail->birthplace = $client[11];
-                $client_detail->gender_id = $client[13];
-                $client_detail->civil_status_id = $client[15];
+                if($client[13] < 1) $client_detail->gender_id = 3;
+                else $client_detail->gender_id = $client[13];
+                if($client[15] < 1) $client_detail->civil_status_id = 5;
+                else $client_detail->civil_status_id = $client[15];
                 $client_detail->house_address = $client[17];
                 $barangay = \App\Barangay::find($client[19]);
                 if($barangay != null) $client_detail->barangay_id = $barangay->id;
@@ -1077,6 +1082,8 @@ class GeneralController extends Controller
         foreach ($client->tags as $tag) {
             $tag->pivot->delete();
         }
+
+        $client->delete();
 
         return redirect("/structure");
     }

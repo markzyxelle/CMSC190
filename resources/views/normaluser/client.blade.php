@@ -544,7 +544,6 @@
                             <label class="col-md-3 control-label">Active</label>
                             <div class="col-md-7">
                                 <select required class="form-control required-select" name="isActive" value="">
-                                    <option value="">None</option>  
                                     <option value="1">True</option>
                                     <option value="0">False</option>
                                 </select>
@@ -557,7 +556,6 @@
                             <label class="col-md-3 control-label">Released</label>
                             <div class="col-md-7">
                                 <select required class="form-control required-select" name="isReleased" value="">
-                                    <option value="">None</option>  
                                     <option value="1">True</option>
                                     <option value="0">False</option>
                                 </select>
@@ -628,62 +626,64 @@
                         {!! csrf_field() !!}
                         <h1> Transaction </h1>
                         <input type="hidden" name="loan_id" id="loan-id-modal" value=""/>
-                        <div class="form-group{{ $errors->has('principal_amount_transaction') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label">Principal Amount</label>
-                            <div class="col-md-7">
-                                <input id="principal-amount-transaction" type="text" class="form-control required-text required-number" name="principal_amount_transaction" value="">
+                        <span id="transaction-part-form">
+                            <div class="form-group{{ $errors->has('principal_amount_transaction') ? ' has-error' : '' }}">
+                                <label class="col-md-3 control-label">Principal Amount</label>
+                                <div class="col-md-7">
+                                    <input id="principal-amount-transaction" type="text" class="form-control required-text required-number" name="principal_amount_transaction" value="">
 
-                                <span class="help-block required">
-                                    <strong>This field is required</strong>
-                                </span>
-                                <span class="help-block number">
-                                    <strong>Please put a valid number</strong>
-                                </span>
+                                    <span class="help-block required">
+                                        <strong>This field is required</strong>
+                                    </span>
+                                    <span class="help-block number">
+                                        <strong>Please put a valid number</strong>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group{{ $errors->has('interest_amount_transaction') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label">Interest Amount</label>
-                            <div class="col-md-7">
-                                <input id="interest-amount-transaction" type="text" class="form-control required-text required-number" name="interest_amount_transaction" value="">
+                            <div class="form-group{{ $errors->has('interest_amount_transaction') ? ' has-error' : '' }}">
+                                <label class="col-md-3 control-label">Interest Amount</label>
+                                <div class="col-md-7">
+                                    <input id="interest-amount-transaction" type="text" class="form-control required-text required-number" name="interest_amount_transaction" value="">
 
-                                <span class="help-block required">
-                                    <strong>This field is required</strong>
-                                </span>
-                                <span class="help-block number">
-                                    <strong>Please put a valid number</strong>
-                                </span>
+                                    <span class="help-block required">
+                                        <strong>This field is required</strong>
+                                    </span>
+                                    <span class="help-block number">
+                                        <strong>Please put a valid number</strong>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group{{ $errors->has('payment_date') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label">Payment Date</label>
-                            <div class="col-md-7">
-                                <input id="payment-date" type="date" class="form-control required-date" name="payment_date" value="">
+                            <div class="form-group{{ $errors->has('payment_date') ? ' has-error' : '' }}">
+                                <label class="col-md-3 control-label">Payment Date</label>
+                                <div class="col-md-7">
+                                    <input id="payment-date" type="date" class="form-control required-date" name="payment_date" value="">
 
-                                <span class="help-block wrong-format">
-                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
-                                </span>
+                                    <span class="help-block wrong-format">
+                                        <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group{{ $errors->has('due_date') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label">Due Date</label>
-                            <div class="col-md-7">
-                                <input id="due-date" type="date" class="form-control required-date" name="due_date" value="">
+                            <div class="form-group{{ $errors->has('due_date') ? ' has-error' : '' }}">
+                                <label class="col-md-3 control-label">Due Date</label>
+                                <div class="col-md-7">
+                                    <input id="due-date" type="date" class="form-control required-date" name="due_date" value="">
 
-                                <span class="help-block wrong-format">
-                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
-                                </span>
+                                    <span class="help-block wrong-format">
+                                        <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group{{ $errors->has('cutoff_date_transaction') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label">Data as of</label>
-                            <div class="col-md-7">
-                                <input id="cutoff-date-transaction" type="date" class="form-control required-date" name="cutoff_date_transaction" value="">
+                            <div class="form-group{{ $errors->has('cutoff_date_transaction') ? ' has-error' : '' }}">
+                                <label class="col-md-3 control-label">Data as of</label>
+                                <div class="col-md-7">
+                                    <input id="cutoff-date-transaction" type="date" class="form-control required-date" name="cutoff_date_transaction" value="">
 
-                                <span class="help-block wrong-format">
-                                    <strong>The date has a wrong format (MM/DD/YYYY)</strong>
-                                </span>
+                                    <span class="help-block wrong-format">
+                                        <strong>The date has a wrong format (MM/DD/YYYY)</strong>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        </span>
                         <h1> Loan </h1>
                         <div class="form-group{{ $errors->has('principal_amount_loan_transaction_form') ? ' has-error' : '' }}">
                             <label class="col-md-3 control-label">Principal Amount</label>

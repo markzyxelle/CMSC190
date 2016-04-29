@@ -217,6 +217,10 @@ $( document ).ready(function() {
 					data["isActive"] = (data["isActive"] == 1 ? "True" : "False");
 					data["isReleased"] = (data["isReleased"] == 1 ? "True" : "False");
 					$("#view-loans-table tbody").append("<tr class='loan-structure' data-id=" + data["id"] + "><td>" + data["loan_type_id"] + "</td><td>" + data["loan_cycle"] + "</td><td>" + data["released_date"] + "</td><td>" + data["principal_amount"] + "</td><td>" + data["interest_amount"] + "</td><td>" + data["principal_balance"] + "</td><td>" + data["interest_balance"] + "</td><td>" + data["isActive"] + "</td><td>" + data["isReleased"] + "</td><td>" + data["status"] + "</td><td>" + data["maturity_date"] + "</td><td>" + data["cutoff_date"] + ($("#view-loans-information").data("activity") == 1 ? "</td><td><button type='button' class='btn btn-info btn-sm modal-button raised edit-loan-button' data-toggle='modal' data-target='#edit-loan-modal'>Edit Loan</button></td><td><button type='button' class='btn btn-danger btn-sm modal-button raised delete-loan-button' data-toggle='modal' data-target='#delete-loan-modal'>Delete Loan</button>" : "")+"</td></tr>")
+					$("#add-loan-form").find("input[type=text]").val("");
+					$("#add-loan-form").find("input[type=date]").val("");
+					$("#add-loan-form").find("select option").prop("selected", "");
+					$("#add-loan-form").find("select option[value='1']").prop("selected", "selected");
 					// $('#structure-table').append("<tr><td><a href='/viewClient/" + data["id"] + " class='structure-client' data-id='" + data["id"] + "'>" + data["first_name"] + "</a><td></tr>");
 					// alert(data["center_name"]);
 					// $.each( data, function( key, value ) {
@@ -332,6 +336,8 @@ $( document ).ready(function() {
 					row.children("td")[7].innerHTML = data["loan"]["isActive"];
 					row.children("td")[9].innerHTML = data["loan"]["status"];
 					row.children("td")[11].innerHTML = data["loan"]["cutoff_date"];
+					$("#add-transaction-form").find("#transaction-part-form input[type=text]").val("");
+					$("#add-transaction-form").find("#transaction-part-form input[type=date]").val("");
 					// $("#view-transactions-table").append("<tr><td>" +  + "</td><td>" +  + "</td><td>" +  + "</td><td>" +  + "</td><td>")
 					// // $.each( data, function( key, value ) {
 					// 	alert(JSON.stringify(data["transaction"]));

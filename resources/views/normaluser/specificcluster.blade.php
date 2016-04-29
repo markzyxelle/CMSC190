@@ -24,7 +24,7 @@
                 <div id="cluster-body" class="panel-body" data-id="{{ $cluster_id }}">
                     <div id="accordion">
                         @if(in_array(2,$allowed_actions))
-                            <h1> Search Clients </h1>
+                            <h1> Search Clients Information From Cluster </h1>
                             <div class="row">
                                 <div id="search-clients-clusters" class="row">
                                     <div class="col-md-1 col-md-offset-11" style="margin-bottom: 1%">
@@ -39,10 +39,10 @@
                                             <label class="col-md-3 control-label">Cluster Setting *</label>
                                             <div class="col-md-3">
                                                 <select required class="form-control required-select" name="cluster_setting" value="">
-                                                    <option value="">None</option>
-                                                    @for ($i = 1; $i <= $setting; $i++)
+                                                    @for ($i = 1; $i < $setting; $i++)
                                                         <option value="{{ $i }}">Setting {{ $i }}</option>
                                                     @endfor 
+                                                    <option value="{{ $setting }}" selected>Setting {{ $setting }}</option>
                                                 </select>
                                                 <span class="help-block required">
                                                     <strong>This field is required</strong>
@@ -113,94 +113,8 @@
                                 </div>
                             </div>
                         @endif
-                        <h1> Approved Users </h1>
-                        <div id="view-approved-users" class="row">
-                            <table id="approved-users-table" class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <td>Company</td>
-                                        <td>Username</td>
-                                        <td>Name</td>
-                                        <td>Email</td>
-                                        @if(in_array(1,$allowed_actions))
-                                            <td>Edit</td>  <!-- Change depending on role in cluster -->
-                                            <td>Delete</td>  <!-- Change depending on role in cluster -->
-                                        @endif
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($cluster_users as $user)
-                                        @if($user->pivot->isApproved == 1)
-                                            <tr>
-                                                <td>{{ $user->company->name }}</td>
-                                                <td>{{ $user->username }}</td>
-                                                <td>{{ $user->name }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                @if(in_array(1,$allowed_actions))
-                                                    <td>
-                                                        <button type='button' class='edit-user-button btn btn-info btn-sm modal-button raised' data-toggle='modal' data-target='#edit-user-modal' data-id="{{ $user->pivot->id }}"><i class="fa fa-btn fa-pencil"></i>Edit User</button>
-                                                    </td>
-                                                    <td>
-                                                        <form action="/deleteClusterUser/{{$user->pivot->id}}" method="post">
-                                                            {!! csrf_field() !!}
-                                                            <button class="btn btn-danger btn-sm">
-                                                                <i class="fa fa-btn fa-trash-o"></i>Delete User
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                @endif
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <br />
-                        </div>
-                        <h1> Pending Users </h1>
-                        <div id="view-pending-users" class="row">
-                            <table id="pending-users-table" class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <td>Company</td>
-                                        <td>Username</td>
-                                        <td>Name</td>
-                                        <td>Email</td>
-                                        @if(in_array(1,$allowed_actions))
-                                            <td>Approve</td>  <!-- Change depending on role in cluster -->
-                                            <td>Disapprove</td>  <!-- Change depending on role in cluster -->
-                                        @endif
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($cluster_users as $user)
-                                        @if($user->pivot->isApproved == 0)
-                                            <tr>
-                                                <td>{{ $user->company->name }}</td>
-                                                <td>{{ $user->username }}</td>
-                                                <td>{{ $user->name }}</td>
-                                                <td>{{ $user->email }}
-                                                @if(in_array(1,$allowed_actions))
-                                                    <td>
-                                                        <button type='button' class='approve-user-button btn btn-success btn-sm modal-button raised' data-toggle='modal' data-target='#approve-user-modal' data-id="{{ $user->pivot->id }}"><i class="fa fa-btn fa-thumbs-up"></i>Approve User</button>
-                                                    </td>
-                                                    <td>
-                                                        <form action="/disapproveClusterUser/{{$user->pivot->id}}" method="post">
-                                                            {!! csrf_field() !!}
-                                                            <button class="btn btn-danger btn-sm">
-                                                                <i class="fa fa-btn fa-trash-o"></i>Disapprove User
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                @endif
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <br />
-                        </div>
                         @if(in_array(3,$allowed_actions))
-                            <h1>Add Clients </h1>
+                            <h1>Share clients Information To Cluster </h1>
                             <div class="row">
                                 <div id="add-clients-clusters" class="col-md-6">
                                         <div id="add-clients-panel">
@@ -272,7 +186,7 @@
                                     </form>
                                 </div>
                             </div>
-                            <h3>View Clients </h3>
+                            <h1>View Clients Shared In Cluster </h1>
                             <div id="view-clients" class="row">
                                 <div id="view-clients-body">
                                     <table id="view-clients-table" class="table table-striped">
@@ -299,6 +213,94 @@
                                 </form>
                             </div>
                         @endif
+                        <h1> Approved Users </h1>
+                        <div>
+                            <div id="view-approved-users" class="row">
+                                <table id="approved-users-table" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <td>Company</td>
+                                            <td>Username</td>
+                                            <td>Name</td>
+                                            <td>Email</td>
+                                            @if(in_array(1,$allowed_actions))
+                                                <td>Edit</td>  <!-- Change depending on role in cluster -->
+                                                <td>Delete</td>  <!-- Change depending on role in cluster -->
+                                            @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($cluster_users as $user)
+                                            @if($user->pivot->isApproved == 1)
+                                                <tr>
+                                                    <td>{{ $user->company->name }}</td>
+                                                    <td>{{ $user->username }}</td>
+                                                    <td>{{ $user->name }}</td>
+                                                    <td>{{ $user->email }}</td>
+                                                    @if(in_array(1,$allowed_actions))
+                                                        <td>
+                                                            <button type='button' class='edit-user-button btn btn-info btn-sm modal-button raised' data-toggle='modal' data-target='#edit-user-modal' data-id="{{ $user->pivot->id }}"><i class="fa fa-btn fa-pencil"></i>Edit User</button>
+                                                        </td>
+                                                        <td>
+                                                            <form action="/deleteClusterUser/{{$user->pivot->id}}" method="post">
+                                                                {!! csrf_field() !!}
+                                                                <button class="btn btn-danger btn-sm">
+                                                                    <i class="fa fa-btn fa-trash-o"></i>Delete User
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    @endif
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <h1> Pending Users </h1>
+                        <div>
+                            <div id="view-pending-users" class="row">
+                                <table id="pending-users-table" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <td>Company</td>
+                                            <td>Username</td>
+                                            <td>Name</td>
+                                            <td>Email</td>
+                                            @if(in_array(1,$allowed_actions))
+                                                <td>Approve</td>  <!-- Change depending on role in cluster -->
+                                                <td>Disapprove</td>  <!-- Change depending on role in cluster -->
+                                            @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($cluster_users as $user)
+                                            @if($user->pivot->isApproved == 0)
+                                                <tr>
+                                                    <td>{{ $user->company->name }}</td>
+                                                    <td>{{ $user->username }}</td>
+                                                    <td>{{ $user->name }}</td>
+                                                    <td>{{ $user->email }}
+                                                    @if(in_array(1,$allowed_actions))
+                                                        <td>
+                                                            <button type='button' class='approve-user-button btn btn-success btn-sm modal-button raised' data-toggle='modal' data-target='#approve-user-modal' data-id="{{ $user->pivot->id }}"><i class="fa fa-btn fa-thumbs-up"></i>Approve User</button>
+                                                        </td>
+                                                        <td>
+                                                            <form action="/disapproveClusterUser/{{$user->pivot->id}}" method="post">
+                                                                {!! csrf_field() !!}
+                                                                <button class="btn btn-danger btn-sm">
+                                                                    <i class="fa fa-btn fa-trash-o"></i>Disapprove User
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    @endif
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                         @if(in_array(1,$allowed_actions))
                             <h1> Add User </h1>
                             <div id="add-user" class="row">
@@ -420,8 +422,8 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script>
-        $(function() {
-            $( "#accordion" ).accordion();
-        });
+    $( "#accordion" ).accordion({
+        heightStyle: "content"
+    });
     </script>
 @endsection

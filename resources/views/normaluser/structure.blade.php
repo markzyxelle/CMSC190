@@ -208,7 +208,7 @@
                     <div class="form-group{{ $errors->has('region_id') ? ' has-error' : '' }}">
                         <label class="col-md-5 control-label">Region</label>
                         <div class="col-md-7">
-                            <select required id="region-select" class="form-control" name="region_id" value="{{ old('region_id') }}">
+                            <select id="region-select" class="form-control" name="region_id" value="{{ old('region_id') }}">
                                 <option value="">None</option>
                                 @foreach($regions as $region)
                                     <option value="{{ $region->id }}">{{ $region->name }}</option>
@@ -224,7 +224,7 @@
                     <div class="form-group{{ $errors->has('province_id') ? ' has-error' : '' }}">
                         <label class="col-md-5 control-label">Province</label>
                         <div class="col-md-7">
-                            <select required id="province-select" class="form-control" name="province_id" value="{{ old('province_id') }}">
+                            <select id="province-select" class="form-control" name="province_id" value="{{ old('province_id') }}">
                                 <option value="">None</option>  
                             </select>
                             @if ($errors->has('province_id'))
@@ -237,7 +237,7 @@
                     <div class="form-group{{ $errors->has('municipality_id') ? ' has-error' : '' }}">
                         <label class="col-md-5 control-label">Municipality</label>
                         <div class="col-md-7">
-                            <select required id="municipality-select" class="form-control" name="municipality_id" value="{{ old('municipality_id') }}">
+                            <select id="municipality-select" class="form-control" name="municipality_id" value="{{ old('municipality_id') }}">
                                 <option value="">None</option>  
                             </select>
                             @if ($errors->has('municipality_id'))
@@ -250,7 +250,7 @@
                     <div class="form-group{{ $errors->has('barangay_id') ? ' has-error' : '' }}">
                         <label class="col-md-5 control-label">Barangay</label>
                         <div class="col-md-7">
-                            <select required id="barangay-select" class="form-control" name="barangay_id" value="{{ old('barangay_id') }}">
+                            <select id="barangay-select" class="form-control" name="barangay_id" value="{{ old('barangay_id') }}">
                                 <option value="">None</option>  
                             </select>
                             <span class="help-block required">

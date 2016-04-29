@@ -136,7 +136,23 @@
                 <form id="approve-user-form" class="form-horizontal" role="form" method="POST" action="{{ url('/approveUser') }}">
                     {!! csrf_field() !!}
                     <input type="hidden" name="user_id" id="user-id-modal" value=""/>
-                    <div class="form-group{{ $errors->has('branch_id') ? ' has-error' : '' }}">
+                    <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
+                        <label class="col-md-3 control-label">Role</label>
+                        <div class="col-md-6">
+                            <select required id="role-form" class="form-control" name="role_id" value="{{ old('role_id') }}">
+                                <option value="">None</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->pivot->id }}">{{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('role_id'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('role_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div id="branch-div" class="form-group{{ $errors->has('branch_id') ? ' has-error' : '' }}">
                         <label class="col-md-3 control-label">Branch Name</label>
                         <div class="col-md-6">
                             <select required class="form-control" name="branch_id" value="{{ old('branch_id') }}">
@@ -148,22 +164,6 @@
                             @if ($errors->has('branch_id'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('branch_id') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group{{ $errors->has('role_id') ? ' has-error' : '' }}">
-                        <label class="col-md-3 control-label">Role</label>
-                        <div class="col-md-6">
-                            <select required class="form-control" name="role_id" value="{{ old('role_id') }}">
-                                <option value="">None</option>
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->pivot->id }}">{{ $role->name }}</option>
-                                @endforeach
-                            </select>
-                            @if ($errors->has('role_id'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('role_id') }}</strong>
                                 </span>
                             @endif
                         </div>

@@ -1,14 +1,14 @@
 .move-clients{
-	margin-top : 50%;
+	margin-top : 30%;
 }
 
 #add-buttons-clusters{
-	margin-top : 20%;
+	margin-top : 15%;
 }
 
 #selected-clients-body, #view-clients-body{
 	border: 1px solid #ddd;
-	height:257px;
+	height:240px;
 	line-height:3em;
 	overflow:auto;
 	padding:5px;

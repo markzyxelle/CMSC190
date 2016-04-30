@@ -1,6 +1,9 @@
 $( document ).ready(function() {
 	//branch breadcrumb clicked
 	//populates the tbody
+	$("#structure-select-all").prop("checked", false);
+	$("#moving-select-all").prop("checked", false);
+	$("#view-select-all").prop("checked", false);
 	$(document).on('click', '#branch-breadcrumb', function(){
 		var branch_id = $("#branch-breadcrumb").data('id');
 		$.getJSON( "/getCenters/" + branch_id ) 
@@ -21,6 +24,7 @@ $( document ).ready(function() {
 				$("#add-group-button").hide();
 				$("#add-client-button").hide();
 				$("#search-div").hide();
+				$("#structure-select-all").prop("checked", false);
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -46,6 +50,7 @@ $( document ).ready(function() {
 				$("#add-group-button").show();
 				$("#add-client-button").hide();
 				$("#search-div").hide();
+				$("#structure-select-all").prop("checked", false);
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -74,6 +79,7 @@ $( document ).ready(function() {
 				$("#add-group-button").show();
 				$("#add-client-button").hide();
 				$("#search-div").hide();
+				$("#structure-select-all").prop("checked", false);
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -96,12 +102,13 @@ $( document ).ready(function() {
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
-			    	$('#structure-table').append("<tr class='structure-client'><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a data-id='" + value["id"] + "'>  " + value["last_name"]+ ", " + value["first_name"] + " " + value["middle_name"] + "</a><td></tr>");
+			    	$('#structure-table').append("<tr class='structure-client'><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a class='structure-client' data-id='" + value["id"] + "'>  " + value["last_name"]+ ", " + value["first_name"] + " " + value["middle_name"] + "</a><td></tr>");
 			    });
 			    $("#add-center-button").hide();
 				$("#add-group-button").hide();
 				$("#add-client-button").show();
 				$("#search-div").show();
+				$("#structure-select-all").prop("checked", false);
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -119,7 +126,7 @@ $( document ).ready(function() {
 		var selected = [];
 		var name = [];
 		var url;
-		switch($("#structure-table input:checkbox:checked").first().attr("name")){
+		switch($("#structure-table input:checkbox:checked").not("#structure-select-all").first().attr("name")){
 			case "center" : url = "getClientsFromCenter";
 							break;
 			case "group" : url = "getClientsFromGroup";
@@ -130,7 +137,7 @@ $( document ).ready(function() {
 						return;
 		}
 
-		$("#structure-table input:checkbox:checked").each(function(){
+		$("#structure-table input:checkbox:checked").not("#structure-select-all").each(function(){
 			selected.push($(this).val());
 			name.push($(this).parent().children("a").html());
 		});
@@ -144,21 +151,24 @@ $( document ).ready(function() {
 				    // Log each key in the response data
 				    $.each( resp, function( key, value ) {
 				    	if(!($(".moving-client[data-id="+ value["id"] + "]").length))
-				    		$('#selected-clients-table').append("<tr><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a class='moving-client' data-id='" + value["id"] + "'>  " + value["last_name"]+ ", " +value["first_name"] + "</a><td></tr>");
+				    		$('#selected-clients-table').append("<tr><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a class='moving-client' data-id='" + value["id"] + "'>  " + value["last_name"]+ ", " + value["first_name"] + " " + value["middle_name"] +"</a><td></tr>");
 				    });
 				})
 				.fail(function( jqxhr, textStatus, error ) {
-				    alert("There was an error while accessing " + name[index]);
+				    alert(error);
 			});
 		}
+
+
 		$( "#structure-table input:checkbox:checked" ).prop( "checked", false );
 		
 	});
 
 	$(document).on('click', '#remove-button', function(){
-		$("#selected-clients-table input:checkbox:checked").each(function(){
+		$("#selected-clients-table input:checkbox:checked").not("#moving-select-all").each(function(){
 			$(this).parent().parent().remove();
 		});
+		$("#moving-select-all").prop("checked", false);
 	});
 
 	$('#add-client-form').submit(function(){
@@ -177,7 +187,7 @@ $( document ).ready(function() {
 
 	$('#remove-client-form').submit(function(){
 		var selected = [];
-		$("#view-clients-table input:checkbox:checked").each(function(){
+		$("#view-clients-table input:checkbox:checked").not("#view-select-all").each(function(){
 			selected.push($(this).val());
 		});
 		var $cluster_id = $("<input type='hidden' name='cluster_id'/>")
@@ -434,6 +444,23 @@ $( document ).ready(function() {
 			})
 				.show();
 		}
+	});
+
+	$( "#structure-select-all" ).change(function() {
+		var status = $(this).prop("checked");
+		$(".structure-center").parent().children("input[type=checkbox]").prop("checked", status);
+		$(".structure-group").parent().children("input[type=checkbox]").prop("checked", status);
+		$(".structure-client").parent().children("input[type=checkbox]").prop("checked", status);
+	});
+
+	$( "#moving-select-all" ).change(function() {
+		var status = $(this).prop("checked");
+		$(".moving-client").parent().children("input[type=checkbox]").prop("checked", status);
+	});
+
+	$( "#view-select-all" ).change(function() {
+		var status = $(this).prop("checked");
+		$(".view-client").children("input[type=checkbox]").prop("checked", status);
 	});
 
 	$( "#branch-breadcrumb" ).click();

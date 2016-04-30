@@ -223,7 +223,7 @@ class ClusterController extends Controller
                     $clients = array();
 
                     foreach ($groups as $group) {
-                        foreach ($group->clients as $client) {
+                        foreach ($group->clients()->orderBy('last_name', 'asc')->get() as $client) {
                             if($client->isDummy == Auth::user()->dummy_mode) array_push($clients, $client);
                         }
                     }
@@ -233,7 +233,7 @@ class ClusterController extends Controller
 
                     $clients = array();
 
-                    foreach ($tag->clients as $client) {
+                    foreach ($tag->clients()->orderBy('last_name', 'asc')->get() as $client) {
                         if($client->group->center->id == $center_id){
                             if($client->isDummy == Auth::user()->dummy_mode) array_push($clients, $client);
                         }
@@ -260,7 +260,7 @@ class ClusterController extends Controller
 
                     $clients = array();
 
-                    foreach ($group->clients as $client) {
+                    foreach ($group->clients()->orderBy('last_name', 'asc')->get() as $client) {
                         if($client->isDummy == Auth::user()->dummy_mode) array_push($clients, $client);
                     }
                 }
@@ -269,7 +269,7 @@ class ClusterController extends Controller
 
                     $clients = array();
 
-                    foreach ($tag->clients as $client) {
+                    foreach ($tag->clients()->orderBy('last_name', 'asc')->get() as $client) {
                         if($client->group->id == $group_id){
                             if($client->isDummy == Auth::user()->dummy_mode) array_push($clients, $client);
                         } 

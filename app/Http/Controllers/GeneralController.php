@@ -130,7 +130,7 @@ class GeneralController extends Controller
     {
         if($request->ajax()){
             $branch = \App\Branch::find($branch_id);
-            $centers = $branch->centers;
+            $centers = $branch->centers()->orderBy('name', 'asc')->get();
             
             // $approved = Auth::user()->company->users->where('isApproved', 1);
             // $pending = Auth::user()->company->users->where('isApproved', 0);
@@ -180,7 +180,7 @@ class GeneralController extends Controller
         if($request->ajax()){
             //put if to check if they own the center
             $center = \App\Center::find($center_id);
-            $groups = $center->groups;
+            $groups = $center->groups()->orderBy('name', 'asc')->get();
             
             // $approved = Auth::user()->company->users->where('isApproved', 1);
             // $pending = Auth::user()->company->users->where('isApproved', 0);
@@ -229,7 +229,7 @@ class GeneralController extends Controller
     {
         if($request->ajax()){
             $group = \App\Group::find($group_id);
-            $clients = $group->clients()->where("isDummy", Auth::user()->dummy_mode)->get();
+            $clients = $group->clients()->where("isDummy", Auth::user()->dummy_mode)->orderBy('last_name', 'asc')->get();
             
             // $approved = Auth::user()->company->users->where('isApproved', 1);
             // $pending = Auth::user()->company->users->where('isApproved', 0);

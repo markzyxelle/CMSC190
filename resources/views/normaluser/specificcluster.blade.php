@@ -156,7 +156,7 @@
                                                 <table id="structure-table" class="table table-striped">
                                                     <thead>
                                                         <tr>
-                                                            <td>Name</td>
+                                                            <td><input type='checkbox' id="structure-select-all"/>  Name</td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -181,7 +181,7 @@
                                             <table id="selected-clients-table" class="table table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <td>Name</td>
+                                                        <td><input type='checkbox' id="moving-select-all"/>  Name</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -203,13 +203,13 @@
                                     <table id="view-clients-table" class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <td>Name</td>
+                                                <td><input type='checkbox' id="view-select-all"/>  Name</td>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($clients as $client)
                                                 <tr>
-                                                    <td><input type='checkbox' name='client' value='{{ $client->id }}'/> {{$client->last_name}}, {{ $client->first_name }} {{$client->middle_name}}<td>
+                                                    <td class="view-client"><input type='checkbox' name='client' value='{{ $client->id }}'/> {{$client->last_name}}, {{ $client->first_name }} {{$client->middle_name}}<td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

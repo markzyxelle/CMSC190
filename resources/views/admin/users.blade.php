@@ -27,7 +27,7 @@
                         <form class="form-horizontal" role="form" method="POST" action="{{ url('/editCompany') }}">
                             {!! csrf_field() !!}
                             <div class="form-group">
-                                <label class="col-md-3 control-label">Company Code</label>
+                                <label class="col-md-3 control-label">MFI Code</label>
 
                                 <div class="col-md-8" style="margin-top:0.5%; margin-left:1.2%">
                                     {{ $company->company_code }}
@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                             <div class="form-group{{ $errors->has('company_name') ? ' has-error' : '' }}">
-                                <label class="col-md-3 control-label">Company Name</label>
+                                <label class="col-md-3 control-label">MFI Name</label>
 
                                 <div class="col-md-8">
                                     <input type="text" class="form-control" name="company_name" value="{{ $company->name }}">
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                             <div class="form-group{{ $errors->has('company_shortname') ? ' has-error' : '' }}">
-                                <label class="col-md-3 control-label">Company Shortname</label>
+                                <label class="col-md-3 control-label">MFI Shortname</label>
 
                                 <div class="col-md-8">
                                     <input type="text" class="form-control" name="company_shortname" value="{{ $company->shortname }}">
@@ -63,7 +63,7 @@
                             <div class="form-group">
                                 <div class="col-md-3 col-md-offset-9">
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-btn fa-pencil"></i>Edit Company
+                                        <i class="fa fa-btn fa-pencil"></i>Edit MFI
                                     </button>
                                 </div>
                             </div>

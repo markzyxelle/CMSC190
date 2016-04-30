@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div id="view-client-information" class="row" data-id="{{ $client->id }}">
-                        <h3>View Clients</h3>
+                        <h2 style="margin-left:5%; margin-bottom:2%;">Client Information</h2>
                         <form id="edit-client-form" class="form-horizontal" role="form" data-url="{{URL::to('/editClient')}}/{{$client->id}}">
                             {!! csrf_field() !!}
                             <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">

@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Structure</div>
+                <div class="panel-heading">Maintain Data</div>
 
                 <div class="panel-body">
                     <div id="structure-breadcrumb" class="row">

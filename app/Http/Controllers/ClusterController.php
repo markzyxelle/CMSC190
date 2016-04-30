@@ -629,8 +629,11 @@ class ClusterController extends Controller
                             break;
                         case 2: $temp = array();
                             foreach ($cluster->clients()->where($parameters)->get() as $client) {
-                                if(!array_key_exists ( $client->group->center->branch->company->id , $temp )) $temp[$client->group->center->branch->company->id] = 0;
-                                $temp[$client->group->center->branch->company->id] = $temp[$client->group->center->branch->company->id] + $client->loans()->count();
+                                if(!array_key_exists ( $client->group->center->branch->company->id , $temp )){
+                                    $temp[$client->group->center->branch->company->id]["count"] = 0;
+                                    $temp[$client->group->center->branch->company->id]["name"] = $client->group->center->branch->company->name;
+                                } 
+                                $temp[$client->group->center->branch->company->id]["count"] = $temp[$client->group->center->branch->company->id]["count"] + $client->loans()->count();
                             }
                             $clients["data"] = $temp;
                             break;

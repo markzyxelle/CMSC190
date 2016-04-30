@@ -27,6 +27,10 @@
                             <h1> Search Clients Information From Cluster </h1>
                             <div class="row">
                                 <div id="search-clients-clusters" class="row">
+                                    <div class="alert alert-info">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        Fill up search fields below and click search client button
+                                    </div>
                                     <div class="col-md-1 col-md-offset-11" style="margin-bottom: 1%">
                                         <button id="search-client-submit" class="btn btn-primary pull-right">
                                             <i class="fa fa-btn fa-search"></i>Search Client
@@ -36,13 +40,13 @@
                                         {!! csrf_field() !!}
                                         <input type="hidden" name="cluster_id" id="cluster-id-modal" value="{{$cluster_id}}"/>
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Cluster Setting *</label>
+                                            <label class="col-md-4 control-label">Cluster Setting (Required)</label>
                                             <div class="col-md-3">
                                                 <select required class="form-control required-select" name="cluster_setting" value="">
                                                     @for ($i = 1; $i < $setting; $i++)
-                                                        <option value="{{ $i }}">Setting {{ $i }}</option>
+                                                        <option value="{{ $i }}">Search Option {{ $i }}</option>
                                                     @endfor 
-                                                    <option value="{{ $setting }}" selected>Setting {{ $setting }}</option>
+                                                    <option value="{{ $setting }}" selected>Search Option {{ $setting }}</option>
                                                 </select>
                                                 <span class="help-block required">
                                                     <strong>This field is required</strong>
@@ -50,9 +54,8 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <label class="col-md-2 control-label">Last Name <strong>*</strong></label>
-                                            <div class="col-md-2">
-                                                <input id="last-name" type="text" class="form-control required-text" name="last_name" value="{{ old('last_name') }}">
+                                            <div class="col-md-4">
+                                                <input id="last-name" type="text" class="form-control required-text" name="last_name" value="{{ old('last_name') }}" placeholder="Last Name (Required)">
 
                                                 <span class="help-block required">
                                                     <strong>This field is required</strong>
@@ -61,9 +64,8 @@
                                                     <strong>Please limit number of characters to 255</strong>
                                                 </span>
                                             </div>
-                                            <label class="col-md-2 control-label">First Name <strong>*</strong></label>
-                                            <div class="col-md-2">
-                                                <input id="first-name" type="text" class="form-control required-text" name="first_name" value="{{ old('first_name') }}">
+                                            <div class="col-md-4">
+                                                <input id="first-name" type="text" class="form-control required-text" name="first_name" value="{{ old('first_name') }}" placeholder="First Name (Required)">
 
                                                 <span class="help-block required">
                                                     <strong>This field is required</strong>
@@ -72,9 +74,8 @@
                                                     <strong>Please limit number of characters to 255</strong>
                                                 </span>
                                             </div>
-                                            <label class="col-md-2 control-label">Middle Name</label>
-                                            <div class="col-md-2">
-                                                <input id="middle-name" type="text" class="form-control check-length" name="middle_name" value="{{ old('middle_name') }}">
+                                            <div class="col-md-3">
+                                                <input id="middle-name" type="text" class="form-control check-length" name="middle_name" value="{{ old('middle_name') }}" placeholder="Middle Name">
 
                                                 <span class="help-block max">
                                                     <strong>Please limit number of characters to 255</strong>
@@ -82,17 +83,15 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <label class="col-md-2 control-label">Birthplace</label>
                                             <div class="col-md-4">
-                                                <input id="birthplace" type="text" class="form-control check-length" name="birthplace" value="{{ old('birthplace') }}">
+                                                <input id="birthplace" type="text" class="form-control check-length" name="birthplace" value="{{ old('birthplace') }}" placeholder="Birthplace">
                                             </div>
 
                                             <span class="help-block max">
                                                 <strong>Please limit number of characters to 255</strong>
                                             </span>
-                                            <label class="col-md-2 control-label">Birthdate</label>
                                             <div class="col-md-4">
-                                                <input id="birthdate" type="date" class="form-control required-date" name="birthdate" value="{{ old('birthdate') }}">
+                                                <input id="birthdate" type="date" class="form-control required-date" name="birthdate" value="{{ old('birthdate') }}" placeholder="Birthdate">
 
                                                 <span class="help-block wrong-format">
                                                     <strong>The date has a wrong format (MM/DD/YYYY)</strong>
@@ -114,7 +113,7 @@
                             </div>
                         @endif
                         @if(in_array(3,$allowed_actions))
-                            <h1>Share clients Information To Cluster </h1>
+                            <h1>Share Client Information To Cluster </h1>
                             <div class="row">
                                 <div id="add-clients-clusters" class="col-md-6">
                                         <div id="add-clients-panel">

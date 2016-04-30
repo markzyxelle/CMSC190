@@ -55,6 +55,32 @@
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
 
+
+                <!-- Left Side Of Navbar -->
+                <ul class="nav navbar-nav navbar-left">
+                    <!-- Authentication Links -->
+                    @if (Auth::guest())
+                    @else
+                        @if(Auth::user()->isApproved == 1)
+                            @if(Auth::user()->companyrole->role_id != 1)
+                                @if(in_array(6,\App\CompanyRoleActivity::where('company_role_id', Auth::user()->companyrole->id)->lists('activity_id')->toArray()))
+                                    <li><a href="{{URL::to('/clusters')}}">Clusters</a></li>
+                                @endif
+                                @if(in_array(7,\App\CompanyRoleActivity::where('company_role_id', Auth::user()->companyrole->id)->lists('activity_id')->toArray()))
+                                    <li><a href="{{URL::to('/upload')}}">Upload</a></li>
+                                @endif
+                                <li><a href="{{URL::to('/structure')}}">Maintain Data</a></li> 
+                            @else
+                                <li><a href="{{URL::to('/branches')}}">Branches</a></li>
+
+                                <li><a href="{{URL::to('/roles')}}">Roles</a></li>
+
+                                <li><a href="{{URL::to('/users')}}">Users</a></li>
+                            @endif
+                        @endif
+                    @endif
+                </ul>
+
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->

@@ -1199,4 +1199,43 @@ class GeneralController extends Controller
 
         return redirect(URL::previous());
     }
+
+    /**
+     * Delete all Clients in a Branch.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function restartBranch(Request $request)
+    {
+        $data = $request->all();
+        
+        $branch = Auth::user()->branch;
+
+        foreach ($branch->centers as $center){
+            foreach ($center->groups as $group) {
+                foreach ($group->clients as $client) {
+                    foreach ($client->loans as $loan) {
+                        foreach ($loan->transactions as $transaction) {
+                            $transaction->delete();
+                        }
+                        $loan->delete();
+                    }
+
+                    foreach ($client->clusters as $cluster) {
+                        $cluster->pivot->delete();
+                    }
+
+                    foreach ($client->tags as $tag) {
+                        $tag->pivot->delete();
+                    }
+
+                    $client->delete();
+                }
+                $group->delete();
+            }
+            $center->delete();
+        }
+
+        return redirect("/structure");
+    }
 }

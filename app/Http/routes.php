@@ -63,6 +63,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/editLoan', 'GeneralController@editLoan')->middleware(['unapproved', 'auth', 'normaluser']);     //edit a loan
     Route::post('/editTransaction', 'GeneralController@editTransaction')->middleware(['unapproved', 'auth', 'normaluser']);     //edit a transaction
     Route::post('/deleteTag', 'GeneralController@deleteTag')->middleware(['unapproved', 'auth', 'normaluser']);     //delete a tag
+    Route::post('/restartBranch', 'GeneralController@restartBranch')->middleware(['unapproved', 'auth', 'normaluser']);     //remove all clients of a branch
 
 
     Route::get('/clusters', 'ClusterController@getCluster')->middleware(['unapproved', 'auth', 'normaluser']);        //get cluster page  *
@@ -82,6 +83,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/searchClientCluster', 'ClusterController@searchClientCluster')->middleware(['unapproved', 'auth', 'normaluser']);     //search user in cluster
     Route::post('/addUser', 'ClusterController@addUser')->middleware(['unapproved', 'auth', 'normaluser']);     //add user to cluster
     Route::post('/leaveCluster', 'ClusterController@leaveCluster')->middleware(['unapproved', 'auth', 'normaluser']);     //leave a cluster
+    Route::post('/editCluster', 'ClusterController@editCluster')->middleware(['unapproved', 'auth', 'normaluser']);     //edit a cluster setting
 
     //administrator
     Route::get('/users', 'AdminController@users')->middleware(['unapproved', 'auth', 'administrator']);   //approved and pending users   *

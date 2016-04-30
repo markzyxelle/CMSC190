@@ -369,7 +369,7 @@ $( document ).ready(function() {
 							if(data["data"].length == 0) $("#search-results-table tbody").html("<strong>The client has no records in this cluster</strong>");
 							else{
 								$.each( data["data"], function( key, value ) {
-									$("#search-results-table thead").append("<tr><td>Company</td><td>Number of Loans</td></tr>");
+									$("#search-results-table thead").append("<tr><td>MFI</td><td>Number of Loans</td></tr>");
 									$("#search-results-table tbody").append("<tr><td>"+ value["name"] + "</td><td>"+ value["count"] +"</td></tr>");
 								})
 							}
@@ -379,7 +379,7 @@ $( document ).ready(function() {
 							$("#search-results-table thead").html("");
 							if(data["data"].length == 0) $("#search-results-table tbody").html("<strong>The client has no records in this cluster</strong>");
 							else{
-								$("#search-results-table thead").html("<tr><td colspan='7'>Company</td></tr>");
+								$("#search-results-table thead").html("<tr><td colspan='7'>MFI</td></tr>");
 								$.each( data["data"], function( key, value ) {
 									$("#search-results-table tbody").append("<tr><td colspan='7'>"+ key +"</td></tr>");
 									$("#search-results-table tbody").append("<tr><td></td><td>Loan Type</td><td>Loan Cycle</td><td>Loan Amount</td><td>Maturity Date</td><td>Status</td><td>As Of</td></tr>");
@@ -394,7 +394,7 @@ $( document ).ready(function() {
 							$("#search-results-table thead").html("");
 							if(data["data"].length == 0) $("#search-results-table tbody").html("<strong>The client has no records in this cluster</strong>");
 							else{
-								$("#search-results-table thead").html("<tr><td colspan='7'>Company</td></tr>");
+								$("#search-results-table thead").html("<tr><td colspan='7'>MFI</td></tr>");
 								$("#search-results-table tbody").html("");
 								$.each( data["data"], function( key, value ) {
 									$("#search-results-table tbody").append("<tr><td colspan='7'>"+ key +"</td></tr>");

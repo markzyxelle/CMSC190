@@ -623,6 +623,7 @@ class ClusterController extends Controller
                     if($data["birthdate"] != "") array_push($parameters, ['birthdate', $data["birthdate"]]);
 
                     $cluster = \App\Cluster::find($data["cluster_id"]);
+                    if($data["cluster_setting"] > $cluster->setting) return redirect("/clusters");
                     $clients["setting"] = $data["cluster_setting"];
                     switch($data["cluster_setting"]){
                         case 1: $clients["data"] = ($cluster->clients()->where($parameters)->count() > 0) ? true : false;
@@ -774,4 +775,39 @@ class ClusterController extends Controller
             return redirect("/home");
         }
     }
+
+    /**
+     * Edit cluster setting
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editCluster(Request $request)
+    {
+        $companyrole = Auth::user()->companyrole;
+        $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
+        if(in_array(6,$activities)){
+            $data = $request->all();
+            $cluster_user = \App\ClusterUser::where(['cluster_id' => $data["cluster_id"],
+                                            'user_id' => Auth::user()->id,
+                                            'isApproved' => 1])->first();
+
+            if($cluster_user == null) return redirect("/clusters");
+
+            $allowed_actions = \App\ActionClusterUser::where('cluster_user_id', $cluster_user->id)->lists('action_id')->toArray();
+
+            if(in_array(1,$allowed_actions)){
+                $cluster = \App\Cluster::find($data["cluster_id"]);
+                $cluster->setting = $data["cluster_setting"];
+                $cluster->save();
+
+                return redirect(URL::previous());
+            }
+            else{
+                return redirect("/home");
+            }
+        }
+        else{
+            return redirect("/home");
+        }
+    }    
 }

@@ -51,6 +51,9 @@
                             </tbody>
                         </table>
                     </div>
+                    @if(in_array(2,$activities))
+                        <button id='restart-branch-button' type='button' class='btn btn-danger btn-sm modal-button pull-right raised' data-toggle='modal' data-target='#restart-branch-modal'>Restart Branch</button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -409,6 +412,33 @@
                     <input type="hidden" name="client_id" id="delete-client-id-modal" value=""/>
                     <button class="btn btn-danger raised pull-right">
                         <i class="fa fa-btn fa-trash-o"></i>Delete Client
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Restart Branch Modal -->
+<div id="restart-branch-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Restart Branch</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete all the clients in this branch?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default raised pull-right" data-dismiss="modal">Close</button>
+                <form action="/restartBranch" method="post">
+                    {!! csrf_field() !!}
+                    <button class="btn btn-danger raised pull-right">
+                        <i class="fa fa-btn fa-trash-o"></i>Restart Branch
                     </button>
                 </form>
             </div>

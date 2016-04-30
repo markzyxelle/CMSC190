@@ -48,7 +48,7 @@
         <div class="col-md-5 col-md-offset-1">
             <ul class="nav nav-tabs">
                 <li class="{{ session('status', 'default') == 'default' ? 'active' : '' }}"><a data-toggle="tab" href="#login">Login</a></li>
-                <li class="{{ session('status', 'default') == 'company' ? 'active' : '' }}"><a data-toggle="tab" href="#registerCompany">New Company</a></li>
+                <li class="{{ session('status', 'default') == 'company' ? 'active' : '' }}"><a data-toggle="tab" href="#registerCompany">New MFI</a></li>
                 <li class="{{ session('status', 'default') == 'user' ? 'active' : '' }}"><a data-toggle="tab" href="#registerUser">New User</a></li>
             </ul>
 
@@ -111,12 +111,12 @@
                 </div>
                 <div id="registerCompany" class="tab-pane{{ session('status', 'default') == 'company' ? ' fade in active' : ' fade' }} ">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Register New Company</div>
+                        <div class="panel-heading">Register New MFI</div>
                         <div class="panel-body">
                             <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                                 {!! csrf_field() !!}
                                 <div class="form-group{{ $errors->has('company_name') ? ' has-error' : '' }}">
-                                    <label class="col-md-4 control-label">Company Name</label>
+                                    <label class="col-md-4 control-label">MFI Name</label>
 
                                     <div class="col-md-8">
                                         <input type="text" class="form-control" name="company_name" value="{{ old('company_name') }}">

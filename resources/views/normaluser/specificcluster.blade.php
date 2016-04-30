@@ -41,7 +41,7 @@
                                         <input type="hidden" name="cluster_id" id="cluster-id-modal" value="{{$cluster_id}}"/>
                                         <div class="form-group">
                                             <label class="col-md-4 control-label">Cluster Setting (Required)</label>
-                                            <div class="col-md-3">
+                                            <div class="col-md-8">
                                                 <select required class="form-control required-select" name="cluster_setting" value="">
                                                     @for ($i = 1; $i < $setting; $i++)
                                                         <option value="{{ $i }}">Search Option {{ $i }}</option>
@@ -209,7 +209,7 @@
                                         <tbody>
                                             @foreach($clients as $client)
                                                 <tr>
-                                                    <td><input type='checkbox' name='client' value='{{ $client->id }}'/> {{$client->last_name}}, {{ $client->first_name }}<td>
+                                                    <td><input type='checkbox' name='client' value='{{ $client->id }}'/> {{$client->last_name}}, {{ $client->first_name }} {{$client->middle_name}}<td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -346,6 +346,37 @@
                                             <button type="submit" class="btn btn-primary">
                                                 <i class="fa fa-btn fa-plus"></i>Add User
                                             </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <h1> Edit Cluster </h1>
+                            <div id="edit-cluster" class="row">
+                                <form class="form-horizontal" role="form" method="POST" action="{{ url('/editCluster') }}">
+                                    {!! csrf_field() !!}
+                                    <input type="hidden" name="cluster_id" id="cluster-id-add-user" value="{{$cluster_id}}"/>
+                                    <div class="form-group{{ $errors->has('cluster_setting') ? ' has-error' : '' }}">
+                                        <label class="col-md-2 control-label">Cluster Setting</label>
+
+                                        <div class="col-md-8">
+                                            <input type="radio" name="cluster_setting" value="1" {{ $setting == '1' ? 'checked' : '' }}> Setting 1<br>
+                                            <input type="radio" name="cluster_setting" value="2" {{ $setting == '2' ? 'checked' : '' }}> Setting 2<br>
+                                            <input type="radio" name="cluster_setting" value="3" {{ $setting == '3' ? 'checked' : '' }}> Setting 3<br>
+                                            <input type="radio" name="cluster_setting" value="4" {{ $setting == '4' ? 'checked' : '' }}> Setting 4<br>
+
+                                            @if ($errors->has('cluster_setting'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('cluster_setting') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-4 col-md-offset-8">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fa fa-btn fa-pencil"></i>Edit Cluster
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </form>

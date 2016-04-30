@@ -125,15 +125,27 @@
                                                    <li class="title-breadcrumb" id="group-breadcrumb" data-id=""></li>
                                                 </ol>
                                             </div>
-                                            <div id="structure-tag" class="form-group row">
-                                                <label class="col-md-offset-5 col-md-1 control-label">Tag</label>
-                                                <div class="col-md-6">
-                                                    <select id="tag-id" class="form-control">
-                                                        <option value="0">None</option>  
-                                                        @foreach($tags as $tag)
-                                                            <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-                                                        @endforeach   
-                                                    </select>
+                                            <div id="structure-tag" class="row">
+                                                <div class="form-vertical">
+                                                    <div class="form-group">
+                                                        <label class="col-md-1 control-label">Tag</label>
+                                                        <div class="col-md-4">
+                                                            <select id="tag-id" class="form-control">
+                                                                <option value="0">None</option>  
+                                                                @foreach($tags as $tag)
+                                                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                                                @endforeach   
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <span id="search-div">
+                                                        <div class="form-group">
+                                                            <label class="col-md-2 control-label">Search</label>
+                                                            <div class="col-md-5">
+                                                                <input type="text" class="form-control" id="search-textbox">
+                                                            </div>
+                                                        </div>
+                                                    </span>
                                                 </div>
                                             </div>
                                             <!-- <div id="structure-buttons">

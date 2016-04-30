@@ -409,11 +409,11 @@ class GeneralController extends Controller
 
                         $client[$row][] = is_numeric($data[1]) ? true : false;
                         $client[$row][] = $data[1];
-                        $client[$row][] = strlen($data[2]) > 255 ? false : true;
+                        $client[$row][] = strlen($data[2]) > 255 ? false : true;        //change
                         $client[$row][] = $data[2];
-                        $client[$row][] = strlen($data[3]) > 255 ? false : true;
+                        $client[$row][] = strlen($data[3]) > 255 ? false : true;        //change
                         $client[$row][] = $data[3];
-                        $client[$row][] = strlen($data[4]) > 255 ? false : true;
+                        $client[$row][] = strlen($data[4]) > 255 ? false : true;        //change
                         $client[$row][] = $data[4];
                         $client[$row][] = (strtotime($data[5]) || $data[5] == "") ? true : false;       //change
                         $client[$row][] = $data[5];

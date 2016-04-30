@@ -22,6 +22,7 @@ $( document ).ready(function() {
 				$("#add-center-button").show();
 				$("#add-group-button").hide();
 				$("#add-client-button").hide();
+				$("#search-div").hide();
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -47,6 +48,7 @@ $( document ).ready(function() {
 				$("#add-center-button").hide();
 				$("#add-group-button").show();
 				$("#add-client-button").hide();
+				$("#search-div").hide();
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -75,6 +77,7 @@ $( document ).ready(function() {
 			    $("#add-center-button").hide();
 				$("#add-group-button").show();
 				$("#add-client-button").hide();
+				$("#search-div").hide();
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -98,11 +101,12 @@ $( document ).ready(function() {
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
-			    	$('#structure-table').append("<tr class='structure-client'><td>" + value["last_name"]+ ", " +value["first_name"] + "</td><td><a href='/viewClient/"+ value["id"] + "'>" + "<button class='btn btn-sm raised btn-info'><i class='fa fa-btn fa-eye'></i>View Client</button></a></td><td data-id='"+ value["id"] +"'>" + "<button type='button' id='delete-client-button' class='btn btn-danger btn-sm modal-button raised delete-client-button' data-toggle='modal' data-target='#delete-client-modal'><i class='fa fa-btn fa-trash-o'></i>Delete Client</button>" +"<td></tr>");
+			    	$('#structure-table').append("<tr class='structure-client'><td>" + value["last_name"]+ ", " + value["first_name"] + " " + value["middle_name"] + "</td><td><a href='/viewClient/"+ value["id"] + "'>" + "<button class='btn btn-sm raised btn-info'><i class='fa fa-btn fa-eye'></i>View Client</button></a></td><td data-id='"+ value["id"] +"'>" + "<button type='button' id='delete-client-button' class='btn btn-danger btn-sm modal-button raised delete-client-button' data-toggle='modal' data-target='#delete-client-modal'><i class='fa fa-btn fa-trash-o'></i>Delete Client</button>" +"<td></tr>");
 			    });
 			    $("#add-center-button").hide();
 				$("#add-group-button").hide();
 				$("#add-client-button").show();
+				$("#search-div").show();
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -387,6 +391,18 @@ $( document ).ready(function() {
 
 	$(document).on('click', '.delete-client-button', function(){
 		$("#delete-client-id-modal").val($(this).parent().data('id'));
+	});
+
+	$( "#search-textbox" ).keyup(function() {
+		if($(this).val() == "") $(".structure-client").show();
+		else{
+			$(".structure-client").hide();
+			$(".structure-client")
+				.filter(function( index ) {
+				return ($( this ).children("td")[0].innerHTML).indexOf($( "#search-textbox" ).val()) > -1;
+			})
+				.show();
+		}
 	});
 
 	// $("tr").click(function(){

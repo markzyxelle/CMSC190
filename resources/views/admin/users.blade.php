@@ -29,8 +29,9 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Company Code</label>
 
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" value="{{ $company->company_code }}" disabled>
+                                <div class="col-md-8" style="margin-top:0.5%; margin-left:1.2%">
+                                    {{ $company->company_code }}
+                                    <!-- <input type="text" class="form-control" value="{{ $company->company_code }}" disabled> -->
                                 </div>
                             </div>
                             <div class="form-group{{ $errors->has('company_name') ? ' has-error' : '' }}">

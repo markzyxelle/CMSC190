@@ -24,6 +24,14 @@
                         </ol>
                     </div>
                     <div id="structure-buttons" class="row">
+                        <span class="form-horizontal" id="search-div">
+                            <div class="form-group">
+                                <label class="col-md-1 control-label">Search</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="search-textbox">
+                                </div>
+                            </div>
+                        </span>
                         @if(in_array(1,$activities))
                             <button id='add-center-button' type='button' class='btn btn-info btn-sm modal-button pull-right raised' data-toggle='modal' data-target='#addCenterModal'>Add Center</button>
                             <button id='add-group-button' type='button' class='btn btn-info btn-sm modal-button pull-right raised' data-toggle='modal' data-target='#addGroupModal'>Add Group</button>

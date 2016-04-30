@@ -20,6 +20,7 @@ $( document ).ready(function() {
 				$("#add-center-button").show();
 				$("#add-group-button").hide();
 				$("#add-client-button").hide();
+				$("#search-div").hide();
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -44,6 +45,7 @@ $( document ).ready(function() {
 				$("#add-center-button").hide();
 				$("#add-group-button").show();
 				$("#add-client-button").hide();
+				$("#search-div").hide();
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -71,6 +73,7 @@ $( document ).ready(function() {
 			    $("#add-center-button").hide();
 				$("#add-group-button").show();
 				$("#add-client-button").hide();
+				$("#search-div").hide();
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -93,11 +96,12 @@ $( document ).ready(function() {
 				$('#structure-table tbody').html("");
 			    // Log each key in the response data
 			    $.each( resp, function( key, value ) {
-			    	$('#structure-table').append("<tr><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a class='structure-client' data-id='" + value["id"] + "'>  " + value["last_name"]+ ", " +value["first_name"] + "</a><td></tr>");
+			    	$('#structure-table').append("<tr class='structure-client'><td><input type='checkbox' name='client' value='"+ value["id"] +"'  /><a data-id='" + value["id"] + "'>  " + value["last_name"]+ ", " + value["first_name"] + " " + value["middle_name"] + "</a><td></tr>");
 			    });
 			    $("#add-center-button").hide();
 				$("#add-group-button").hide();
 				$("#add-client-button").show();
+				$("#search-div").show();
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -418,6 +422,18 @@ $( document ).ready(function() {
 			});
 		}
 
+	});
+
+	$( "#search-textbox" ).keyup(function() {
+		if($(this).val() == "") $(".structure-client").show();
+		else{
+			$(".structure-client").hide();
+			$(".structure-client")
+				.filter(function( index ) {
+				return ($( this ).children("td")[0].innerHTML).indexOf($( "#search-textbox" ).val()) > -1;
+			})
+				.show();
+		}
 	});
 
 	$( "#branch-breadcrumb" ).click();

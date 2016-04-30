@@ -27,8 +27,8 @@
             margin-right: 6px;
         }
 
-        .container > .row > .col-md-10 > .panel{
-            box-shadow: 2px 10px 10px 5px #888888;
+        .container > .row > .col-md-12 > .panel{
+            box-shadow: 5px 10px 10px 5px #888888;
         }
     </style>
 

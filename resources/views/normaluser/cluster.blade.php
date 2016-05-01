@@ -118,10 +118,10 @@
                                 <label class="col-md-2 control-label">Cluster Setting</label>
 
                                 <div class="col-md-8">
-                                    <input type="radio" name="cluster_setting" value="1" {{ session('setting', '1') == '1' ? 'checked' : '' }}> Setting 1<br>
-                                    <input type="radio" name="cluster_setting" value="2" {{ session('setting', '1') == '2' ? 'checked' : '' }}> Setting 2<br>
-                                    <input type="radio" name="cluster_setting" value="3" {{ session('setting', '1') == '3' ? 'checked' : '' }}> Setting 3<br>
-                                    <input type="radio" name="cluster_setting" value="4" {{ session('setting', '1') == '4' ? 'checked' : '' }}> Setting 4<br>
+                                    <input type="radio" name="cluster_setting" value="1" {{ session('setting', '1') == '1' ? 'checked' : '' }}> Search Option 1<br>
+                                    <input type="radio" name="cluster_setting" value="2" {{ session('setting', '1') == '2' ? 'checked' : '' }}> Search Option 2<br>
+                                    <input type="radio" name="cluster_setting" value="3" {{ session('setting', '1') == '3' ? 'checked' : '' }}> Search Option 3<br>
+                                    <input type="radio" name="cluster_setting" value="4" {{ session('setting', '1') == '4' ? 'checked' : '' }}> Search Option 4<br>
 
                                     @if ($errors->has('cluster_setting'))
                                         <span class="help-block">

@@ -19,19 +19,7 @@
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
                 <div class="item active">
-                    <center><img src="{{ URL::asset('images/image_1.jpg') }}" alt="Chania"></center>
-                </div>
-
-                <div class="item">
-                    <center><img src="{{ URL::asset('images/image_2.jpg') }}" alt="Chania"></center>
-                </div>
-
-                <div class="item">
-                    <center><img src="{{ URL::asset('images/image_3.jpg') }}" alt="Chania"></center>
-                </div>
-
-                <div class="item">
-                    <center><img src="{{ URL::asset('images/image_4.jpg') }}" alt="Chania"></center>
+                    <center><strong>No Announcements Yet!</strong></center>
                 </div>
             </div>
 

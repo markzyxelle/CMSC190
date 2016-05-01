@@ -156,7 +156,7 @@
                                                 <table id="structure-table" class="table table-striped">
                                                     <thead>
                                                         <tr>
-                                                            <td><input type='checkbox' id="structure-select-all"/>  Name</td>
+                                                            <td><input type='checkbox' id="structure-select-all"/>  Select/Unselect All</td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -181,7 +181,7 @@
                                             <table id="selected-clients-table" class="table table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <td><input type='checkbox' id="moving-select-all"/>  Name</td>
+                                                        <td><input type='checkbox' id="moving-select-all"/>  Select/Unselect All</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -203,7 +203,7 @@
                                     <table id="view-clients-table" class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <td><input type='checkbox' id="view-select-all"/>  Name</td>
+                                                <td><input type='checkbox' id="view-select-all"/>  Select/Unselect All</td>
                                             </tr>
                                         </thead>
                                         <tbody>

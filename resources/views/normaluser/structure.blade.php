@@ -25,9 +25,9 @@
                     </div>
                     <div id="structure-buttons" class="row">
                         <span class="form-horizontal" id="search-div">
-                            <div class="form-group">
-                                <label class="col-md-1 control-label">Search</label>
-                                <div class="col-md-4">
+                            <div class="form-group pull-left">
+                                <label class="col-md-3 control-label">Search</label>
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" id="search-textbox">
                                 </div>
                             </div>

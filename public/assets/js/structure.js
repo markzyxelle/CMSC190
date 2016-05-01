@@ -23,6 +23,7 @@ $( document ).ready(function() {
 				$("#add-group-button").hide();
 				$("#add-client-button").hide();
 				$("#search-div").hide();
+				$("#search-textbox").val("");
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");
@@ -49,6 +50,7 @@ $( document ).ready(function() {
 				$("#add-group-button").show();
 				$("#add-client-button").hide();
 				$("#search-div").hide();
+				$("#search-textbox").val("");
 			})
 			.fail(function( jqxhr, textStatus, error ) {
 			    alert("There was an error");

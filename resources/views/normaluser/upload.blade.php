@@ -42,7 +42,7 @@
                                                 {!! csrf_field() !!}
                                                 <div>
                                                     <input style="margin-left:1%;" type="file" name="fileToUpload" id="client-file">
-                                                    <input style="margin:1%;" class="btn btn-info btn-md" type="submit" value="Validate File" name="submit">
+                                                    <input style="margin:1%;" class="btn btn-info btn-md" type="submit" value="Validate Client File" name="submit">
                                                 </div>
                                             </form>
                                             <div id="client-display-summary" class="row">
@@ -97,7 +97,7 @@
                                                 {!! csrf_field() !!}
                                                 <div>
                                                     <input style="margin-left:1%;" type="file" name="fileToUpload" id="loan-file">
-                                                    <input style="margin:1%;" class="btn btn-info btn-md" type="submit" value="Validate File" name="submit">
+                                                    <input style="margin:1%;" class="btn btn-info btn-md" type="submit" value="Validate Loan File" name="submit">
                                                 </div>
                                             </form>
                                             <div id="loan-display-summary" class="row">

@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Cluster Page</div>
+                <div class="panel-heading">{{$cluster_name}}</div>
 
                 <div id="cluster-body" class="panel-body" data-id="{{ $cluster_id }}">
                     <div id="accordion">
@@ -40,7 +40,7 @@
                                         {!! csrf_field() !!}
                                         <input type="hidden" name="cluster_id" id="cluster-id-modal" value="{{$cluster_id}}"/>
                                         <div class="form-group">
-                                            <label class="col-md-4 control-label">Cluster Setting (Required)</label>
+                                            <label class="col-md-3 control-label">Cluster Setting</label>
                                             <div class="col-md-8">
                                                 <select required class="form-control required-select" name="cluster_setting" value="">
                                                     @for ($i = 1; $i < $setting; $i++)
@@ -74,7 +74,7 @@
                                                     <strong>Please limit number of characters to 255</strong>
                                                 </span>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <input id="middle-name" type="text" class="form-control check-length" name="middle_name" value="{{ old('middle_name') }}" placeholder="Middle Name">
 
                                                 <span class="help-block max">
@@ -83,14 +83,14 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <input id="birthplace" type="text" class="form-control check-length" name="birthplace" value="{{ old('birthplace') }}" placeholder="Birthplace">
                                             </div>
 
                                             <span class="help-block max">
                                                 <strong>Please limit number of characters to 255</strong>
                                             </span>
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <input id="birthdate" type="date" class="form-control required-date" name="birthdate" value="{{ old('birthdate') }}" placeholder="Birthdate">
 
                                                 <span class="help-block wrong-format">
@@ -176,7 +176,7 @@
                                     </div>
                                 </div>
                                 <div id="selected-clients-clusters" class="col-md-5">
-                                    <h3>Selected Clients: </h3>
+                                    <h4>List of Clients to be Shared to Cluster: </h4>
                                         <div id="selected-clients-body">
                                             <table id="selected-clients-table" class="table table-striped">
                                                 <thead>
@@ -192,7 +192,7 @@
                                     <form action="/addClientToCluster" method="post" id="add-client-form">
                                         {!! csrf_field() !!}
                                         <button class="btn btn-primary btn-sm pull-right">
-                                            <i class=" fa fa-btn fa-pencil"></i>Add Clients
+                                            <i class=" fa fa-btn fa-pencil"></i>Share Selected Clients to Cluster
                                         </button>
                                     </form>
                                 </div>

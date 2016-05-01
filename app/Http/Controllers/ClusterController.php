@@ -197,7 +197,8 @@ class ClusterController extends Controller
                                                         ->with("regions", $regions)
                                                         ->with("civil_statuses", $civil_statuses)
                                                         ->with("tags", $tags)
-                                                        ->with("setting", $cluster->setting);
+                                                        ->with("setting", $cluster->setting)
+                                                        ->with("cluster_name", $cluster->name);
         }
         else{
             return redirect("/home");

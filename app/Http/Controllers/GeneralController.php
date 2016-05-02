@@ -372,15 +372,13 @@ class GeneralController extends Controller
                 if (($handle = fopen($data["fileToUpload"], "r")) !== FALSE) {
                     while (($data = fgetcsv($handle, 1000, "\t")) !== FALSE) {
                         if($row == 0){
-                            if(strtotime($data[1])){
-                                $client[$row][] = $data[1];
-                            }  
-                            else{
-                                $client[$row][] = "Cutoff Date has a wrong format";
-                                break;
-                            }
+                            $client[$row][] = $data[1];
                             if(strtolower($data[0]) != "clients data"){
                                 $client[$row][] = "Wrong File";
+                                break;
+                            }
+                            if(!(strtotime($data[1]))){
+                                $client[$row][] = "Cutoff Date has a wrong format";
                                 break;
                             }
                             if(strtolower($data[2]) != strtolower(Auth::user()->branch->name)){
@@ -600,15 +598,13 @@ class GeneralController extends Controller
                 if (($handle = fopen($data["fileToUpload"], "r")) !== FALSE) {
                     while (($data = fgetcsv($handle, 1000, "\t")) !== FALSE) {
                         if($row == 0){
-                            if(strtotime($data[1])){
-                                $loan[$row][] = $data[1];
-                            }  
-                            else{
-                                $loan[$row][] = "Cutoff Date has a wrong format";
-                                break;
-                            }
+                            $loan[$row][] = $data[1];
                             if(strtolower($data[0]) != "loans data"){
                                 $loan[$row][] = "Wrong File";
+                                break;
+                            }
+                            if(!(strtotime($data[1]))){
+                                $loan[$row][] = "Cutoff Date has a wrong format";
                                 break;
                             }
                             if(strtolower($data[2]) != strtolower(Auth::user()->branch->name)){

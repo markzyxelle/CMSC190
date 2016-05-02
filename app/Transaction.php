@@ -14,4 +14,12 @@ class Transaction extends Model
     protected $fillable = [
         'loan_id', 'principal_amount', 'interest_amount', 'payment_date', 'due_date', 'cutoff_date',
     ];
+
+    /**
+     * Get the loan that the transaction is under.
+     */
+    public function loan()
+    {
+        return $this->belongsTo('App\Loan');
+    }
 }

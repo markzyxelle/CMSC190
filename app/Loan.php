@@ -22,4 +22,12 @@ class Loan extends Model
     {
         return $this->hasMany('App\Transaction');
     }
+
+    /**
+     * Get the client that the loan is under.
+     */
+    public function client()
+    {
+        return $this->belongsTo('App\Client');
+    }
 }

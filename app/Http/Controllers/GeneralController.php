@@ -353,6 +353,8 @@ class GeneralController extends Controller
             $companyrole = Auth::user()->companyrole;
             $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
             if(in_array(7,$activities)){
+                set_time_limit(0);
+                $branch_id = Auth::user()->branch->id;
                 $data = $request->all();
 
                 // $handle = fopen($data["fileToUpload"], "r");
@@ -441,7 +443,13 @@ class GeneralController extends Controller
                         $client[$row][] = $data[14] > 3 ? false : true;     //change
                         $client[$row][] = $data[14];
                         $client[$row][] = in_array(false, $client[$row], true) ? false : true;
-                        $current_client = \App\Client::where("uploaded_id", $data[1])->first();
+                        $current_clients = \App\Client::where("uploaded_id", $data[1])->get();
+                        $current_client = null;
+                        foreach ($current_clients as $client_temp) {
+                            if($client_temp->group->center->branch->id == $branch_id){
+                                $current_client = $client_temp;
+                            }
+                        }
                         if($current_client == null){
                             $client[$row][] = true;
                         }
@@ -512,7 +520,7 @@ class GeneralController extends Controller
                 $center = \App\Center::firstOrCreate(['branch_id' => $branch_id, 'name' => $client[23]]);
                 $group = \App\Group::firstOrCreate(['center_id' => $center->id, 'name' => $client[21]]);
 
-                $client_detail = \App\Client::where('uploaded_id', $client[1])->first();
+                $client_detail = \App\Client::where(['uploaded_id' => $client[1], "group_id" => $group->id])->first();
                 if($client_detail == null){
                     $client_detail = new \App\Client;
                 }
@@ -573,6 +581,8 @@ class GeneralController extends Controller
             $companyrole = Auth::user()->companyrole;
             $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
             if(in_array(7,$activities)){
+                set_time_limit(0);
+                $branch_id = Auth::user()->branch->id;
                 $data = $request->all();
 
                 // // $handle = fopen($data["fileToUpload"], "r");
@@ -622,9 +632,21 @@ class GeneralController extends Controller
                         });
 
                         if(is_numeric($data[1])){
-                            $client = \App\Client::where("uploaded_id", $data[1])->first();
-                            $loan[$row]["loan"][] = ($client != null) ? true : false;
-                            $loan[$row]["loan"][] = $data[1];
+                            $clients = \App\Client::where("uploaded_id", $data[1])->get();
+                            if($clients == NULL){
+                                $loan[$row]["loan"][] = false;
+                                $loan[$row]["loan"][] = $data[1];
+                            }
+                            else{
+                                $client = null;
+                                foreach ($clients as $temp_client) {
+                                    if($temp_client->group->center->branch->id == $branch_id){
+                                        $client = $temp_client;
+                                    }
+                                }
+                                $loan[$row]["loan"][] = ($client != null) ? true : false;
+                                $loan[$row]["loan"][] = $data[1];
+                            }
                         }
                         else{
                             $loan[$row]["loan"][] = false;
@@ -655,7 +677,13 @@ class GeneralController extends Controller
                         $loan[$row]["loan"][] = (strtotime($data[13]) || $data[13] == "") ? true : false;
                         $loan[$row]["loan"][] = $data[13];
                         $loan[$row]["loan"][] = in_array(false, $loan[$row]["loan"], true) ? false : true;
-                        $current_loan = \App\Loan::where("uploaded_id", $data[2])->first();
+                        $current_loans = \App\Loan::where("uploaded_id", $data[2])->get();
+                        $current_loan = null;
+                        foreach ($current_loans as $loan_temp) {
+                            if($loan_temp->client->group->center->branch->id == $branch_id){
+                                $current_loan = $loan_temp;
+                            }
+                        }
                         if($current_loan == null){
                             $loan[$row]["loan"][] = true;
                         }
@@ -683,7 +711,13 @@ class GeneralController extends Controller
                             $transactions[$c/5][8] = strtotime($temp[$c+4]) ? true : false;
                             $transactions[$c/5][9] = $temp[$c+4];
                             $transactions[$c/5][10] = (!(in_array(false, $transactions[$c/5], true)) && $loan[$row]["loan"][26]) ? true : false;
-                            $current_transaction = \App\Transaction::where("uploaded_id", $temp[$c])->first();
+                            $current_transactions = \App\Transaction::where("uploaded_id", $temp[$c])->get();
+                            $current_transaction = null;
+                            foreach ($current_transactions as $transaction_temp) {
+                                if($transaction_temp->loan->client->group->center->branch->id == $branch_id){
+                                    $current_transaction = $transaction_temp;
+                                }
+                            }
                             if($current_transaction == null){
                                 $transactions[$c/5][11] = true;
                             }
@@ -757,8 +791,8 @@ class GeneralController extends Controller
         $companyrole = Auth::user()->companyrole;
         $activities = \App\CompanyRoleActivity::where('company_role_id', $companyrole->id)->lists('activity_id')->toArray();
         if(in_array(7,$activities)){
-            $loantemp = 0;
-            $trantemp = 0;
+            $branch_id = Auth::user()->branch->id;
+
             set_time_limit(0);
             $data = $request->all();
 
@@ -769,9 +803,21 @@ class GeneralController extends Controller
                     $cutoff_date = $loan[0];                    
                     continue;
                 }
-                $client = \App\Client::where('uploaded_id', $loan["loan"][1])->first();
+                $clients = \App\Client::where('uploaded_id', $loan["loan"][1])->get();
+                if($clients == NULL) continue;
+                foreach ($clients as $temp_client) {
+                    if($temp_client->group->center->branch->id == $branch_id){
+                        $client = $temp_client;
+                    }
+                }
                 if($client == NULL) continue;
-                $loan_detail = \App\Loan::where('uploaded_id', $loan["loan"][3])->first(); 
+                $loans = \App\Loan::where('uploaded_id', $loan["loan"][3])->get();
+                $loan_detail = null; 
+                foreach ($loans as $loan_temp) {
+                    if($loan_temp->client->group->center->branch->id == $branch_id){
+                        $loan_detail = $loan_temp;
+                    }
+                }
                 if(!($loan["loan"][26] == false || $loan["loan"][27] == false)){
             
                     if($loan_detail == null){
@@ -797,13 +843,18 @@ class GeneralController extends Controller
                     $loan_detail->cutoff_date = date("Y-m-d", strtotime($cutoff_date));
                     //loan_history,client_history
                     $loan_detail->save();
-                    $loantemp++;
                 }
 
                 if($loan_detail != null){
                     foreach ($loan["transactions"] as $transaction) {           //change here for uploaded id
                         if(!($transaction[10] == false || $transaction[11] == false)){
-                            $transaction_detail = \App\Transaction::where('uploaded_id', $transaction[1])->first();
+                            $transactions = \App\Transaction::where('uploaded_id', $transaction[1])->get();
+                            $transaction_detail = null;
+                            foreach ($transactions as $transaction_temp) {
+                                if($transaction_temp->loan->client->group->center->branch->id == $branch_id){
+                                    $transaction_detail = $transaction_temp;
+                                }
+                            }
                             if($transaction_detail == null){
                                 $transaction_detail = new \App\Transaction;
                             }
@@ -816,7 +867,6 @@ class GeneralController extends Controller
                             $transaction_detail->uploaded_id = $transaction[1];
                             $transaction_detail->cutoff_date = date("Y-m-d", strtotime($cutoff_date));
                             $transaction_detail->save();
-                            $trantemp++;
                         }
                         //loan_history,client_history
                     }
@@ -1220,29 +1270,31 @@ class GeneralController extends Controller
         $branch = Auth::user()->branch;
 
         foreach ($branch->centers as $center){
-            foreach ($center->groups as $group) {
-                foreach ($group->clients as $client) {
-                    foreach ($client->loans as $loan) {
-                        foreach ($loan->transactions as $transaction) {
-                            $transaction->delete();
-                        }
-                        $loan->delete();
-                    }
+            var_dump($center);
+            // foreach ($center->groups as $group) {
+            //     foreach ($group->clients as $client) {
+            //         foreach ($client->loans as $loan) {
+            //             foreach ($loan->transactions as $transaction) {
+            //                 $transaction->delete();
+            //             }
+            //             $loan->delete();
+            //         }
 
-                    foreach ($client->clusters as $cluster) {
-                        $cluster->pivot->delete();
-                    }
+            //         foreach ($client->clusters as $cluster) {
+            //             $cluster->pivot->delete();
+            //         }
 
-                    foreach ($client->tags as $tag) {
-                        $tag->pivot->delete();
-                    }
+            //         foreach ($client->tags as $tag) {
+            //             $tag->pivot->delete();
+            //         }
 
-                    $client->delete();
-                }
-                $group->delete();
-            }
-            $center->delete();
+            //         $client->delete();
+            //     }
+            //     $group->delete();
+            // }
+            // $center->delete();
         }
+        die();
 
         return redirect("/structure");
     }

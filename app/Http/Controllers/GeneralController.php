@@ -1270,31 +1270,29 @@ class GeneralController extends Controller
         $branch = Auth::user()->branch;
 
         foreach ($branch->centers as $center){
-            var_dump($center);
-            // foreach ($center->groups as $group) {
-            //     foreach ($group->clients as $client) {
-            //         foreach ($client->loans as $loan) {
-            //             foreach ($loan->transactions as $transaction) {
-            //                 $transaction->delete();
-            //             }
-            //             $loan->delete();
-            //         }
+            foreach ($center->groups as $group) {
+                foreach ($group->clients as $client) {
+                    foreach ($client->loans as $loan) {
+                        foreach ($loan->transactions as $transaction) {
+                            $transaction->delete();
+                        }
+                        $loan->delete();
+                    }
 
-            //         foreach ($client->clusters as $cluster) {
-            //             $cluster->pivot->delete();
-            //         }
+                    foreach ($client->clusters as $cluster) {
+                        $cluster->pivot->delete();
+                    }
 
-            //         foreach ($client->tags as $tag) {
-            //             $tag->pivot->delete();
-            //         }
+                    foreach ($client->tags as $tag) {
+                        $tag->pivot->delete();
+                    }
 
-            //         $client->delete();
-            //     }
-            //     $group->delete();
-            // }
-            // $center->delete();
+                    $client->delete();
+                }
+                $group->delete();
+            }
+            $center->delete();
         }
-        die();
 
         return redirect("/structure");
     }

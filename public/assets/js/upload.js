@@ -1,10 +1,13 @@
 $( document ).ready(function() {
     $("#client-approve-button").hide();
     $("#loan-approve-button").hide();
+    $("#client-spinner").hide();
+    $("#loan-spinner").hide();
 
     var clients;
     //return json format of clients and show summarized report of clients
     $('#upload-client-csv').submit(function(e){
+        $("#client-spinner").show();
         e.preventDefault();
         // var form = $('#upload-csv').serialize();
         var form = new FormData();
@@ -12,6 +15,7 @@ $( document ).ready(function() {
 
         form.append('_token', $("input[name='_token']").val())
         form.append('fileToUpload', $('#client-file')[0].files[0]);
+        $("#client-spinner").show();
 
         $.ajax({
             type : 'POST',
@@ -53,9 +57,11 @@ $( document ).ready(function() {
                 else{
                     $("#client-upload-status").append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>" + data[0][1] + "</strong></div>");
                 }
+                $("#client-spinner").hide();
             },
             error : function(data, text, error) {
                 alert("error")
+                $("#client-spinner").hide();
             }
         });
     });
@@ -70,6 +76,7 @@ $( document ).ready(function() {
     var loans;
     //return json format of loans and show summarized report of loans
     $('#upload-loan-csv').submit(function(e){
+        $("#loan-spinner").show();
         e.preventDefault();
         // var form = $('#upload-csv').serialize();
         var form = new FormData();
@@ -129,9 +136,11 @@ $( document ).ready(function() {
                 else{
                     $("#loan-upload-status").append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>" + data[0][1] + "</strong></div>");
                 }
+                $("#loan-spinner").hide();
             },
             error : function(data, text, error) {
                 alert(error);
+                $("#loan-spinner").hide();
             }
         });
     });

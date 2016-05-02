@@ -668,9 +668,9 @@ class GeneralController extends Controller
                         $loan[$row]["loan"][] = $data[8];
                         $loan[$row]["loan"][] = is_numeric($data[9]) ? true : false;
                         $loan[$row]["loan"][] = $data[9];
-                        $loan[$row]["loan"][] = ($data[10] == "true" || $data[10] == "false" || $data[10] == "True" || $data[10] == "False") ? true : false;
+                        $loan[$row]["loan"][] = ($data[10] == "true" || $data[10] == "false" || $data[10] == "True" || $data[10] == "False" || $data[10] == "TRUE" || $data[10] == "FALSE") ? true : false;
                         $loan[$row]["loan"][] = $data[10];
-                        $loan[$row]["loan"][] = ($data[11] == "true" || $data[11] == "false" || $data[11] == "True" || $data[11] == "False") ? true : false;
+                        $loan[$row]["loan"][] = ($data[11] == "true" || $data[11] == "false" || $data[11] == "True" || $data[11] == "False" || $data[11] == "TRUE" || $data[11] == "FALSE") ? true : false;
                         $loan[$row]["loan"][] = $data[11];
                         $loan[$row]["loan"][] = strlen($data[12]) > 255 ? false : true;
                         $loan[$row]["loan"][] = $data[12];

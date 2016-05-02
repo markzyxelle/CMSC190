@@ -216,7 +216,7 @@
                             <form class="form-horizontal" role="form" method="POST" action="{{ url('/register-user') }}">
                                 {!! csrf_field() !!}
                                 <div class="form-group{{ $errors->has('regusercode') ? ' has-error' : '' }}">
-                                    <label class="col-md-4 control-label">Company Code</label>
+                                    <label class="col-md-4 control-label">MFI Code</label>
 
                                     <div class="col-md-8">
                                         <input type="text" class="form-control" name="regusercode" value="{{ old('regusercode') }}">

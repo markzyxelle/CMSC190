@@ -370,18 +370,22 @@ class GeneralController extends Controller
                 if (($handle = fopen($data["fileToUpload"], "r")) !== FALSE) {
                     while (($data = fgetcsv($handle, 1000, "\t")) !== FALSE) {
                         if($row == 0){
-                            if(strtotime($data[0])){
-                                $client[$row][] = $data[0];
+                            if(strtotime($data[1])){
+                                $client[$row][] = $data[1];
                             }  
                             else{
                                 $client[$row][] = "Cutoff Date has a wrong format";
                                 break;
                             }
-                            if(strtolower($data[1]) != strtolower(Auth::user()->branch->name)){
+                            if(strtolower($data[0]) != "clients data"){
+                                $client[$row][] = "Wrong File";
+                                break;
+                            }
+                            if(strtolower($data[2]) != strtolower(Auth::user()->branch->name)){
                                 $client[$row][] = "Branch name in file did not match branch name in the site";
                                 break;
                             } 
-                            if(strtolower($data[2]) != strtolower(Auth::user()->branch->company->name)){
+                            if(strtolower($data[3]) != strtolower(Auth::user()->branch->company->name)){
                                 $client[$row][] = "Company name in file did not match company name in the site";
                                 break;
                             }
@@ -586,18 +590,22 @@ class GeneralController extends Controller
                 if (($handle = fopen($data["fileToUpload"], "r")) !== FALSE) {
                     while (($data = fgetcsv($handle, 1000, "\t")) !== FALSE) {
                         if($row == 0){
-                            if(strtotime($data[0])){
-                                $loan[$row][] = $data[0];
+                            if(strtotime($data[1])){
+                                $loan[$row][] = $data[1];
                             }  
                             else{
                                 $loan[$row][] = "Cutoff Date has a wrong format";
                                 break;
                             }
-                            if(strtolower($data[1]) != strtolower(Auth::user()->branch->name)){
+                            if(strtolower($data[0]) != "loans data"){
+                                $loan[$row][] = "Wrong File";
+                                break;
+                            }
+                            if(strtolower($data[2]) != strtolower(Auth::user()->branch->name)){
                                 $loan[$row][] = "Branch name in file did not match branch name in the site";
                                 break;
                             } 
-                            if(strtolower($data[2]) != strtolower(Auth::user()->branch->company->name)){
+                            if(strtolower($data[3]) != strtolower(Auth::user()->branch->company->name)){
                                 $loan[$row][] = "Company name in file did not match company name in the site";
                                 break;
                             }

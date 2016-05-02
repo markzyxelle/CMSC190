@@ -834,7 +834,7 @@ class GeneralController extends Controller
                     $loan_detail->isReleased = ($loan["loan"][21] == "True" || $loan["loan"][21] == "true") ? true : false;
                     $loan_detail->status = $loan["loan"][23];
                     $loan_detail->uploaded_id = $loan["loan"][3];
-                    if($loan["loan"][25] != "") $loan_detail->maturity_date = date("Y-m-d", strtotime($loan["loan"][12]));
+                    if($loan["loan"][25] != "") $loan_detail->maturity_date = date("Y-m-d", strtotime($loan["loan"][25]));
                     else $loan_detail->maturity_date = null;
                     $loan_detail->cutoff_date = date("Y-m-d", strtotime($cutoff_date));
                     //loan_history,client_history

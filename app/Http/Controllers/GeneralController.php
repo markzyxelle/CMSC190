@@ -596,7 +596,7 @@ class GeneralController extends Controller
 
                 $row = 0;
                 if (($handle = fopen($data["fileToUpload"], "r")) !== FALSE) {
-                    while (($data = fgetcsv($handle, 1000, "\t")) !== FALSE) {
+                    while (($data = fgetcsv($handle, 1000000, "\t")) !== FALSE) {
                         if($row == 0){
                             $loan[$row][] = $data[1];
                             if(strtolower($data[0]) != "loans data"){

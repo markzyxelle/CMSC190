@@ -2,7 +2,9 @@ $( document ).ready(function() {
     $("#client-approve-button").hide();
     $("#loan-approve-button").hide();
     $("#client-spinner").hide();
+    $("#upload-client-spinner").hide();
     $("#loan-spinner").hide();
+    $("#upload-loan-spinner").hide();
 
     var clients;
     //return json format of clients and show summarized report of clients
@@ -70,6 +72,7 @@ $( document ).ready(function() {
         var $hidden = $("<input type='hidden' name='clients'/>");
         $hidden.val(JSON.stringify(clients));
         $(this).append($hidden);
+        $("#upload-client-spinner").show();
         return true;
     });
     
@@ -149,6 +152,7 @@ $( document ).ready(function() {
         var $hidden = $("<input type='hidden' name='loans'/>");
         $hidden.val(JSON.stringify(loans));
         $(this).append($hidden);
+        $("#upload-loan-spinner").show();
         return true;
     });
 });

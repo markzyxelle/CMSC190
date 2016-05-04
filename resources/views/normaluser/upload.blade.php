@@ -73,8 +73,9 @@
                                             <form action="/approveClientsCSV" method="post" id="approve-clients-csv">
                                                 {!! csrf_field() !!}
                                                 <button type="submit" id="client-approve-button" class="btn btn-primary" disabled>
-                                                    <i class="fa fa-btn fa-thumbs-up"></i>  Upload to Database
+                                                    <i class="fa fa-btn fa-thumbs-up"></i>  Upload to Database 
                                                 </button>
+                                                <span id="upload-client-spinner"><i class="fa wobble-fix fa-spin fa-spinner"></i><span>    Loading...</span></span>
                                             </form>
                                         </div>
                                     </div>
@@ -127,8 +128,9 @@
                                             <form action="/approveLoansCSV" method="post" id="approve-loans-csv">
                                                 {!! csrf_field() !!}
                                                 <button type="submit" id="loan-approve-button" class="btn btn-primary" disabled>
-                                                    <i class="fa fa-btn fa-thumbs-up"></i>  Upload to Database
+                                                    <i class="fa fa-btn fa-thumbs-up"></i>  Upload to Database 
                                                 </button>
+                                                <span id="upload-loan-spinner"><i class="fa wobble-fix fa-spin fa-spinner"></i><span>    Loading...</span></span>
                                             </form>
                                         </div>
                                     </div>

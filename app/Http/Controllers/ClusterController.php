@@ -645,6 +645,7 @@ class ClusterController extends Controller
                                 $loans = $client->loans()->get()->toArray();
                                 foreach ($loans as $loan) {
                                     $loan["loan_type_id"] = \App\LoanType::find($loan["loan_type_id"])->name;
+                                    $loan["branch_name"] = $client->group->center->branch->name;
                                     $temp[$client->group->center->branch->company->name][] = $loan;
                                 }
                                 // $temp[$client->group->center->branch->company->name] = $temp[$client->group->center->branch->company->name] + $loans;
@@ -657,6 +658,8 @@ class ClusterController extends Controller
                                 if(!array_key_exists ( $name , $temp )) $temp[$name] = array();
                                 foreach ($client->loans()->get() as $loan) {
                                     if(!array_key_exists ( $loan->id , $temp[$name] )) $temp[$name][$loan->id] = array();
+                                    $loan["loan_type_id"] = \App\LoanType::find($loan["loan_type_id"])->name;
+                                    $loan["branch_name"] = $client->group->center->branch->name;
                                     $temp[$name][$loan->id] = $loan;
                                     // array_push($temp[$client->group->center->branch->company->name], $loan);
                                     $temp[$name][$loan->id]["transactions"] = $loan->transactions->toArray();

@@ -138,7 +138,7 @@ class ClusterController extends Controller
             \App\ClusterUser::create([
                 'cluster_id' => $data["cluster_code"],
                 'user_id' => Auth::user()->id,
-                'isApproved' => 0,
+                'isApproved' => ($data["cluster_code"] == '1' || $data["cluster_code"] == '2' || $data["cluster_code"] == '3') ? 1 : 0,
             ]);
 
             return redirect('/clusters');

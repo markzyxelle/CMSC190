@@ -52,7 +52,7 @@ class AdminController extends Controller
     public function getApprovedUsers($start, Request $request)
     {
         if($request->ajax()){
-            $users = Auth::user()->company->users()->where('isApproved', 1)->skip($start*10)->take(10)->get();
+            $users = Auth::user()->company->users()->where('isApproved', 1)->where('id', '<>', Auth::user()->id)->skip($start*10)->take(10)->get();
             
             // $approved = Auth::user()->company->users->where('isApproved', 1);
             // $pending = Auth::user()->company->users->where('isApproved', 0);
@@ -118,7 +118,7 @@ class AdminController extends Controller
 
         \App\Branch::create([
             'company_id' => $company_id,
-            'name' => $data['branch_name'],
+            'name' => trim($data['branch_name']),
         ]);
 
         return redirect('/branches');
@@ -324,7 +324,7 @@ class AdminController extends Controller
         }
         
         $branch = \App\Branch::find($data["branch_id"]);
-        $branch->name = $data["branch_name"];
+        $branch->name = trim($data["branch_name"]);
         $branch->save();
 
         return redirect('/branches');
@@ -376,8 +376,8 @@ class AdminController extends Controller
         }
         
         $company = Auth::user()->company;
-        $company->name = $data["company_name"];
-        $company->shortname = $data["company_shortname"];
+        $company->name = trim($data["company_name"]);
+        $company->shortname = trim($data["company_shortname"]);
         $company->save();
 
         return redirect('/users');

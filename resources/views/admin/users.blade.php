@@ -30,7 +30,7 @@
                                 <label class="col-md-3 control-label">MFI Code</label>
 
                                 <div class="col-md-8" style="margin-top:0.5%; margin-left:1.2%">
-                                    {{ $company->company_code }}
+                                    {{$company->company_code}}
                                     <!-- <input type="text" class="form-control" value="{{ $company->company_code }}" disabled> -->
                                 </div>
                             </div>

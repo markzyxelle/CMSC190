@@ -392,7 +392,7 @@ $( document ).ready(function() {
 								$("#search-results-table thead").html("<tr><td colspan='8'>MFI</td></tr>");
 								$.each( data["data"], function( key, value ) {
 									$("#search-results-table tbody").append("<tr><td colspan='8'>"+ key +"</td></tr>");
-									$("#search-results-table tbody").append("<tr><td></td><td>Branch</td><td>Loan Type</td><td>Cycle</td><td>L. Amt.</td><td>Mat. Date</td><td>Status</td><td>As Of</td></tr>");
+									$("#search-results-table tbody").append("<tr><td></td><td>Branch</td><td>L. Type</td><td>Cycle</td><td>L. Amt.</td><td>Mat. Date</td><td>Status</td><td>As Of</td></tr>");
 									$.each( value, function( x, loan ) {
 										$("#search-results-table tbody").append("<tr><td></td><td>"+ loan["branch_name"] +"</td><td>"+ loan["loan_type_id"] +"</td><td>"+ loan["loan_cycle"] +"</td><td>"+ loan["principal_amount"] +"</td><td>"+ loan["maturity_date"] +"</td><td>"+ loan["status"] +"</td><td>" + loan["cutoff_date"] + "</td></tr>");
 									})
@@ -408,7 +408,7 @@ $( document ).ready(function() {
 								$("#search-results-table tbody").html("");
 								$.each( data["data"], function( key, value ) {
 									$("#search-results-table tbody").append("<tr><td colspan='8'>"+ key +"</td></tr>");
-									$("#search-results-table tbody").append("<tr><td></td><td>Branch</td><td>Loan Type</td><td>Cycle</td><td>L. Amt.</td><td>Mat. Date</td><td>Status</td><td>As Of</td></tr>");
+									$("#search-results-table tbody").append("<tr><td></td><td>Branch</td><td>L. Type</td><td>Cycle</td><td>L. Amt.</td><td>Mat. Date</td><td>Status</td><td>As Of</td></tr>");
 									$.each( value, function( x, loan ) {
 										$("#search-results-table tbody").append("<tr><td></td><td>"+ loan["branch_name"] +"</td><td>"+ loan["loan_type_id"] +"</td><td>"+ loan["loan_cycle"] +"</td><td>"+ loan["principal_amount"] +"</td><td>"+ loan["maturity_date"] +"</td><td>"+ loan["status"] +"</td><td>" + loan["cutoff_date"] + "</td></tr>");
 										if(loan["transactions"].length > 0) $("#search-results-table tbody").append("<tr><td></td><td></td><td>Transactions</td><td>Principal Amount</td><td>Interest Amount</td><td>Payment Date</td><td>Due Date</td><td>As of</td></tr>");

@@ -135,11 +135,22 @@ class ClusterController extends Controller
                 );
             }
 
-            \App\ClusterUser::create([
+            $cluster_user_id = \App\ClusterUser::create([
                 'cluster_id' => $data["cluster_code"],
                 'user_id' => Auth::user()->id,
                 'isApproved' => ($data["cluster_code"] == '1' || $data["cluster_code"] == '2' || $data["cluster_code"] == '3') ? 1 : 0,
-            ]);
+            ])->id;
+
+            if($data["cluster_code"] == '1' || $data["cluster_code"] == '2' || $data["cluster_code"] == '3'){
+                \App\ActionClusterUser::create([
+                    'cluster_user_id' => $cluster_user_id,
+                    'action_id' => 2,
+                ]);
+                \App\ActionClusterUser::create([
+                    'cluster_user_id' => $cluster_user_id,
+                    'action_id' => 3,
+                ]);
+            }
 
             return redirect('/clusters');
         }

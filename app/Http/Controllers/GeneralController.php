@@ -381,14 +381,14 @@ class GeneralController extends Controller
                                 $client[$row][] = "Cutoff Date has a wrong format";
                                 break;
                             }
-                            if(strtolower($data[2]) != strtolower(Auth::user()->branch->name)){
-                                $client[$row][] = "Branch name in file did not match branch name in the site";
-                                break;
-                            } 
-                            if(strtolower($data[3]) != strtolower(Auth::user()->branch->company->name)){
-                                $client[$row][] = "Company name in file did not match company name in the site";
-                                break;
-                            }
+                            // if(strtolower($data[2]) != strtolower(Auth::user()->branch->name)){
+                            //     $client[$row][] = "Branch name in file did not match branch name in the site";
+                            //     break;
+                            // } 
+                            // if(strtolower($data[3]) != strtolower(Auth::user()->branch->company->name)){
+                            //     $client[$row][] = "Company name in file did not match company name in the site";
+                            //     break;
+                            // }
                         }
                         if($row < 2) {
                             $row++;
@@ -607,14 +607,14 @@ class GeneralController extends Controller
                                 $loan[$row][] = "Cutoff Date has a wrong format";
                                 break;
                             }
-                            if(strtolower($data[2]) != strtolower(Auth::user()->branch->name)){
-                                $loan[$row][] = "Branch name in file did not match branch name in the site";
-                                break;
-                            } 
-                            if(strtolower($data[3]) != strtolower(Auth::user()->branch->company->name)){
-                                $loan[$row][] = "Company name in file did not match company name in the site";
-                                break;
-                            }
+                            // if(strtolower($data[2]) != strtolower(Auth::user()->branch->name)){
+                            //     $loan[$row][] = "Branch name in file did not match branch name in the site";
+                            //     break;
+                            // } 
+                            // if(strtolower($data[3]) != strtolower(Auth::user()->branch->company->name)){
+                            //     $loan[$row][] = "Company name in file did not match company name in the site";
+                            //     break;
+                            // }
                         }
                         if($row < 2) {
                             $row++;
